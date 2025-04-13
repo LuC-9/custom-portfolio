@@ -1,0 +1,385 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --background: 230 20% 12%;
+    --foreground: 0 0% 98%;
+    --card: 230 20% 10%;
+    --card-foreground: 0 0% 98%;
+    --popover: 230 20% 10%;
+    --popover-foreground: 0 0% 98%;
+    --primary: 210 80% 75%;
+    --primary-foreground: 0 0% 98%;
+    --secondary: 230 15% 20%;
+    --secondary-foreground: 0 0% 98%;
+    --muted: 230 15% 20%;
+    --muted-foreground: 240 5% 64.9%;
+    --accent: 210 80% 75%;
+    --accent-foreground: 0 0% 98%;
+    --destructive: 0 62.8% 30.6%;
+    --destructive-foreground: 0 0% 98%;
+    --border: 230 15% 20%;
+    --input: 230 15% 20%;
+    --ring: 210 80% 75%;
+    --radius: 0.5rem;
+  }
+
+  /* Gamer theme overrides */
+  .gamer-theme {
+    --primary: 0 80% 80%;
+    --ring: 0 80% 80%;
+    --accent: 0 30% 25%;
+    --accent-foreground: 0 100% 95%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+  body {
+    @apply bg-background text-foreground;
+    font-feature-settings: "ss01" on, "ss02" on, "ss03" on, "ss04" on, "liga" off;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+  
+  /* Adjust letter spacing for better readability with monospace font */
+  h1, h2, h3, h4, h5, h6 {
+    letter-spacing: -0.02em;
+  }
+  
+  p, li, span {
+    letter-spacing: -0.01em;
+  }
+}
+
+.animate-float {
+  animation: float 3s ease-in-out infinite;
+}
+
+@keyframes float {
+  0% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
+  100% {
+    transform: translateY(0px);
+  }
+}
+
+.animate-pulse-slow {
+  animation: pulse 4s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
+@keyframes pulse {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.6;
+  }
+}
+
+/* Comment out Custom cursor styles */
+/* 
+.custom-cursor {
+  @apply fixed pointer-events-none z-50 w-6 h-6 rounded-full mix-blend-difference bg-white transform -translate-x-1/2 -translate-y-1/2 transition-transform duration-100 ease-out;
+}
+*/
+
+/* For hiding scrollbar but keeping functionality */
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+
+.no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+/* Profile image border styles */
+.profile-border {
+  @apply relative rounded-full overflow-hidden;
+}
+
+.profile-border::before {
+  content: "";
+  @apply absolute inset-0 rounded-full;
+  padding: 4px;
+  background: linear-gradient(to right, hsl(var(--primary)), hsl(var(--primary) / 0.5));
+  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  pointer-events: none;
+  z-index: 10;
+}
+
+.profile-border img {
+  object-position: center 30% !important; /* Adjust this value to position the face properly */
+}
+
+/* Clock styling */
+.clock {
+  @apply text-sm text-muted-foreground flex items-center gap-1;
+}
+
+/* Social icons */
+.social-icons {
+  @apply flex items-center gap-6 mt-8;
+}
+
+.social-icons a {
+  @apply text-muted-foreground hover:text-primary transition-colors;
+}
+
+/* Experience timeline */
+.timeline {
+  @apply relative pl-8 border-l border-primary/30 space-y-10;
+}
+
+.timeline-dot {
+  @apply absolute -left-3 w-6 h-6 rounded-full bg-background flex items-center justify-center;
+}
+
+.timeline-dot::before {
+  content: "";
+  @apply absolute inset-0.5 rounded-full bg-primary;
+}
+
+.experience-card {
+  @apply bg-secondary/20 rounded-lg p-6 border border-secondary/50 hover:border-primary/30 transition-colors;
+}
+
+.experience-date {
+  @apply text-primary text-sm font-medium;
+}
+
+/* Footer styles */
+.footer {
+  @apply border-t border-border mt-20 py-8;
+}
+
+.blog-footer {
+  @apply border-t border-border mt-20 py-8;
+}
+
+.blog-footer-bio {
+  @apply flex items-center gap-4 p-6 rounded-lg bg-secondary/20 border border-secondary/50;
+}
+
+/* Code block styling */
+pre {
+  @apply p-4 rounded-lg overflow-x-auto my-6 bg-secondary/50 border border-secondary;
+}
+
+code {
+  @apply font-mono text-sm;
+}
+
+:not(pre) > code {
+  @apply bg-secondary/50 px-1.5 py-0.5 rounded text-primary;
+}
+
+/* Table styling */
+table {
+  @apply w-full border-collapse my-6;
+}
+
+table th {
+  @apply bg-secondary/50 p-2 text-left border border-secondary;
+}
+
+table td {
+  @apply p-2 border border-secondary;
+}
+
+/* Syntax highlighting */
+.token.comment,
+.token.prolog,
+.token.doctype,
+.token.cdata {
+  @apply text-muted-foreground;
+}
+
+.token.punctuation {
+  @apply text-foreground;
+}
+
+.token.property,
+.token.tag,
+.token.boolean,
+.token.number,
+.token.constant,
+.token.symbol {
+  @apply text-primary;
+}
+
+.token.selector,
+.token.attr-name,
+.token.string,
+.token.char,
+.token.builtin {
+  @apply text-green-400;
+}
+
+.token.operator,
+.token.entity,
+.token.url,
+.language-css .token.string,
+.style .token.string {
+  @apply text-yellow-400;
+}
+
+.token.atrule,
+.token.attr-value,
+.token.keyword {
+  @apply text-blue-400;
+}
+
+.token.function,
+.token.class-name {
+  @apply text-purple-400;
+}
+
+.token.regex,
+.token.important,
+.token.variable {
+  @apply text-red-400;
+}
+
+/* Blog content styling */
+.prose h1, 
+.prose h2, 
+.prose h3, 
+.prose h4, 
+.prose h5, 
+.prose h6 {
+  @apply font-bold;
+  @apply my-4;
+}
+
+.prose h1 {
+  @apply text-3xl;
+}
+
+.prose h2 {
+  @apply text-2xl;
+}
+
+.prose h3 {
+  @apply text-xl;
+}
+
+.prose h4 {
+  @apply text-lg;
+}
+
+.prose h5, .prose h6 {
+  @apply text-base;
+}
+
+/* Add glow effect for cards */
+.card-glow {
+  position: relative;
+  overflow: hidden;
+}
+
+.card-glow::before {
+  content: "";
+  position: absolute;
+  top: -100%;
+  left: -100%;
+  width: 300%;
+  height: 200%;
+  background: linear-gradient(
+    115deg,
+    transparent 0%,
+    transparent 25%,
+    rgba(var(--primary-rgb), 0.1) 45%,
+    rgba(var(--primary-rgb), 0.2) 50%,
+    rgba(var(--primary-rgb), 0.1) 55%,
+    transparent 75%,
+    transparent 100%
+  );
+  transform: rotate(-5deg);
+  opacity: 0;
+  transition: opacity 0.5s ease, top 0.5s ease;
+  pointer-events: none;
+  z-index: 1;
+}
+
+.card-glow:hover::before {
+  top: -50%;
+  opacity: 1;
+}
+
+/* Add CSS variable for RGB values of primary color */
+:root {
+  --primary-rgb: 210, 80, 75;
+}
+
+.gamer-theme {
+  --primary-rgb: 0, 80, 80;
+}
+
+/* Rainbow card glow effect - subtle version */
+.rainbow-card {
+  position: relative;
+  overflow: hidden;
+  border-radius: 0.5rem;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.rainbow-card::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 10px;
+  background: linear-gradient(
+    90deg,
+    rgba(255, 0, 0, 0.3),
+    rgba(255, 154, 0, 0.3),
+    rgba(208, 222, 33, 0.3),
+    rgba(79, 220, 74, 0.3),
+    rgba(63, 218, 216, 0.3),
+    rgba(47, 201, 226, 0.3),
+    rgba(28, 127, 238, 0.3),
+    rgba(95, 21, 242, 0.3),
+    rgba(186, 12, 248, 0.3),
+    rgba(251, 7, 217, 0.3)
+  );
+  filter: blur(4px);
+  opacity: 0;
+  transform: translateY(-100%);
+  transition: transform 0.4s ease, opacity 0.4s ease;
+  z-index: 2;
+}
+
+.rainbow-card:hover::before {
+  transform: translateY(0);
+  opacity: 1;
+}
+
+/* Add subtle glow effect when hovering */
+.rainbow-card:hover {
+  box-shadow: 0 0 20px rgba(0, 0, 0, 0.3), 
+              0 0 12px rgba(255, 255, 255, 0.08);
+}
+
+
+
+
+
+
+
+
+
+
