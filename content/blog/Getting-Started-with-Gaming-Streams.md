@@ -4,6 +4,7 @@ date: "2023-01-01"
 excerpt: "Learn how to set up your first gaming stream with the right equipment and software."
 audioSummary: "/dummy1.mp3"
 featured: true
+tags: ["Gaming", "Streaming", "Twitch", "YouTube"]
 ---
 
 # Getting Started with Gaming Streams

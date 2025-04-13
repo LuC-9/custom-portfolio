@@ -5,6 +5,7 @@ date: "2023-04-18"
 # image: "/placeholder.svg?height=400&width=600"
 tags: ["Next.js", "React", "Web Development"]
 featured: true
+audioSummary: "/next.mp3"
 ---
 
 ## Introduction to Next.js
@@ -98,17 +99,7 @@ export async function createPost(data: FormData) {
 
 Here's a simple diagram showing the Next.js architecture:
 
-```mermaid
-flowchart TD
-    A[Client Browser] -->|HTTP Request| B[Next.js Server]
-    B -->|Server Components| C[React Server Components]
-    B -->|Client Components| D[React Client Components]
-    C --> E[HTML Generation]
-    D --> F[Hydration]
-    E --> G[Initial Response]
-    F --> H[Interactive Page]
-    G --> H
-```
+![Architecture](/next.svg)
 
 ## Comparison with Other Frameworks
 

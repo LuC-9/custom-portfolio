@@ -28,7 +28,7 @@ export function ExperienceSection({
               <Briefcase size={14} />
             </div>
 
-            <div className="experience-card">
+            <div className="experience-card group/exp relative overflow-hidden">
               <h3 className="text-xl font-bold mb-1">{exp.title}</h3>
               <p className="text-muted-foreground mb-2">
                 {isDeveloper ? exp.company : exp.team || exp.platform || exp.community || "Gaming Organization"}
@@ -42,13 +42,17 @@ export function ExperienceSection({
                   {exp.skills.map((skill, index) => (
                     <span 
                       key={index} 
-                      className="px-2 py-1 bg-primary/10 text-primary text-xs rounded-md"
+                      className="px-2 py-1 bg-primary/10 text-primary text-xs rounded-md relative overflow-hidden group/tag"
                     >
-                      {skill}
+                      <span className="relative z-10">{skill}</span>
+                      <span className="absolute inset-0 opacity-0 group-hover/tag:opacity-100 bg-gradient-to-r from-red-500/20 via-purple-500/20 to-blue-500/20 transition-opacity duration-300"></span>
                     </span>
                   ))}
                 </div>
               )}
+              
+              {/* Add subtle gradient effect on card hover */}
+              <span className="absolute inset-0 opacity-0 group-hover/exp:opacity-100 bg-gradient-to-b from-primary/5 to-transparent transition-opacity duration-300"></span>
             </div>
           </div>
         ))}

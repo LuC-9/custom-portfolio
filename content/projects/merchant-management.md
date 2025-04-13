@@ -2,11 +2,11 @@
 title: "Merchant Management App"
 description: "A Spring Boot application for managing merchants with JWT authentication and PostgreSQL database."
 # image: "/placeholder.svg?height=400&width=600"
-tags: ["React", "Firebase", "TypeScript", "Redux"]
-github: "https://github.com"
-demo: "https://example.com"
+tags: ["Java", "SpringBoot", "Maven", "PostgreSQL", "JWT"]
+github: "https://github.com/LuC-9/merchant-api"
+# demo: "https://example.com"
 featured: true
-order: 3
+order: 1
 ---
 
 # Merchant Management API
@@ -201,23 +201,12 @@ The API includes comprehensive error handling for:
 4. Push to the branch (`git push origin feature/amazing-feature`)
 5. Open a Pull Request
 
+
 ## System Architecture
 
-```mermaid
-graph TD
-    Client[Client/Browser] --> Swagger[Swagger UI]
-    Client --> API[REST API Endpoints]
-    
-    subgraph Application
-        API --> Controllers[Controllers Layer]
-        Controllers --> Services[Service Layer]
-        Services --> Repositories[Repository Layer]
-        Services --> Security[Security Components]
-        
-        Repositories --> Database[(PostgreSQL)]
-        Security --> JWT[JWT Service]
-    end
-```
+![Architecture](/mmsa.svg)
+
+
 
 ## Component Overview
 
@@ -273,23 +262,7 @@ Location: `src/main/java/com/merchant/api/model/` & `src/main/java/com/merchant/
 
 ## Dependency Flow
 
-```mermaid
-graph LR
-    AC[AuthController] --> AS[AuthenticationService]
-    AS --> MS[MerchantService]
-    AS --> JS[JwtService]
-    
-    MC[MerchantController] --> MS
-    
-    MS --> MR[MerchantRepository]
-    MS --> PE[PasswordEncoder]
-    
-    JF[JwtAuthenticationFilter] --> JS
-    JF --> UDS[UserDetailsService]
-    
-    SC[SecurityConfig] --> JF
-    SC --> PE
-```
+![dependency flow](/mmsdf.svg)
 
 
 ## License

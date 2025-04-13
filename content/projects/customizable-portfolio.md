@@ -4,7 +4,7 @@ description: "An interactive portfolio website built with Next.js."
 image: "/portfolioSS.png?height=400&width=600"
 tags: ["Tailwind CSS", "Next.js", "Markdown", "Framer Motion"]
 github: "https://github.com"
-demo: "https://example.com"
+demo: "https://byluc.in"
 featured: true
 order: 4
 ---

@@ -14,9 +14,9 @@ const jetbrainsMono = JetBrains_Mono({
   display: 'swap',
 })
 
-export const metadata = {
-  title: 'Portfolio',
-  description: 'Personal portfolio website',
+export const metadata: Metadata = {
+  title: 'LuC\'s Portfolio',
+  description: 'Personal portfolio website showcasing projects, blog posts, and more',
 }
 
 export default function RootLayout({
@@ -26,6 +26,9 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en" suppressHydrationWarning>
+      <head>
+        <link rel="icon" href="/genkai.gif" type="image/gif" />
+      </head>
       <body className={`${jetbrainsMono.variable} font-mono antialiased`}>
         <PersonaProvider>
           <div className="flex flex-col min-h-screen">

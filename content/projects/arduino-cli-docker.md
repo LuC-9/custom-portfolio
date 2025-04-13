@@ -1,21 +1,18 @@
 ---
-title: "arduino-cli-docker"
+title: "Arduino-cli-docker"
 description: "Dockerized arduino-cli sketch compilation tool with per-project core and library dependencies support and with a feature to upload compiled binary to AMAZON S3."
-# image: "/placeholder.svg?height=100&width300"
-tags: ["Python", "Docker", "AWS"]
+# image: "/images/projects/arduino-cli.jpg"
+tags: ["Python", "Docker", "AWS", "Arduino", "IOT"]
 github: https://github.com/LuC-9/Arduino-cli-Docker
 #demo: "https://example.com"
 featured: true
-order: 2
+order: 3
 ---
 
 # Arduino CLI Docker
 
-
-
 Dockerized [`arduino-cli`](https://github.com/arduino/arduino-cli) sketch 
 compilation tool with per-project core and library dependencies support and with a feature to upload compiled binary to AMAZON S3.
-
 
 ## Getting Started
 
@@ -60,4 +57,3 @@ libraries:
 6.  The compiled binary file will appear inside the specified bucket with the name sketch.bin.
 
 7.  Here you go, you have successfully generated the binary of your sketch!
--*-

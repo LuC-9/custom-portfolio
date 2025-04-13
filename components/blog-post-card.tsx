@@ -25,9 +25,14 @@ export function BlogPostCard({ post }) {
           <p className="text-muted-foreground line-clamp-3 mb-4">{post.excerpt}</p>
           <div className="flex flex-wrap gap-2 mt-2">
             {post.tags && post.tags.map((tag) => (
-              <Badge key={tag} variant="secondary" className="text-xs">
+              <Badge 
+                key={tag} 
+                variant="secondary" 
+                className="text-xs relative overflow-hidden group/tag"
+              >
                 <Tag className="h-3 w-3 mr-1" />
-                {tag}
+                <span className="relative z-10">{tag}</span>
+                <span className="absolute inset-0 opacity-0 group-hover/tag:opacity-100 bg-gradient-to-r from-red-500/20 via-purple-500/20 to-blue-500/20 transition-opacity duration-300"></span>
               </Badge>
             ))}
           </div>

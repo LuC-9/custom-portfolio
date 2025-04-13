@@ -52,8 +52,9 @@ export function HomeFeaturedSection({
                         <p className="text-muted-foreground text-sm mb-4">{project.description}</p>
                         <div className="flex flex-wrap gap-2">
                           {project.tags && project.tags.map((tag: string, i: number) => (
-                            <span key={i} className="text-xs bg-secondary px-2 py-1 rounded-full">
-                              {tag}
+                            <span key={i} className="text-xs bg-secondary px-2 py-1 rounded-full relative overflow-hidden group/tag">
+                              <span className="relative z-10">{tag}</span>
+                              <span className="absolute inset-0 opacity-0 group-hover/tag:opacity-100 bg-gradient-to-r from-red-500/20 via-purple-500/20 to-blue-500/20 transition-opacity duration-300"></span>
                             </span>
                           ))}
                         </div>
@@ -148,8 +149,9 @@ export function HomeFeaturedSection({
                       <p className="text-muted-foreground text-sm mb-4">{blog.excerpt}</p>
                       <div className="flex flex-wrap gap-2">
                         {blog.tags && blog.tags.map((tag: string) => (
-                          <span key={tag} className="text-xs bg-secondary px-2 py-1 rounded-full">
-                            {tag}
+                          <span key={tag} className="text-xs bg-secondary px-2 py-1 rounded-full relative overflow-hidden group/tag">
+                            <span className="relative z-10">{tag}</span>
+                            <span className="absolute inset-0 opacity-0 group-hover/tag:opacity-100 bg-gradient-to-r from-red-500/20 via-purple-500/20 to-blue-500/20 transition-opacity duration-300"></span>
                           </span>
                         ))}
                       </div>
@@ -171,6 +173,9 @@ export function HomeFeaturedSection({
     </div>
   )
 }
+
+
+
 
 
 

@@ -1,5 +1,5 @@
 import { getAllContentData } from "@/lib/content"
-import ProjectsClient from "./ProjectsClient"
+import { ProjectsClient } from "./ProjectsClient"
 import { ProjectsSectionHeading } from "@/components/projects-section-heading"
 import { Footer } from "@/components/footer"
 

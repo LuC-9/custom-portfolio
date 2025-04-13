@@ -45,14 +45,14 @@ export async function getContentData(directory: string, fileName: string) {
 
 // Function to get all content files from a directory
 export async function getAllContentData(directory: string) {
-  const fullPath = path.join(contentDirectory, directory)
+  const contentPath = path.join(contentDirectory, directory)
   
   // Check if directory exists
-  if (!fs.existsSync(fullPath)) {
+  if (!fs.existsSync(contentPath)) {
     return []
   }
   
-  const filenames = await readdir(fullPath)
+  const filenames = await readdir(contentPath)
   
   const allContentData = await Promise.all(
     filenames.map(async (filename) => {
@@ -90,13 +90,25 @@ export async function getAllContentData(directory: string) {
     })
   )
   
-  // Filter out null values and sort by date if available
+  // Filter out null values and sort by date if available, or by order if it's projects
   return allContentData
     .filter(Boolean)
     .sort((a, b) => {
+      // First sort by order if it exists (for projects)
+      if (a.order !== undefined && b.order !== undefined) {
+        return a.order - b.order;
+      }
+      
+      // Then sort by date if available (for blog posts)
       if (a.date && b.date) {
         return new Date(b.date).getTime() - new Date(a.date).getTime()
       }
+      
+      // Default to title sort if neither order nor date is available
+      if (a.title && b.title) {
+        return a.title.localeCompare(b.title);
+      }
+      
       return 0
     })
 }

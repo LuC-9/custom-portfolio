@@ -7,6 +7,7 @@ import { ProjectDialog } from "@/components/project-dialog"
 import Image from "next/image"
 import { Badge } from "@/components/ui/badge"
 import { ScrollAnimationWrapper } from "@/components/scroll-animation-wrapper"
+import { FileCode } from "lucide-react"
 
 // Define project type
 interface ProjectProps {
@@ -14,39 +15,20 @@ interface ProjectProps {
   title: string
   description: string
   content: string
-  contentHtml?: string // Add this if your content processing returns contentHtml
+  contentHtml?: string
   image: string
   tags: string[]
   github?: string
   demo?: string
 }
 
-export default function ProjectsClient({ projects = [] }: { projects: ProjectProps[] }) {
-  const { isDeveloper, setPersona } = usePersona()
-  
-  useEffect(() => {
-    // Switch to developer persona if not already active
-    if (!isDeveloper) {
-      setPersona("developer")
-    }
-  }, [isDeveloper, setPersona])
-
-  if (projects.length === 0) {
-    return (
-      <div className="flex-1">
-        <div className="text-center py-12">
-          <p className="text-xl text-muted-foreground">Loading projects or no projects found...</p>
-        </div>
-      </div>
-    )
-  }
-
+export function ProjectsClient({ projects }: { projects: ProjectProps[] }) {
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
       {projects.map((project, index) => (
         <ScrollAnimationWrapper key={project.id} delay={index % 3}>
           <ProjectDialog project={project}>
-            <Card className="h-full overflow-hidden hover:shadow-xl transition-all duration-300 cursor-pointer hover:scale-[1.02] hover:border-primary/30 relative">
+            <Card className="h-full flex flex-col overflow-hidden hover:shadow-xl transition-all duration-300 cursor-pointer hover:scale-[1.02] hover:border-primary/30 relative">
               {project.image ? (
                 <div className="aspect-video relative overflow-hidden">
                   <Image
@@ -57,28 +39,31 @@ export default function ProjectsClient({ projects = [] }: { projects: ProjectPro
                   />
                 </div>
               ) : (
-                <div className="aspect-video bg-secondary/20 flex items-center justify-center">
-                  <div className="text-4xl text-primary/40">
-                    {project.title.charAt(0)}
-                  </div>
+                <div className="aspect-video bg-muted/50 flex items-center justify-center">
+                  <FileCode className="h-12 w-12 text-muted-foreground/40" />
                 </div>
               )}
-              <CardHeader className="pb-2">
-                <CardTitle className="text-xl">{project.title}</CardTitle>
-                <CardDescription className="line-clamp-2">{project.description}</CardDescription>
-              </CardHeader>
-              <CardFooter className="flex flex-wrap gap-2 pt-0">
-                {project.tags && project.tags.slice(0, 3).map((tag, i) => (
-                  <Badge key={i} variant="secondary" className="text-xs">
-                    {tag}
-                  </Badge>
-                ))}
-                {project.tags && project.tags.length > 3 && (
-                  <Badge variant="outline" className="text-xs">
-                    +{project.tags.length - 3}
-                  </Badge>
-                )}
-              </CardFooter>
+              
+              <div className="p-4 flex flex-col flex-grow">
+                <h3 className="text-xl font-bold mb-2 line-clamp-1">{project.title}</h3>
+                <p className="text-muted-foreground text-sm mb-4 line-clamp-3">{project.description}</p>
+                <div className="flex flex-wrap gap-2 mt-auto">
+                  {project.tags && project.tags.slice(0, 4).map((tag, i) => (
+                    <span 
+                      key={i} 
+                      className="text-xs bg-secondary px-2 py-1 rounded-full relative overflow-hidden group/tag"
+                    >
+                      <span className="relative z-10">{tag}</span>
+                      <span className="absolute inset-0 opacity-0 group-hover/tag:opacity-100 bg-gradient-to-r from-red-500/20 via-purple-500/20 to-blue-500/20 transition-opacity duration-300"></span>
+                    </span>
+                  ))}
+                  {project.tags && project.tags.length > 4 && (
+                    <span className="text-xs bg-secondary px-2 py-1 rounded-full">
+                      +{project.tags.length - 4}
+                    </span>
+                  )}
+                </div>
+              </div>
             </Card>
           </ProjectDialog>
         </ScrollAnimationWrapper>
