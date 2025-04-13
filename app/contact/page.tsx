@@ -11,8 +11,8 @@ export const metadata: Metadata = {
 export default function ContactPage() {
   return (
     <div className="min-h-screen flex flex-col">
-      <div className="container mx-auto py-24 flex-grow">
-        <div className="max-w-2xl mx-auto">
+      <div className="container mx-auto py-12 md:py-24 flex-grow">
+        <div className="max-w-2xl mx-auto px-4">
           <ContactSectionHeading />
           <ClientWrapper />
         </div>

@@ -6,6 +6,7 @@ import { zodResolver } from "@hookform/resolvers/zod"
 import * as z from "zod"
 import { Suspense } from "react"
 import { toast } from "sonner"
+import { useIsMobile } from "@/hooks/use-mobile"
 import { 
   Form, 
   FormField, 
@@ -25,7 +26,7 @@ import {
   SelectValue 
 } from "@/components/ui/select"
 
-// Form schema definition
+// Form schema definition remains the same
 const formSchema = z.object({
   name: z.string().min(2, { message: "Name must be at least 2 characters." }),
   email: z.string().email({ message: "Please enter a valid email address." }),
@@ -44,14 +45,16 @@ export default function ContactForm() {
 
 // Fallback component
 function ContactFormFallback() {
+  const isMobile = useIsMobile()
+  
   return (
-    <div className="p-6 border rounded-lg shadow-sm animate-pulse">
+    <div className={`border rounded-lg shadow-sm animate-pulse ${isMobile ? 'p-4' : 'p-6'}`}>
       <div className="h-8 bg-gray-200 rounded mb-4"></div>
-      <div className="space-y-4">
+      <div className="space-y-3">
         <div className="h-10 bg-gray-200 rounded"></div>
         <div className="h-10 bg-gray-200 rounded"></div>
         <div className="h-10 bg-gray-200 rounded"></div>
-        <div className="h-32 bg-gray-200 rounded"></div>
+        <div className="h-24 bg-gray-200 rounded"></div>
         <div className="h-10 bg-gray-200 rounded w-1/3"></div>
       </div>
     </div>
@@ -61,6 +64,7 @@ function ContactFormFallback() {
 // Move the component that uses useSearchParams to a separate component
 function ContactFormContent() {
   const [isSubmitting, setIsSubmitting] = useState(false)
+  const isMobile = useIsMobile()
   
   // Import useSearchParams inside the component
   const { useSearchParams } = require("next/navigation")
@@ -103,9 +107,12 @@ function ContactFormContent() {
 
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4 border border-primary/30 rounded-lg p-6 mt-16">
-        <h2 className="text-xl font-semibold mb-2">Send a Message</h2>
-        <p className="text-sm text-muted-foreground mb-4">
+      <form 
+        onSubmit={form.handleSubmit(onSubmit)} 
+        className={`space-y-3 border border-primary/30 rounded-lg ${isMobile ? 'p-4 mt-8' : 'p-6 mt-16'}`}
+      >
+        <h2 className={`font-semibold mb-2 ${isMobile ? 'text-lg' : 'text-xl'}`}>Send a Message</h2>
+        <p className={`text-muted-foreground mb-3 ${isMobile ? 'text-xs' : 'text-sm'}`}>
           Please feel free to contact me regarding any <span className="font-bold text-primary">Opportunities</span>, <span className="font-bold text-primary">Queries</span> or if you <span className="font-bold text-primary">Need some Help</span> with your project/idea.
         </p>
         
@@ -113,12 +120,12 @@ function ContactFormContent() {
           control={form.control}
           name="name"
           render={({ field }) => (
-            <FormItem>
-              <FormLabel>Name</FormLabel>
+            <FormItem className={isMobile ? 'mb-2' : ''}>
+              <FormLabel className={isMobile ? 'text-sm' : ''}>Name</FormLabel>
               <FormControl>
-                <Input placeholder="Your name" {...field} />
+                <Input placeholder="Your name" {...field} className={isMobile ? 'h-9 text-sm' : ''} />
               </FormControl>
-              <FormMessage />
+              <FormMessage className={isMobile ? 'text-xs' : ''} />
             </FormItem>
           )}
         />
@@ -126,12 +133,12 @@ function ContactFormContent() {
           control={form.control}
           name="email"
           render={({ field }) => (
-            <FormItem>
-              <FormLabel>Email</FormLabel>
+            <FormItem className={isMobile ? 'mb-2' : ''}>
+              <FormLabel className={isMobile ? 'text-sm' : ''}>Email</FormLabel>
               <FormControl>
-                <Input placeholder="Your email address" {...field} />
+                <Input placeholder="Your email address" {...field} className={isMobile ? 'h-9 text-sm' : ''} />
               </FormControl>
-              <FormMessage />
+              <FormMessage className={isMobile ? 'text-xs' : ''} />
             </FormItem>
           )}
         />
@@ -139,11 +146,11 @@ function ContactFormContent() {
           control={form.control}
           name="reason"
           render={({ field }) => (
-            <FormItem>
-              <FormLabel>Reason</FormLabel>
+            <FormItem className={isMobile ? 'mb-2' : ''}>
+              <FormLabel className={isMobile ? 'text-sm' : ''}>Reason</FormLabel>
               <Select onValueChange={field.onChange} defaultValue={field.value}>
                 <FormControl>
-                  <SelectTrigger>
+                  <SelectTrigger className={isMobile ? 'h-9 text-sm' : ''}>
                     <SelectValue placeholder="Select a reason for contact" />
                   </SelectTrigger>
                 </FormControl>
@@ -156,7 +163,7 @@ function ContactFormContent() {
                   <SelectItem value="other">Others</SelectItem>
                 </SelectContent>
               </Select>
-              <FormMessage />
+              <FormMessage className={isMobile ? 'text-xs' : ''} />
             </FormItem>
           )}
         />
@@ -164,12 +171,16 @@ function ContactFormContent() {
           control={form.control}
           name="message"
           render={({ field }) => (
-            <FormItem>
-              <FormLabel>Message</FormLabel>
+            <FormItem className={isMobile ? 'mb-2' : ''}>
+              <FormLabel className={isMobile ? 'text-sm' : ''}>Message</FormLabel>
               <FormControl>
-                <Textarea placeholder="Your message" className="min-h-32" {...field} />
+                <Textarea 
+                  placeholder="Your message" 
+                  className={isMobile ? 'min-h-24 text-sm' : 'min-h-32'} 
+                  {...field} 
+                />
               </FormControl>
-              <FormMessage />
+              <FormMessage className={isMobile ? 'text-xs' : ''} />
             </FormItem>
           )}
         />
