@@ -94,6 +94,22 @@ export async function createPost(data: FormData) {
 
 ```
 
+## Next.js Architecture
+
+Here's a simple diagram showing the Next.js architecture:
+
+```mermaid
+flowchart TD
+    A[Client Browser] -->|HTTP Request| B[Next.js Server]
+    B -->|Server Components| C[React Server Components]
+    B -->|Client Components| D[React Client Components]
+    C --> E[HTML Generation]
+    D --> F[Hydration]
+    E --> G[Initial Response]
+    F --> H[Interactive Page]
+    G --> H
+```
+
 ## Comparison with Other Frameworks
 
 Here's how Next.js compares to other popular frameworks:

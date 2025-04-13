@@ -9,17 +9,10 @@ import { unified } from "unified"
 import remarkParse from "remark-parse"
 import remarkRehype from "remark-rehype"
 import rehypeStringify from "rehype-stringify"
+import rehypeRaw from "rehype-raw"
+import { visit } from "unist-util-visit"
 
 const contentDirectory = path.join(process.cwd(), "content")
-
-// Function to get all markdown files from a directory
-export function getFilesFromDirectory(directory: string): string[] {
-  if (!fs.existsSync(directory)) {
-    return []
-  }
-  const fileNames = fs.readdirSync(directory)
-  return fileNames.filter((fileName) => fileName.endsWith(".md"))
-}
 
 // Function to read a markdown file and parse its metadata and content
 export async function getContentData(directory: string, fileName: string) {
@@ -39,24 +32,37 @@ export async function getContentData(directory: string, fileName: string) {
     .use(rehypeStringify, { allowDangerousHtml: true })
     .process(content)
 
-  const contentHtml = processedContent.toString()
+  // Just return the processed content without Mermaid handling
+  const contentHtml = processedContent.toString();
 
+  // Return the combined data
   return {
     id: fileName.replace(/\.md$/, ""),
+    contentHtml,
     ...data,
-    content: contentHtml,
   }
 }
 
-// Function to get all content data from a specific content type
-export async function getAllContentData(type: string) {
-  const directory = path.join(process.cwd(), 'content', type);
-  const filenames = await readdir(directory);
+// Function to get all content files from a directory
+export async function getAllContentData(directory: string) {
+  const fullPath = path.join(contentDirectory, directory)
+  
+  // Check if directory exists
+  if (!fs.existsSync(fullPath)) {
+    return []
+  }
+  
+  const filenames = await readdir(fullPath)
   
   const allContentData = await Promise.all(
     filenames.map(async (filename) => {
-      const id = filename.replace(/\.md$/, '');
-      const fullPath = path.join(directory, filename);
+      // Skip non-markdown files
+      if (!filename.endsWith('.md') && !filename.endsWith('.mdx')) {
+        return null
+      }
+      
+      const id = filename.replace(/\.(md|mdx)$/, '');
+      const fullPath = path.join(contentDirectory, directory, filename);
       const fileContents = await readFile(fullPath, 'utf8');
       
       // Use gray-matter to parse the post metadata section
@@ -71,23 +77,28 @@ export async function getAllContentData(type: string) {
         .use(rehypePrism)
         .use(rehypeStringify, { allowDangerousHtml: true })
         .process(matterResult.content);
-
+      
+      // Just return the processed content without Mermaid handling
       const contentHtml = processedContent.toString();
-      
-      // Ensure featured is a boolean
-      const featured = matterResult.data.featured === true;
-      
-      // Return the data with the id, explicitly set featured property, and HTML content
+
+      // Combine the data with the id
       return {
         id,
-        featured,
+        contentHtml,
         ...matterResult.data,
-        content: contentHtml,
-      };
+      }
     })
-  );
+  )
   
-  return allContentData;
+  // Filter out null values and sort by date if available
+  return allContentData
+    .filter(Boolean)
+    .sort((a, b) => {
+      if (a.date && b.date) {
+        return new Date(b.date).getTime() - new Date(a.date).getTime()
+      }
+      return 0
+    })
 }
 
 // Function to get a specific content item

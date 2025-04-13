@@ -32,31 +32,24 @@ function Code({ children, ...props }) {
   return <code dangerouslySetInnerHTML={{ __html: codeHTML }} {...props} />
 }
 
-function slugify(str) {
-  return str
-    .toString()
-    .toLowerCase()
-    .trim() // Remove whitespace from both ends
-    .replace(/\s+/g, "-") // Replace spaces with -
-    .replace(/&/g, "-and-") // Replace & with 'and'
-    .replace(/[^\w\-]+/g, "") // Remove all non-word characters except for -
-    .replace(/\-\-+/g, "-") // Replace multiple - with single -
-}
+// Remove MermaidWrapper component
+// Remove mermaid from components list
 
+// Create heading components with anchor links
 function createHeading(level) {
-  return ({ children }) => {
-    let slug = slugify(children)
+  return function Heading({ children, id }) {
     return React.createElement(
       `h${level}`,
-      { id: slug },
+      { id, className: `heading-${level}` },
       [
-        React.createElement("a", {
-          href: `#${slug}`,
-          key: `link-${slug}`,
-          className: "anchor",
-        }),
-      ],
-      children
+        React.createElement('a', {
+          href: `#${id}`,
+          key: `link-${id}`,
+          className: 'anchor-link',
+          'aria-hidden': true,
+        }, '#'),
+        children
+      ]
     )
   }
 }
@@ -72,6 +65,7 @@ let components = {
   a: CustomLink,
   code: Code,
   AudioSummary: AudioSummary,
+  // Remove mermaid from components list
 }
 
 export function BlogPost({ source, frontmatter }) {

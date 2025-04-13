@@ -13,10 +13,14 @@ export default async function BlogPage() {
   const posts = await getAllContentData("blog")
 
   return (
-    <>
-      <BlogClientPage posts={posts} />
-      <BlogFooter />
-    </>
+    <div className="blog-post-container">
+      <div className="blog-content">
+        <BlogClientPage posts={posts} />
+      </div>
+      <div className="blog-footer-wrapper">
+        <BlogFooter />
+      </div>
+    </div>
   )
 }
 

@@ -42,6 +42,10 @@ export function HomeContent() {
         text: "View my work",
         href: "/projects",
       },
+      resumeButton: {
+        text: "Resume",
+        href: "/resume.pdf",
+      },
       profileImage: "/profile.jpg",
     },
     gamer: {
@@ -123,15 +127,22 @@ export function HomeContent() {
                     {activeContent.secondaryButton.text}
                   </Link>
                 </Button>
+                {isDeveloper && (
+                  <Link href={activeContent.resumeButton.href} target="_blank" rel="noopener noreferrer">
+                    <Button variant="outline" className="rounded-full">
+                      {activeContent.resumeButton.text}
+                    </Button>
+                  </Link>
+                )}
               </div>
               
               <div className="flex space-x-6 mt-8">
                 {isDeveloper ? (
                   <>
-                    <Link href="https://github.com/yourusername" target="_blank" rel="noopener noreferrer" aria-label="GitHub">
+                    <Link href="https://github.com/LuC-9" target="_blank" rel="noopener noreferrer" aria-label="GitHub">
                       <Github className="h-6 w-6 text-muted-foreground hover:text-primary transition-colors" />
                     </Link>
-                    <Link href="https://linkedin.com/in/yourusername" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn">
+                    <Link href="https://www.linkedin.com/in/aarsh-mishra09/" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn">
                       <Linkedin className="h-6 w-6 text-muted-foreground hover:text-primary transition-colors" />
                     </Link>
                     <Link href="https://twitter.com/yourusername" target="_blank" rel="noopener noreferrer" aria-label="Twitter">
@@ -140,10 +151,10 @@ export function HomeContent() {
                   </>
                 ) : (
                   <>
-                    <Link href="https://twitch.tv/yourusername" target="_blank" rel="noopener noreferrer" aria-label="Twitch">
+                    <Link href="https://www.twitch.tv/xrshluc" target="_blank" rel="noopener noreferrer" aria-label="Twitch">
                       <Twitch className="h-6 w-6 text-muted-foreground hover:text-primary transition-colors" />
                     </Link>
-                    <Link href="https://youtube.com/yourusername" target="_blank" rel="noopener noreferrer" aria-label="YouTube">
+                    <Link href="https://www.youtube.com/@LuC-Throws" target="_blank" rel="noopener noreferrer" aria-label="YouTube">
                       <Youtube className="h-6 w-6 text-muted-foreground hover:text-primary transition-colors" />
                     </Link>
                     <Link href="https://twitter.com/yourusername" target="_blank" rel="noopener noreferrer" aria-label="Twitter">
@@ -151,7 +162,7 @@ export function HomeContent() {
                     </Link>
                   </>
                 )}
-                <Link href="mailto:your.email@example.com" aria-label="Email">
+                <Link href="mailto:aarshmail@gmail.com" aria-label="Email">
                   <Mail className="h-6 w-6 text-muted-foreground hover:text-primary transition-colors" />
                 </Link>
               </div>

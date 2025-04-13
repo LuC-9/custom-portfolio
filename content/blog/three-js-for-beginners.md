@@ -14,7 +14,7 @@ Three.js is a JavaScript library that makes it easier to create 3D graphics in t
 
 To create a basic 3D scene, you need three things: a scene, a camera, and a renderer.
 
-\`\`\`javascript
+```javascript
 // Create a scene
 const scene = new THREE.Scene();
 
@@ -26,25 +26,25 @@ camera.position.z = 5;
 const renderer = new THREE.WebGLRenderer();
 renderer.setSize(window.innerWidth, window.innerHeight);
 document.body.appendChild(renderer.domElement);
-\`\`\`
+```
 
 ## Adding Objects
 
 Now let's add a simple cube to our scene:
 
-\`\`\`javascript
+```javascript
 // Create a cube
 const geometry = new THREE.BoxGeometry();
 const material = new THREE.MeshBasicMaterial({ color: 0x00ff00 });
 const cube = new THREE.Mesh(geometry, material);
 scene.add(cube);
-\`\`\`
+```
 
 ## Animation
 
 To animate the cube, we can use the requestAnimationFrame function:
 
-\`\`\`javascript
+```javascript
 function animate() {
   requestAnimationFrame(animate);
   
@@ -55,7 +55,7 @@ function animate() {
 }
 
 animate();
-\`\`\`
+```
 
 ## Common Three.js Materials
 
@@ -74,7 +74,7 @@ Three.js provides several materials for different rendering styles:
 
 Here's how you can integrate Three.js with React using React Three Fiber:
 
-\`\`\`jsx
+```jsx
 import React, { useRef } from 'react';
 import { Canvas, useFrame } from '@react-three/fiber';
 
@@ -103,11 +103,11 @@ export default function ThreeScene() {
     </Canvas>
   );
 }
-\`\`\`
+```
 
 ## Conclusion
 
 Three.js is a powerful library that makes 3D graphics on the web accessible to JavaScript developers. With just a few lines of code, you can create impressive 3D scenes and animations.
-\`\`\`
+```
 
-Now, let's create a solution for dummy audio files:
+

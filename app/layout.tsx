@@ -28,10 +28,10 @@ export default function RootLayout({
     <html lang="en" suppressHydrationWarning>
       <body className={`${jetbrainsMono.variable} font-mono antialiased`}>
         <PersonaProvider>
-          <div className="relative min-h-screen flex flex-col">
+          <div className="flex flex-col min-h-screen">
             <Navigation />
             <NavigationEventsWrapper />
-            <main className="flex-1">{children}</main>
+            <main className="flex-grow flex flex-col">{children}</main>
           </div>
           <Toaster />
         </PersonaProvider>

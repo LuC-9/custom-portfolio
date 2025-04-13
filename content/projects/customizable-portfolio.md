@@ -9,7 +9,12 @@ featured: true
 order: 4
 ---
 
+![Portfolio Screenshot](/ss1.png)
+![Portfolio Screenshot](/ss2.png)
+
 A modern, responsive portfolio website built with Next.js, TypeScript, and Tailwind CSS. This portfolio features a unique dual persona concept - switching between developer and gamer profiles with distinct content and styling.
+
+
 
 ## Tech Stack
 

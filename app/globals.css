@@ -374,12 +374,76 @@ table td {
               0 0 12px rgba(255, 255, 255, 0.08);
 }
 
+/* Update blog post container to ensure it fills the viewport */
+.blog-post-container {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  padding-top: 10rem;
+}
 
+/* Make the blog content area grow to push footer down */
+.blog-content {
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+}
 
+/* Ensure blog footer sticks to bottom */
+.blog-footer-wrapper {
+  margin-top: auto;
+}
 
+/* Mermaid diagram styling */
+.mermaid {
+  @apply my-8 p-6 bg-gray-900 rounded-lg overflow-auto;
+  min-height: 100px;
+  text-align: center;
+}
 
+/* Force SVG to be visible */
+.mermaid svg {
+  display: block !important;
+  margin: 0 auto;
+  max-width: 100%;
+  height: auto !important;
+}
 
+/* Ensure text is visible in dark mode */
+.dark .mermaid .label {
+  color: white !important;
+  fill: white !important;
+}
 
+.dark .mermaid .node rect,
+.dark .mermaid .node circle,
+.dark .mermaid .node ellipse,
+.dark .mermaid .node polygon,
+.dark .mermaid .node path {
+  fill: #2d3748 !important;
+  stroke: #4a5568 !important;
+}
 
+.dark .mermaid .edgePath .path {
+  stroke: #a0aec0 !important;
+}
 
+.dark .mermaid .edgeLabel {
+  @apply bg-transparent text-gray-300;
+}
 
+.dark .mermaid .cluster rect {
+  @apply fill-gray-900 stroke-gray-700;
+}
+
+/* Add these styles for Mermaid diagrams */
+.mermaid {
+  margin: 1.5rem 0;
+  overflow-x: auto;
+  text-align: center;
+}
+
+.mermaid svg {
+  max-width: 100%;
+  height: auto;
+}

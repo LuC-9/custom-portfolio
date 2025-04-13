@@ -103,7 +103,8 @@ function ContactFormContent() {
 
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4 border border-primary/30 rounded-lg p-6">
+      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4 border border-primary/30 rounded-lg p-6 mt-16">
+        <h2 className="text-xl font-semibold mb-2">Send a Message</h2>
         <p className="text-sm text-muted-foreground mb-4">
           Please feel free to contact me regarding any <span className="font-bold text-primary">Opportunities</span>, <span className="font-bold text-primary">Queries</span> or if you <span className="font-bold text-primary">Need some Help</span> with your project/idea.
         </p>
