@@ -109,7 +109,7 @@ function ContactFormContent() {
     <Form {...form}>
       <form 
         onSubmit={form.handleSubmit(onSubmit)} 
-        className={`space-y-3 border border-primary/30 rounded-lg ${isMobile ? 'p-4 mt-8' : 'p-6 mt-16'}`}
+        className={`space-y-3 border border-primary/30 rounded-lg ${isMobile ? 'p-4 mt-6' : 'p-6 mt-8'}`}
       >
         <h2 className={`font-semibold mb-2 ${isMobile ? 'text-lg' : 'text-xl'}`}>Send a Message</h2>
         <p className={`text-muted-foreground mb-3 ${isMobile ? 'text-xs' : 'text-sm'}`}>
