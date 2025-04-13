@@ -108,6 +108,6 @@ export default function ThreeScene() {
 ## Conclusion
 
 Three.js is a powerful library that makes 3D graphics on the web accessible to JavaScript developers. With just a few lines of code, you can create impressive 3D scenes and animations.
-```
+
 
 

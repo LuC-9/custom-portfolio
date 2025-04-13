@@ -5,7 +5,8 @@ export interface BlogPost {
   excerpt: string;
   tags: string[];
   image?: string;
-  featured?: boolean; // Add this field
+  featured?: boolean;
+  readingTime?: string; // Add reading time field
 }
 
 // Add a function to get featured blog posts

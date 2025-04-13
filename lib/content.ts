@@ -11,6 +11,7 @@ import remarkRehype from "remark-rehype"
 import rehypeStringify from "rehype-stringify"
 import rehypeRaw from "rehype-raw"
 import { visit } from "unist-util-visit"
+import { calculateReadingTime } from './utils';
 
 const contentDirectory = path.join(process.cwd(), "content")
 
@@ -32,13 +33,15 @@ export async function getContentData(directory: string, fileName: string) {
     .use(rehypeStringify, { allowDangerousHtml: true })
     .process(content)
 
-  // Just return the processed content without Mermaid handling
-  const contentHtml = processedContent.toString();
+  const contentHtml = processedContent.toString()
+  
+  // Calculate reading time
+  const readingTime = calculateReadingTime(content)
 
   // Return the combined data
   return {
-    id: fileName.replace(/\.md$/, ""),
     contentHtml,
+    readingTime,
     ...data,
   }
 }
@@ -80,11 +83,15 @@ export async function getAllContentData(directory: string) {
       
       // Just return the processed content without Mermaid handling
       const contentHtml = processedContent.toString();
+      
+      // Calculate reading time
+      const readingTime = calculateReadingTime(matterResult.content);
 
       // Combine the data with the id
       return {
         id,
         contentHtml,
+        readingTime,
         ...matterResult.data,
       }
     })

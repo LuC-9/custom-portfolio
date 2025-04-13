@@ -14,6 +14,7 @@ type BlogPost = {
   excerpt: string
   tags?: string[]
   image: string
+  readingTime?: string
 }
 
 export function BlogSection() {
@@ -69,8 +70,12 @@ function BlogCard({ post }: { post: BlogPost }) {
           </div>
           <h3 className="text-lg font-semibold mb-2 group-hover:text-primary transition-colors">{post.title}</h3>
           <p className="text-muted-foreground text-sm mb-3">{post.excerpt}</p>
-          <div className="text-xs text-muted-foreground">
-            {formatDate(post.date)}
+          <div className="flex items-center justify-between text-xs text-muted-foreground">
+            <span>{formatDate(post.date)}</span>
+            <div className="flex items-center">
+              <Clock className="h-3 w-3 mr-1" />
+              <span>{post.readingTime || "5 min read"}</span>
+            </div>
           </div>
         </div>
       </div>

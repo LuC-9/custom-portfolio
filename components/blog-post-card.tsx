@@ -43,12 +43,10 @@ export function BlogPostCard({ post }) {
               <Calendar className="h-4 w-4 mr-1" />
               <span>{post.date}</span>
             </div>
-            {post.readingTime && (
-              <div className="flex items-center">
-                <Clock className="h-4 w-4 mr-1" />
-                <span>{post.readingTime}</span>
-              </div>
-            )}
+            <div className="flex items-center">
+              <Clock className="h-4 w-4 mr-1" />
+              <span>{post.readingTime || "5 min read"}</span>
+            </div>
           </div>
         </CardFooter>
       </Link>

@@ -5,7 +5,7 @@ date: "2023-04-18"
 # image: "/placeholder.svg?height=400&width=600"
 tags: ["Next.js", "React", "Web Development"]
 featured: true
-audioSummary: "/next.mp3"
+audioSummary: "/next.wav"
 ---
 
 ## Introduction to Next.js
@@ -100,6 +100,7 @@ export async function createPost(data: FormData) {
 Here's a simple diagram showing the Next.js architecture:
 
 ![Architecture](/next.svg)
+
 
 ## Comparison with Other Frameworks
 
