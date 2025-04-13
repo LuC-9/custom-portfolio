@@ -1,40 +1,80 @@
-"use client"
+'use client'
 
 import { useState } from "react"
-import { zodResolver } from "@hookform/resolvers/zod"
 import { useForm } from "react-hook-form"
+import { zodResolver } from "@hookform/resolvers/zod"
 import * as z from "zod"
-import { Button } from "@/components/ui/button"
-import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form"
+import { Suspense } from "react"
+import { toast } from "sonner"
+import { 
+  Form, 
+  FormField, 
+  FormItem, 
+  FormLabel, 
+  FormControl, 
+  FormMessage 
+} from "@/components/ui/form"
 import { Input } from "@/components/ui/input"
 import { Textarea } from "@/components/ui/textarea"
-import { toast } from "sonner"
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
+import { Button } from "@/components/ui/button"
+import { 
+  Select, 
+  SelectContent, 
+  SelectItem, 
+  SelectTrigger, 
+  SelectValue 
+} from "@/components/ui/select"
 
+// Form schema definition
 const formSchema = z.object({
-  name: z.string().min(2, {
-    message: "Name must be at least 2 characters.",
-  }),
-  email: z.string().email({
-    message: "Please enter a valid email address.",
-  }),
-  reason: z.string({
-    required_error: "Please select a reason for contact.",
-  }),
-  message: z.string().min(10, {
-    message: "Message must be at least 10 characters.",
-  }),
+  name: z.string().min(2, { message: "Name must be at least 2 characters." }),
+  email: z.string().email({ message: "Please enter a valid email address." }),
+  reason: z.string().min(1, { message: "Please select a reason for contact." }),
+  message: z.string().min(10, { message: "Message must be at least 10 characters." }),
 })
 
+// Create a wrapper component that doesn't use useSearchParams
 export default function ContactForm() {
+  return (
+    <Suspense fallback={<ContactFormFallback />}>
+      <ContactFormContent />
+    </Suspense>
+  )
+}
+
+// Fallback component
+function ContactFormFallback() {
+  return (
+    <div className="p-6 border rounded-lg shadow-sm animate-pulse">
+      <div className="h-8 bg-gray-200 rounded mb-4"></div>
+      <div className="space-y-4">
+        <div className="h-10 bg-gray-200 rounded"></div>
+        <div className="h-10 bg-gray-200 rounded"></div>
+        <div className="h-10 bg-gray-200 rounded"></div>
+        <div className="h-32 bg-gray-200 rounded"></div>
+        <div className="h-10 bg-gray-200 rounded w-1/3"></div>
+      </div>
+    </div>
+  )
+}
+
+// Move the component that uses useSearchParams to a separate component
+function ContactFormContent() {
   const [isSubmitting, setIsSubmitting] = useState(false)
+  
+  // Import useSearchParams inside the component
+  const { useSearchParams } = require("next/navigation")
+  const searchParams = useSearchParams()
+  
+  // Get any pre-filled values from URL if they exist
+  const defaultReason = searchParams?.get('reason') || ""
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
       name: "",
       email: "",
-      reason: "",
+      reason: defaultReason,
       message: "",
     },
   })
@@ -139,12 +179,3 @@ export default function ContactForm() {
     </Form>
   )
 }
-
-
-
-
-
-
-
-
-

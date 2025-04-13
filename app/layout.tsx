@@ -5,7 +5,7 @@ import { JetBrains_Mono } from "next/font/google"
 import { PersonaProvider } from "@/contexts/persona-context"
 import { Navigation } from "@/components/navigation"
 import { Toaster } from '@/components/ui/sonner'
-import { NavigationEvents } from "@/components/navigation-events"
+import { NavigationEventsWrapper } from '@/components/navigation-events-wrapper'
 
 // Load JetBrains Mono - a popular monospaced font for coding
 const jetbrainsMono = JetBrains_Mono({
@@ -13,6 +13,11 @@ const jetbrainsMono = JetBrains_Mono({
   variable: '--font-mono',
   display: 'swap',
 })
+
+export const metadata = {
+  title: 'Portfolio',
+  description: 'Personal portfolio website',
+}
 
 export default function RootLayout({
   children,
@@ -25,7 +30,7 @@ export default function RootLayout({
         <PersonaProvider>
           <div className="relative min-h-screen flex flex-col">
             <Navigation />
-            <NavigationEvents />
+            <NavigationEventsWrapper />
             <main className="flex-1">{children}</main>
           </div>
           <Toaster />
