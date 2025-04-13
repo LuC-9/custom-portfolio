@@ -33,6 +33,15 @@
     --accent: 0 30% 25%;
     --accent-foreground: 0 100% 95%;
   }
+
+  /* Add this to ensure hover effects use the correct theme colors */
+  .gamer-theme .hover-animation-primary:hover {
+    @apply bg-primary/10 text-primary border-primary/20;
+  }
+
+  .gamer-theme .hover-animation-accent:hover {
+    @apply bg-accent/10 text-accent-foreground border-accent/20;
+  }
 }
 
 @layer base {
