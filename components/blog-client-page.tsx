@@ -50,7 +50,7 @@ export function BlogClientPage({ posts }) {
         </div>
       </div>
       
-      <div ref={blogSectionRef} className="pt-8 md:pt-16">
+      <div ref={blogSectionRef} className="pt-16 md:pt-24 mt-8 md:mt-16">
         <BlogSectionHeading />
         <div className="grid gap-8 mt-8 md:mt-12">
           {posts.map((post, index) => (
