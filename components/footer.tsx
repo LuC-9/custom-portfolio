@@ -2,7 +2,9 @@
 
 import Link from "next/link"
 import { usePersona } from "@/contexts/persona-context"
-import { Github, Linkedin, Twitter, Twitch, Mail, MessageSquare, Youtube } from "lucide-react"
+import { Github, Linkedin, Twitch, Mail, MessageSquare, Youtube, Code } from "lucide-react"
+import { XIcon } from "@/components/icons/x-icon"
+import { LeetCodeIcon } from "@/components/icons/leetcode-icon"
 
 export function Footer() {
   const { isDeveloper } = usePersona()
@@ -25,8 +27,8 @@ export function Footer() {
             <Link href="https://www.linkedin.com/in/aarsh-mishra09/" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn">
               <Linkedin size={20} className="text-muted-foreground hover:text-primary transition-colors" />
             </Link>
-            <Link href="https://twitter.com" target="_blank" rel="noopener noreferrer" aria-label="Twitter">
-              <Twitter size={20} className="text-muted-foreground hover:text-primary transition-colors" />
+            <Link href="https://twitter.com/yourusername" target="_blank" rel="noopener noreferrer" aria-label="X (formerly Twitter)">
+              <XIcon size={20} className="text-muted-foreground hover:text-primary transition-colors" />
             </Link>
             <Link href="mailto:aarshmail@gmail.com" aria-label="Email">
               <Mail size={20} className="text-muted-foreground hover:text-primary transition-colors" />
@@ -34,7 +36,12 @@ export function Footer() {
             <Link href="https://discord.gg/Sd8Uq73FeK" target="_blank" rel="noopener noreferrer" aria-label="Discord">
               <MessageSquare size={20} className="text-muted-foreground hover:text-primary transition-colors" />
             </Link>
-           
+            
+            {isDeveloper && (
+              <Link href="https://leetcode.com/u/LuC9/" target="_blank" rel="noopener noreferrer" aria-label="LeetCode">
+                <LeetCodeIcon size={20} className="text-muted-foreground hover:text-primary transition-colors" />
+              </Link>
+            )}
 
             {!isDeveloper && (
               <Link href="https://www.youtube.com/@LuC-Throws" target="_blank" rel="noopener noreferrer" aria-label="Youtube">

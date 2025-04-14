@@ -4,10 +4,12 @@ import { usePersona } from "@/contexts/persona-context"
 import Link from "next/link"
 import Image from "next/image"
 import { PersonaToggle } from "@/components/persona-toggle"
-import { Clock, Github, Linkedin, Twitter, Youtube, Mail, Globe, Twitch } from "lucide-react"
+import { Clock, Github, Linkedin, Twitter, Youtube, Mail, Globe, Twitch, Code } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { motion } from "framer-motion"
 import { useEffect, useState } from "react"
+import { XIcon } from "@/components/icons/x-icon"
+import { LeetCodeIcon } from "@/components/icons/leetcode-icon"
 
 export function HomeContent() {
   const { isDeveloper, isGamer } = usePersona()
@@ -147,8 +149,11 @@ export function HomeContent() {
                     <Link href="https://www.linkedin.com/in/aarsh-mishra09/" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn">
                       <Linkedin className="h-6 w-6 text-muted-foreground hover:text-primary transition-colors" />
                     </Link>
-                    <Link href="https://twitter.com/yourusername" target="_blank" rel="noopener noreferrer" aria-label="Twitter">
-                      <Twitter className="h-6 w-6 text-muted-foreground hover:text-primary transition-colors" />
+                    <Link href="https://twitter.com/yourusername" target="_blank" rel="noopener noreferrer" aria-label="X (formerly Twitter)">
+                      <XIcon className="h-6 w-6 text-muted-foreground hover:text-primary transition-colors" />
+                    </Link>
+                    <Link href="https://leetcode.com/u/LuC9/" target="_blank" rel="noopener noreferrer" aria-label="LeetCode">
+                      <LeetCodeIcon className="h-6 w-6 text-muted-foreground hover:text-primary transition-colors" />
                     </Link>
                   </>
                 ) : (
@@ -159,8 +164,8 @@ export function HomeContent() {
                     <Link href="https://www.youtube.com/@LuC-Throws" target="_blank" rel="noopener noreferrer" aria-label="YouTube">
                       <Youtube className="h-6 w-6 text-muted-foreground hover:text-primary transition-colors" />
                     </Link>
-                    <Link href="https://twitter.com/yourusername" target="_blank" rel="noopener noreferrer" aria-label="Twitter">
-                      <Twitter className="h-6 w-6 text-muted-foreground hover:text-primary transition-colors" />
+                    <Link href="https://twitter.com/yourusername" target="_blank" rel="noopener noreferrer" aria-label="X (formerly Twitter)">
+                      <XIcon className="h-6 w-6 text-muted-foreground hover:text-primary transition-colors" />
                     </Link>
                   </>
                 )}
