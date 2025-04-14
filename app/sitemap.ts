@@ -3,7 +3,7 @@ import { MetadataRoute } from "next"
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   // Base URL - replace with your actual domain when deployed
-  const baseUrl = "https://yourwebsite.com"
+  const baseUrl = "https://www.byluc.in"
   
   // Get all blog posts and projects
   const blogs = await getAllContentData("blog")

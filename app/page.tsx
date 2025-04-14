@@ -11,6 +11,7 @@ import { Badge } from "@/components/ui/badge"
 import { Clock, ChevronDown } from "lucide-react"
 import { ProjectDialog } from "@/components/project-dialog"
 import { ScrollAnimationWrapper } from "@/components/scroll-animation-wrapper"
+import { PersonStructuredData, WebsiteStructuredData } from './structured-data'
 
 export const metadata: Metadata = {
   title: 'LuC (Aarsh Mishra) | Developer & Gamer',
@@ -32,28 +33,32 @@ export default async function Home() {
   const featuredBlogs = blogs.filter(blog => blog.featured === true)
   
   return (
-    <main className="flex flex-col min-h-screen">
-      <div className="flex-1">
-        <HomeContent />
-        
-        {/* Add more space above the experience section */}
-        <div className="mt-8">
-          <HomeExperienceSection 
-            developerExperiences={developerExperiences} 
-            gamingExperiences={gamingExperiences} 
+    <>
+      <PersonStructuredData />
+      <WebsiteStructuredData />
+      <main className="flex flex-col min-h-screen">
+        <div className="flex-1">
+          <HomeContent />
+          
+          {/* Add more space above the experience section */}
+          <div className="mt-8">
+            <HomeExperienceSection 
+              developerExperiences={developerExperiences} 
+              gamingExperiences={gamingExperiences} 
+            />
+          </div>
+
+          {/* Featured content section - conditionally rendered based on persona */}
+          <HomeFeaturedSection 
+            featuredProjects={featuredProjects} 
+            featuredBlogs={featuredBlogs} 
           />
         </div>
-
-        {/* Featured content section - conditionally rendered based on persona */}
-        <HomeFeaturedSection 
-          featuredProjects={featuredProjects} 
-          featuredBlogs={featuredBlogs} 
-        />
-      </div>
-      <div className="container mx-auto px-4">
-        <Footer />
-      </div>
-    </main>
+        <div className="container mx-auto px-4">
+          <Footer />
+        </div>
+      </main>
+    </>
   )
 }
 
