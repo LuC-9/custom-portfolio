@@ -15,8 +15,40 @@ const jetbrainsMono = JetBrains_Mono({
 })
 
 export const metadata: Metadata = {
-  title: 'LuC\'s Portfolio',
-  description: 'Personal portfolio website showcasing projects, blog posts, and more',
+  title: {
+    default: 'LuC | Aarsh Mishra - Developer & Gamer Portfolio',
+    template: '%s | LuC (Aarsh Mishra) '
+  },
+  description: 'Personal portfolio of Aarsh Mishra (LuC) - Software Developer, Web Engineer, and Gaming Enthusiast.',
+  keywords: ['Aarsh Mishra', 'LuC', 'developer', 'software engineer', 'web developer', 'portfolio', 'gaming', 'programmer'],
+  authors: [{ name: 'Aarsh Mishra', url: 'https://github.com/LuC-9' }],
+  creator: 'Aarsh Mishra',
+  openGraph: {
+    type: 'website',
+    locale: 'en_US',
+    url: 'https://byluc.in',
+    title: 'LuC | Aarsh Mishra - Developer & Gamer Portfolio',
+    description: 'Personal portfolio of Aarsh Mishra (LuC) - Software Developer, Web Engineer, and Gaming Enthusiast.',
+    siteName: 'Aarsh Mishra Portfolio',
+    images: [
+      {
+        url: '/og-image.png',
+        width: 1200,
+        height: 630,
+        alt: 'Aarsh Mishra (LuC) - Developer & Gamer Portfolio'
+      }
+    ]
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'LuC | Aarsh Mishra - Developer & Gamer Portfolio',
+    description: 'Personal portfolio of Aarsh Mishra (LuC) - Software Developer, Web Engineer, and Gaming Enthusiast.',
+    images: ['/og-image.png']
+  },
+  robots: {
+    index: true,
+    follow: true
+  }
 }
 
 export default function RootLayout({

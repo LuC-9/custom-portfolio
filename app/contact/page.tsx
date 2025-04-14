@@ -4,7 +4,7 @@ import { Footer } from "@/components/footer"
 import ClientWrapper from "./ClientWrapper"
 
 export const metadata: Metadata = {
-  title: "Contact | LuC",
+  title: "Contact Me",
   description: "Get in touch with LuC for collaboration, job opportunities, or just to say hello.",
 }
 

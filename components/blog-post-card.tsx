@@ -6,8 +6,8 @@ import { Calendar, Clock, Tag } from "lucide-react"
 
 export function BlogPostCard({ post }) {
   return (
-    <Card key={post.id} className="overflow-hidden flex flex-col hover:shadow-xl transition-all duration-300 hover:scale-[1.02] hover:border-primary/30 relative">
-      <Link href={`/blog/${post.id}`} className="group">
+    <Card key={post.id} className="overflow-hidden flex flex-col hover:shadow-xl transition-all duration-300 hover:scale-[1.02] hover:border-primary/30 relative h-full">
+      <Link href={`/blog/${post.id}`} className="group h-full flex flex-col">
         {post.image && (
           <div className="relative aspect-video bg-muted overflow-hidden">
             <Image
@@ -18,37 +18,33 @@ export function BlogPostCard({ post }) {
             />
           </div>
         )}
-        <CardHeader>
-          <CardTitle className="line-clamp-2">{post.title}</CardTitle>
-        </CardHeader>
-        <CardContent>
-          <p className="text-muted-foreground line-clamp-3 mb-4">{post.excerpt}</p>
-          <div className="flex flex-wrap gap-2 mt-2">
-            {post.tags && post.tags.map((tag) => (
-              <Badge 
-                key={tag} 
-                variant="secondary" 
-                className="text-xs relative overflow-hidden group/tag"
-              >
-                <Tag className="h-3 w-3 mr-1" />
-                <span className="relative z-10">{tag}</span>
-                <span className="absolute inset-0 opacity-0 group-hover/tag:opacity-100 bg-gradient-to-r from-red-500/20 via-purple-500/20 to-blue-500/20 transition-opacity duration-300"></span>
+        <CardContent className="flex-grow p-4 md:p-6">
+          <div className="mb-2 flex flex-wrap gap-2">
+            {post.tags && post.tags.slice(0, 2).map((tag) => (
+              <Badge key={tag} variant="secondary" className="text-xs">
+                {tag}
               </Badge>
             ))}
           </div>
-        </CardContent>
-        <CardFooter className="text-sm text-muted-foreground mt-auto">
-          <div className="flex items-center gap-4">
+          <CardTitle className="text-lg md:text-xl mb-2 line-clamp-2 group-hover:text-primary transition-colors">
+            {post.title}
+          </CardTitle>
+          <p className="text-muted-foreground text-sm mb-3 line-clamp-3">{post.excerpt}</p>
+          <div className="flex items-center justify-between text-xs text-muted-foreground mt-auto">
             <div className="flex items-center">
-              <Calendar className="h-4 w-4 mr-1" />
-              <span>{post.date}</span>
+              <Calendar className="h-3 w-3 mr-1" />
+              <span>{new Date(post.date).toLocaleDateString('en-US', {
+                year: 'numeric',
+                month: 'short',
+                day: 'numeric'
+              })}</span>
             </div>
             <div className="flex items-center">
-              <Clock className="h-4 w-4 mr-1" />
+              <Clock className="h-3 w-3 mr-1" />
               <span>{post.readingTime || "5 min read"}</span>
             </div>
           </div>
-        </CardFooter>
+        </CardContent>
       </Link>
     </Card>
   )

@@ -2,6 +2,18 @@ import { getAllContentData } from "@/lib/content"
 import { ProjectsClient } from "./ProjectsClient"
 import { ProjectsSectionHeading } from "@/components/projects-section-heading"
 import { Footer } from "@/components/footer"
+import { Metadata } from "next"
+
+// Generate static metadata for the projects listing page
+export const metadata: Metadata = {
+  title: "Projects",
+  description: "Explore my portfolio of software development and creative projects.",
+  openGraph: {
+    title: "Projects | LuC (Aarsh Mishra)",
+    description: "Explore my portfolio of software development and creative projects.",
+    type: "website"
+  }
+}
 
 export default async function ProjectsPage() {
   try {
@@ -15,9 +27,6 @@ export default async function ProjectsPage() {
             <ProjectsSectionHeading />
           </div>
           <ProjectsClient projects={projects} />
-          
-          {/* Add Mermaid script via client component */}
-          {/* <MermaidInitializer /> */}
         </div>
         <Footer />
       </div>
@@ -27,4 +36,3 @@ export default async function ProjectsPage() {
     return <div>Failed to load projects</div>
   }
 }
-

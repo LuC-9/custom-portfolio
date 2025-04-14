@@ -3,6 +3,7 @@ import { HomeExperienceSection } from "@/components/home-experience-section"
 import { HomeFeaturedSection } from "@/components/home-featured-section"
 import { Footer } from "@/components/footer"
 import { getAllContentData, getExperiences } from "@/lib/content"
+import { Metadata } from "next"
 import Link from "next/link"
 import Image from "next/image"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
@@ -10,6 +11,15 @@ import { Badge } from "@/components/ui/badge"
 import { Clock, ChevronDown } from "lucide-react"
 import { ProjectDialog } from "@/components/project-dialog"
 import { ScrollAnimationWrapper } from "@/components/scroll-animation-wrapper"
+
+export const metadata: Metadata = {
+  title: 'LuC (Aarsh Mishra) | Developer & Gamer',
+  description: 'Official portfolio website of Aarsh Mishra, also known as LuC. Software Developer, Web Engineer, and Gaming Enthusiast.',
+  keywords: ['Aarsh Mishra', 'LuC', 'developer', 'software engineer', 'web developer', 'portfolio', 'gaming', 'programmer'],
+  alternates: {
+    canonical: 'https://byluc.in'
+  }
+}
 
 export default async function Home() {
   const developerExperiences = await getExperiences()

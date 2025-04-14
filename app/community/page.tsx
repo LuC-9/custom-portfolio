@@ -4,7 +4,7 @@ import { BlogFooter } from "@/components/blog-footer"
 import ClientWrapper from "./ClientWrapper"
 
 export const metadata: Metadata = {
-  title: "Community | LuC",
+  title: "Community",
   description: "Join LuC's gaming community, watch streams, and connect with fellow gamers and enthusiasts.",
 }
 

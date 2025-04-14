@@ -1,96 +1,94 @@
 "use client"
 
 import { useState, useEffect } from "react"
-import { Link } from "lucide-react"
-
-interface TOCItem {
-  id: string
-  text: string
-  level: number
-}
+import { ChevronDown } from "lucide-react"
 
 export function TableOfContents({ content }: { content: string }) {
-  const [headings, setHeadings] = useState<TOCItem[]>([])
-  const [activeId, setActiveId] = useState("")
+  const [headings, setHeadings] = useState<{ id: string; text: string; level: number }[]>([])
+  const [activeId, setActiveId] = useState<string>("")
+  const [isOpen, setIsOpen] = useState(false)
 
-  // Extract headings from content
   useEffect(() => {
-    const doc = new DOMParser().parseFromString(content, "text/html")
-    const headingElements = Array.from(doc.querySelectorAll("h2, h3, h4, h5, h6"))
-
-    const items = headingElements.map((heading) => {
-      // If heading doesn't have an id, we can't link to it
-      if (!heading.id) {
-        const id =
-          heading.textContent
-            ?.toLowerCase()
-            .replace(/\s+/g, "-")
-            .replace(/[^\w-]/g, "") || ""
-        heading.id = id
-      }
-
-      return {
-        id: heading.id,
-        text: heading.textContent || "",
-        level: Number.parseInt(heading.tagName.substring(1)),
-      }
-    })
-
-    setHeadings(items)
-  }, [content])
-
-  // Track active heading on scroll
-  useEffect(() => {
+    // Extract headings from content
+    const doc = new DOMParser().parseFromString(content, 'text/html')
+    const headingElements = Array.from(doc.querySelectorAll('h2, h3, h4'))
+    
+    const extractedHeadings = headingElements.map(heading => ({
+      id: heading.id,
+      text: heading.textContent || '',
+      level: parseInt(heading.tagName.substring(1))
+    }))
+    
+    setHeadings(extractedHeadings)
+    
+    // Set up intersection observer for active heading
     const observer = new IntersectionObserver(
       (entries) => {
-        entries.forEach((entry) => {
+        entries.forEach(entry => {
           if (entry.isIntersecting) {
             setActiveId(entry.target.id)
           }
         })
       },
-      { rootMargin: "0px 0px -80% 0px" },
+      { rootMargin: '0px 0px -80% 0px' }
     )
-
-    const headingElements = document.querySelectorAll("h2, h3, h4, h5, h6")
-    headingElements.forEach((element) => observer.observe(element))
-
+    
+    // Observe all headings
+    headingElements.forEach(heading => {
+      if (heading.id) {
+        const element = document.getElementById(heading.id)
+        if (element) observer.observe(element)
+      }
+    })
+    
     return () => {
-      headingElements.forEach((element) => observer.unobserve(element))
+      headingElements.forEach(heading => {
+        if (heading.id) {
+          const element = document.getElementById(heading.id)
+          if (element) observer.unobserve(element)
+        }
+      })
     }
-  }, [headings])
+  }, [content])
 
   if (headings.length === 0) return null
 
   return (
-    <div className="bg-secondary/20 rounded-lg p-4 mb-8 sticky top-24">
-      <div className="flex items-center gap-2 mb-4 text-primary font-medium">
-        <Link size={16} />
-        <h3>Table of Contents</h3>
+    <div className="bg-secondary/20 rounded-lg p-4 border border-secondary/50">
+      <div 
+        className="flex items-center justify-between font-medium mb-2 cursor-pointer lg:cursor-default"
+        onClick={() => setIsOpen(!isOpen)}
+      >
+        <h3 className="text-base md:text-lg">Table of Contents</h3>
+        <ChevronDown className={`h-4 w-4 transition-transform lg:hidden ${isOpen ? 'rotate-180' : ''}`} />
       </div>
-      <nav>
-        <ul className="space-y-2">
-          {headings.map((heading) => (
-            <li key={heading.id} style={{ paddingLeft: `${(heading.level - 2) * 16}px` }}>
-              <a
-                href={`#${heading.id}`}
-                className={`text-sm hover:text-primary transition-colors block py-1 border-l-2 pl-3 ${
-                  activeId === heading.id
-                    ? "border-primary text-primary font-medium"
-                    : "border-transparent text-muted-foreground"
+      
+      <div className={`${isOpen ? 'block' : 'hidden'} lg:block`}>
+        <nav className="toc-nav">
+          <ul className="space-y-1 text-sm">
+            {headings.map((heading) => (
+              <li 
+                key={heading.id}
+                className={`${
+                  heading.level === 2 ? 'pl-0' : 
+                  heading.level === 3 ? 'pl-3' : 
+                  'pl-6'
                 }`}
-                onClick={(e) => {
-                  e.preventDefault()
-                  document.getElementById(heading.id)?.scrollIntoView({ behavior: "smooth" })
-                  window.history.pushState(null, "", `#${heading.id}`)
-                }}
               >
-                {heading.text}
-              </a>
-            </li>
-          ))}
-        </ul>
-      </nav>
+                <a
+                  href={`#${heading.id}`}
+                  className={`block py-1 hover:text-primary transition-colors ${
+                    activeId === heading.id ? 'text-primary font-medium' : 'text-muted-foreground'
+                  }`}
+                  onClick={() => setIsOpen(false)}
+                >
+                  {heading.text}
+                </a>
+              </li>
+            ))}
+          </ul>
+        </nav>
+      </div>
     </div>
   )
 }

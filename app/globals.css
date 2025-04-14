@@ -383,12 +383,24 @@ table td {
               0 0 12px rgba(255, 255, 255, 0.08);
 }
 
-/* Update blog post container to ensure it fills the viewport */
+/* Responsive blog styling */
 .blog-post-container {
   display: flex;
   flex-direction: column;
   min-height: 100vh;
-  padding-top: 10rem;
+  padding-top: 6rem;
+}
+
+@media (min-width: 768px) {
+  .blog-post-container {
+    padding-top: 8rem;
+  }
+}
+
+@media (min-width: 1024px) {
+  .blog-post-container {
+    padding-top: 10rem;
+  }
 }
 
 /* Make the blog content area grow to push footer down */
@@ -401,6 +413,46 @@ table td {
 /* Ensure blog footer sticks to bottom */
 .blog-footer-wrapper {
   margin-top: auto;
+}
+
+/* Responsive prose adjustments */
+.prose img {
+  width: 100%;
+  height: auto;
+  border-radius: 0.5rem;
+}
+
+.prose table {
+  display: block;
+  width: 100%;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+.prose pre {
+  overflow-x: auto;
+  padding: 1rem;
+  font-size: 0.875rem;
+  line-height: 1.5;
+}
+
+@media (max-width: 640px) {
+  .prose h2 {
+    font-size: 1.5rem;
+    margin-top: 1.5rem;
+    margin-bottom: 0.75rem;
+  }
+  
+  .prose h3 {
+    font-size: 1.25rem;
+    margin-top: 1.25rem;
+    margin-bottom: 0.5rem;
+  }
+  
+  .prose p, .prose ul, .prose ol {
+    margin-top: 0.75rem;
+    margin-bottom: 0.75rem;
+  }
 }
 
 /* Mermaid diagram styling */

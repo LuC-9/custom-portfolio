@@ -4,7 +4,7 @@ import { BlogClientPage } from "@/components/blog-client-page"
 import { BlogFooter } from "@/components/blog-footer"
 
 export const metadata: Metadata = {
-  title: "Blogs | LuC",
+  title: "Blogs",
   description: "Articles and insights on web development, gaming, and technology from Aarsh Mishra (LuC).",
 }
 
