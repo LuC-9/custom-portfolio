@@ -73,7 +73,9 @@
     "three": "latest",
     "unified": "latest",
     "vaul": "^0.9.6",
-    "zod": "latest"
+    "zod": "latest",
+    "react-schemaorg": "latest",
+    "schema-dts": "latest"
   },
   "devDependencies": {
     "@types/node": "^22",

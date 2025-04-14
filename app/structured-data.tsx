@@ -9,8 +9,8 @@ export function PersonStructuredData() {
         "@type": "Person",
         name: "Aarsh Mishra",
         alternateName: "LuC",
-        url: "https://byluc.in",
-        image: "https://byluc.in/profile.jpg",
+        url: "https://www.byluc.in",
+        image: "https://www.byluc.in/profile.jpg",
         jobTitle: "Software Developer",
         sameAs: [
           "https://github.com/LuC-9",
@@ -30,13 +30,14 @@ export function WebsiteStructuredData() {
         "@context": "https://schema.org",
         "@type": "WebSite",
         name: "Aarsh Mishra (LuC) Portfolio",
-        url: "https://yourwebsite.com",
+        url: "https://byluc.in",
         potentialAction: {
           "@type": "SearchAction",
-          target: "https://yourwebsite.com/search?q={search_term_string}",
+          target: "https://byluc.in/search?q={search_term_string}",
           "query-input": "required name=search_term_string"
         }
       }}
     />
   )
 }
+
