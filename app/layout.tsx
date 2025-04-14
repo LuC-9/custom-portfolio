@@ -20,13 +20,13 @@ export const metadata: Metadata = {
     template: '%s | LuC (Aarsh Mishra) '
   },
   description: 'Personal portfolio of Aarsh Mishra (LuC) - Software Developer, Web Engineer, and Gaming Enthusiast.',
-  keywords: ['Aarsh Mishra', 'LuC', 'developer', 'software engineer', 'web developer', 'portfolio', 'gaming', 'programmer'],
+  keywords: ['Aarsh Mishra', 'LuC', 'developer', 'software engineer', 'web developer', 'portfolio', 'gaming', 'gamer' 'programmer'],
   authors: [{ name: 'Aarsh Mishra', url: 'https://github.com/LuC-9' }],
   creator: 'Aarsh Mishra',
   openGraph: {
     type: 'website',
     locale: 'en_US',
-    url: 'https://byluc.in',
+    url: 'https://www.byluc.in',
     title: 'LuC | Aarsh Mishra - Developer & Gamer Portfolio',
     description: 'Personal portfolio of Aarsh Mishra (LuC) - Software Developer, Web Engineer, and Gaming Enthusiast.',
     siteName: 'Aarsh Mishra Portfolio',
@@ -35,13 +35,13 @@ export const metadata: Metadata = {
         url: '/og-image.png',
         width: 1200,
         height: 630,
-        alt: 'Aarsh Mishra (LuC) - Developer & Gamer Portfolio'
+        alt: 'Aarsh Mishra (LuC) - Developer & Gamer'
       }
     ]
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'LuC | Aarsh Mishra - Developer & Gamer Portfolio',
+    title: 'LuC | Aarsh Mishra - Developer & Gamer',
     description: 'Personal portfolio of Aarsh Mishra (LuC) - Software Developer, Web Engineer, and Gaming Enthusiast.',
     images: ['/og-image.png']
   },

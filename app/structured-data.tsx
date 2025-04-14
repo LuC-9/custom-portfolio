@@ -29,11 +29,11 @@ export function WebsiteStructuredData() {
       item={{
         "@context": "https://schema.org",
         "@type": "WebSite",
-        name: "Aarsh Mishra (LuC) Portfolio",
+        name: "LuC | Aarsh Mishra",
         url: "https://byluc.in",
         potentialAction: {
           "@type": "SearchAction",
-          target: "https://byluc.in/search?q={search_term_string}",
+          target: "https://www.byluc.in/search?q={search_term_string}",
           "query-input": "required name=search_term_string"
         }
       }}
