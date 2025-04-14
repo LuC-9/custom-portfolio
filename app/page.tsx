@@ -14,9 +14,9 @@ import { ScrollAnimationWrapper } from "@/components/scroll-animation-wrapper"
 import { PersonStructuredData, WebsiteStructuredData } from './structured-data'
 
 export const metadata: Metadata = {
-  title: 'LuC (Aarsh Mishra) | Developer & Gamer',
-  description: 'Official portfolio website of Aarsh Mishra, also known as LuC. Software Developer, Web Engineer, and Gaming Enthusiast.',
-  keywords: ['Aarsh Mishra', 'LuC', 'developer', 'software engineer', 'web developer', 'portfolio', 'gaming', 'programmer'],
+  title: 'Aarsh Mishra | Software Developer & Gaming Enthusiast (LuC)',
+  description: 'Official portfolio of Aarsh Mishra, software developer and web engineer. View projects, experience, and contact information.',
+  keywords: ['Aarsh Mishra', 'software developer', 'web developer', 'developer', 'portfolio', 'LuC', 'programmer', 'engineer', 'gamer'],
   alternates: {
     canonical: 'https://byluc.in'
   }

@@ -15,9 +15,18 @@ export function PersonStructuredData() {
         sameAs: [
           "https://github.com/LuC-9",
           "https://www.linkedin.com/in/aarsh-mishra09/",
-          // "https://twitter.com/yourtwitter"
+          // Add more social profiles if available
         ],
-        description: "Software Developer and Casual Gamer"
+        description: "Software Developer specializing in web development and engineering. also, a part time gamer.",
+        knowsAbout: ["Web Development", "JavaScript", "TypeScript", "React", "Next.js", "Backend Development", 'Software Engineering'],
+        worksFor: {
+          "@type": "Organization",
+          name: "Nagarro" // Replace with your current company
+        },
+        alumniOf: {
+          "@type": "EducationalOrganization",
+          name: "PSIT" // Replace with your education
+        }
       }}
     />
   )
@@ -30,7 +39,7 @@ export function WebsiteStructuredData() {
         "@context": "https://schema.org",
         "@type": "WebSite",
         name: "LuC | Aarsh Mishra",
-        url: "https://byluc.in",
+        url: "https://www.byluc.in",
         potentialAction: {
           "@type": "SearchAction",
           target: "https://www.byluc.in/search?q={search_term_string}",
@@ -40,4 +49,5 @@ export function WebsiteStructuredData() {
     />
   )
 }
+
 

@@ -20,7 +20,7 @@ export const metadata: Metadata = {
     template: '%s | LuC (Aarsh Mishra) '
   },
   description: 'Personal portfolio of Aarsh Mishra (LuC) - Software Developer, Web Engineer, and Gaming Enthusiast.',
-  keywords: ['Aarsh Mishra', 'LuC', 'developer', 'software engineer', 'web developer', 'portfolio', 'gaming', 'gamer' 'programmer'],
+  keywords: ['Aarsh Mishra', 'LuC', 'developer', 'software engineer', 'web developer', 'portfolio', 'gaming', 'gamer', 'programmer'],
   authors: [{ name: 'Aarsh Mishra', url: 'https://github.com/LuC-9' }],
   creator: 'Aarsh Mishra',
   openGraph: {

@@ -1,11 +1,9 @@
-import { Metadata } from "next"
-import { ContactSectionHeading } from "@/components/contact-section-heading"
-import { Footer } from "@/components/footer"
-import ClientWrapper from "./ClientWrapper"
+import type { Metadata } from 'next'
 
 export const metadata: Metadata = {
-  title: "Contact Me",
-  description: "Get in touch with LuC for collaboration, job opportunities, or just to say hello.",
+  title: 'Contact Aarsh Mishra | Software Developer',
+  description: 'Get in touch with Aarsh Mishra for collaboration, job opportunities, or questions.',
+  keywords: ['Aarsh Mishra', 'contact', 'hire', 'collaboration']
 }
 
 export default function ContactPage() {

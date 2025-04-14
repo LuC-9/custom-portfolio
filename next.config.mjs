@@ -18,6 +18,16 @@ const nextConfig = {
   },
   // Configure pageExtensions to include md and mdx
   pageExtensions: ['ts', 'tsx', 'js', 'jsx', 'md', 'mdx'],
+  // Add redirects configuration
+  async redirects() {
+    return [
+      {
+        source: '/about',
+        destination: '/',
+        permanent: true,
+      },
+    ];
+  },
   // Disable favicon generation through metadata
   webpack(config) {
     return config;
