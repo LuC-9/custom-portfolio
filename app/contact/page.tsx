@@ -1,4 +1,7 @@
 import type { Metadata } from 'next'
+import { ContactSectionHeading } from '@/components/contact-section-heading'
+import ClientWrapper from './ClientWrapper'
+import { Footer } from '@/components/footer'
 
 export const metadata: Metadata = {
   title: 'Contact Aarsh Mishra | Software Developer',

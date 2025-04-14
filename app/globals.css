@@ -508,3 +508,28 @@ table td {
   max-width: 100%;
   height: auto;
 }
+
+/* Neon button effect */
+.neon-button {
+  position: relative;
+  overflow: hidden;
+  background: linear-gradient(135deg, #4f46e5, #6366f1, #818cf8);
+  box-shadow: 0 0 5px #6366f1, 0 0 10px #6366f1;
+  text-shadow: 0 0 2px rgba(255, 255, 255, 0.8);
+  animation: neon-pulse 2s infinite alternate;
+}
+
+@keyframes neon-pulse {
+  0% {
+    box-shadow: 0 0 5px #6366f1, 0 0 10px #6366f1;
+  }
+  100% {
+    box-shadow: 0 0 7px #6366f1, 0 0 15px #6366f1, 0 0 20px #6366f1;
+  }
+}
+
+.neon-button:hover {
+  box-shadow: 0 0 10px #6366f1, 0 0 20px #6366f1, 0 0 30px #6366f1;
+  text-shadow: 0 0 5px white;
+  background: linear-gradient(135deg, #4338ca, #4f46e5, #6366f1);
+}
