@@ -143,87 +143,153 @@ export function getAllContentTypes() {
     .map((dirent) => dirent.name)
 }
 
-// Add or modify the sorting function for experiences
-export async function getExperiences() {
-  const experiences = await getAllContentData('experience');
+// Function to get experiences with proper sorting
+export async function getExperiences(directory = 'experience') {
+  const experiences = await getAllContentData(directory);
   
-  // Sort experiences by date, most recent first
-  return experiences.sort((a, b) => {
-    // Extract years from period strings
-    const aYears = a.period.match(/\d{4}/g) || [];
-    const bYears = b.period.match(/\d{4}/g) || [];
+  // Month name to number mapping (all lowercase for consistent comparison)
+  const monthToNum = {
+    'jan': 0, 'january': 0,
+    'feb': 1, 'february': 1,
+    'mar': 2, 'march': 2,
+    'apr': 3, 'april': 3,
+    'may': 4,
+    'jun': 5, 'june': 5,
+    'jul': 6, 'july': 6,
+    'aug': 7, 'august': 7,
+    'sep': 8, 'september': 8,
+    'oct': 9, 'october': 9,
+    'nov': 10, 'november': 10,
+    'dec': 11, 'december': 11
+  };
+  
+  // Helper function to parse date from period string
+  const parseDate = (periodStr, getEnd = false) => {
+    if (!periodStr) return new Date(0);
     
-    // Get the end year (or present)
-    const aEndYear = a.period.includes('Present') ? 
-      new Date().getFullYear() + 1 : // Add 1 to ensure "Present" is always most recent
-      parseInt(aYears[aYears.length - 1]);
+    const parts = periodStr.split(' - ');
+    const datePart = getEnd ? parts[1] || '' : parts[0] || '';
     
-    const bEndYear = b.period.includes('Present') ? 
-      new Date().getFullYear() + 1 : 
-      parseInt(bYears[bYears.length - 1]);
-    
-    // Sort by end year (descending)
-    if (aEndYear !== bEndYear) {
-      return bEndYear - aEndYear;
+    // If we're looking for end date and it's "Present"
+    if (getEnd && datePart.toLowerCase().includes('present')) {
+      return new Date(9999, 11, 31); // Far future date for "Present"
     }
     
-    // If end years are the same, sort by start year (descending)
-    const aStartYear = parseInt(aYears[0]);
-    const bStartYear = parseInt(bYears[0]);
-    return bStartYear - aStartYear;
+    // Extract month and year
+    const monthYearRegex = /([a-z]{3,})\s+(\d{4})/i;
+    const match = datePart.match(monthYearRegex);
+    
+    if (match) {
+      const monthName = match[1].toLowerCase();
+      const year = parseInt(match[2]);
+      
+      // Get month number from our mapping
+      const monthNum = monthToNum[monthName];
+      
+      if (monthNum !== undefined && !isNaN(year)) {
+        return new Date(year, monthNum, 1);
+      }
+    }
+    
+    // Fallback to just year
+    const yearMatch = datePart.match(/\d{4}/);
+    if (yearMatch) {
+      const year = parseInt(yearMatch[0]);
+      return new Date(year, 0, 1);
+    }
+    
+    // Default fallback
+    return new Date(0);
+  };
+  
+  // Sort experiences by start date (most recent first)
+  return experiences.sort((a, b) => {
+    // If order is specified for both, use it
+    if (a.order !== undefined && b.order !== undefined) {
+      return a.order - b.order;
+    }
+    
+    // If only one has order, prioritize it
+    if (a.order !== undefined) return -1;
+    if (b.order !== undefined) return 1;
+    
+    // Parse start dates
+    const aStartDate = parseDate(a.period, false);
+    const bStartDate = parseDate(b.period, false);
+    
+    // Most recent start date first (descending order)
+    return bStartDate.getTime() - aStartDate.getTime();
   });
+}
+
+// Function specifically for gaming experiences
+export async function getGamingExperiences() {
+  return getExperiences('gaming-experience');
 }
 
 // Add this function for debugging
-export async function debugExperienceSorting() {
-  const fileNames = fs.readdirSync(path.join(contentDirectory, "experience"))
-  const experiences = await Promise.all(
-    fileNames.map(async (fileName) => {
-      const id = fileName.replace(/\.md$/, "")
-      const contentData = await getContentData("experience", fileName)
-      return {
-        id,
-        ...contentData,
-      }
-    })
-  )
-
-  // Log each experience with its period and extracted years
+export async function debugExperienceSorting(directory = 'gaming-experience') {
+  const experiences = await getAllContentData(directory);
+  
+  // Log each experience with its period and parsed dates
   experiences.forEach(exp => {
-    const years = exp.period.match(/\d{4}/g) || [];
-    const endYear = exp.period.includes('Present') ? 
-      new Date().getFullYear() + 1 : 
-      parseInt(years[years.length - 1]);
-    
-    console.log(`Experience: ${exp.title} at ${exp.company}`);
+    console.log(`Experience: ${exp.title}`);
     console.log(`  Period: ${exp.period}`);
-    console.log(`  Extracted years: ${years.join(', ')}`);
-    console.log(`  End year for sorting: ${endYear}`);
+    
+    // Parse dates
+    const parts = exp.period.split(' - ');
+    const startPart = parts[0] || '';
+    const endPart = parts[1] || '';
+    
+    console.log(`  Start part: "${startPart}"`);
+    console.log(`  End part: "${endPart}"`);
+    
+    // Check if it contains "Present"
+    console.log(`  Contains "Present": ${exp.period.includes('Present')}`);
+    
     console.log('---');
   });
+  
+  return experiences;
+}
 
-  // Return sorted experiences
-  return experiences.sort((a, b) => {
-    const aYears = a.period.match(/\d{4}/g) || [];
-    const bYears = b.period.match(/\d{4}/g) || [];
-    
-    const aEndYear = a.period.includes('Present') ? 
-      new Date().getFullYear() + 1 : 
-      parseInt(aYears[aYears.length - 1]);
-    
-    const bEndYear = b.period.includes('Present') ? 
-      new Date().getFullYear() + 1 : 
-      parseInt(bYears[bYears.length - 1]);
-    
-    if (aEndYear !== bEndYear) {
-      return bEndYear - aEndYear;
+// // Update the existing getAllExperienceData function
+export async function getAllExperienceData() {
+  const directory = "experience";
+  const experienceData = await getAllContentData(directory);
+  
+  // Sort by order field (lowest first) or by date (most recent first)
+  return experienceData.sort((a, b) => {
+    // If order is specified, use it
+    if (a.order !== undefined && b.order !== undefined) {
+      return a.order - b.order;
     }
     
-    const aStartYear = parseInt(aYears[0]);
-    const bStartYear = parseInt(bYears[0]);
-    return bStartYear - aStartYear;
+    // Otherwise sort by date (most recent first)
+    const dateA = new Date(a.period?.split(' - ')[0] || 0);
+    const dateB = new Date(b.period?.split(' - ')[0] || 0);
+    return dateB.getTime() - dateA.getTime();
   });
 }
+
+// //Add this function if it doesn't exist
+// export async function getAllExperienceData() {
+//   const directory = "experience";
+//   const experienceData = await getAllContentData(directory);
+  
+//   // Sort by order field (lowest first) or by date (most recent first)
+//   return experienceData.sort((a, b) => {
+//     // If order is specified, use it
+//     if (a.order !== undefined && b.order !== undefined) {
+//       return a.order - b.order;
+//     }
+    
+//     // Otherwise sort by date (most recent first)
+//     const dateA = new Date(a.period?.split(' - ')[0] || 0);
+//     const dateB = new Date(b.period?.split(' - ')[0] || 0);
+//     return dateB.getTime() - dateA.getTime();
+//   });
+// }
 
 
 

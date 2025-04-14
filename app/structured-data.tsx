@@ -11,22 +11,17 @@ export function PersonStructuredData() {
         alternateName: "LuC",
         url: "https://www.byluc.in",
         image: "https://www.byluc.in/profile.jpg",
-        jobTitle: "Software Developer",
-        sameAs: [
-          "https://github.com/LuC-9",
-          "https://www.linkedin.com/in/aarsh-mishra09/",
-          // Add more social profiles if available
-        ],
-        description: "Software Developer specializing in web development and engineering. also, a part time gamer.",
-        knowsAbout: ["Web Development", "JavaScript", "TypeScript", "React", "Next.js", "Backend Development", 'Software Engineering'],
+        jobTitle: "Engineer",
         worksFor: {
           "@type": "Organization",
-          name: "Nagarro" // Replace with your current company
+          name: "Nagarro"
         },
-        alumniOf: {
-          "@type": "EducationalOrganization",
-          name: "PSIT" // Replace with your education
-        }
+        description: "Software Developer at Nagarro specializing in React, TypeScript, Next.js, and modern web technologies.",
+        knowsAbout: ["Web Development", "JavaScript", "TypeScript", "React", "Next.js", "TailwindCSS", "Node.js"],
+        sameAs: [
+          "https://github.com/LuC-9",
+          "https://www.linkedin.com/in/aarsh-mishra09/"
+        ]
       }}
     />
   )
@@ -49,5 +44,7 @@ export function WebsiteStructuredData() {
     />
   )
 }
+
+
 
 

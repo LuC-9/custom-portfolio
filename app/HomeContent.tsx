@@ -108,6 +108,8 @@ export function HomeContent() {
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.5 }}
             >
+              {/* <h1 className="text-3xl font-bold mb-4">Aarsh Mishra</h1> */}
+              {/* <p className="text-xl mb-6">Software Developer & Gaming Enthusiast</p> */}
               <h1 className="text-4xl md:text-5xl font-bold mb-4">
                 Hi, I'm <span className="text-primary">{activeContent.name}</span>
               </h1>

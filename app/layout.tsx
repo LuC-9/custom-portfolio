@@ -19,16 +19,16 @@ export const metadata: Metadata = {
     default: 'LuC | Aarsh Mishra - Developer & Gamer Portfolio',
     template: '%s | LuC (Aarsh Mishra) '
   },
-  description: 'Personal portfolio of Aarsh Mishra (LuC) - Software Developer, Web Engineer, and Gaming Enthusiast.',
-  keywords: ['Aarsh Mishra', 'LuC', 'developer', 'software engineer', 'web developer', 'portfolio', 'gaming', 'gamer', 'programmer'],
+  description: 'Aarsh Mishra (LuC) - Engineer at Nagarro specializing in React, TypeScript, Next.js and modern web technologies.',
+  keywords: ['Aarsh Mishra', 'Nagarro', 'Engineer', 'React Developer', 'TypeScript', 'Next.js', 'LuC', 'web developer'],
   authors: [{ name: 'Aarsh Mishra', url: 'https://github.com/LuC-9' }],
   creator: 'Aarsh Mishra',
   openGraph: {
     type: 'website',
     locale: 'en_US',
     url: 'https://www.byluc.in',
-    title: 'LuC | Aarsh Mishra - Developer & Gamer Portfolio',
-    description: 'Personal portfolio of Aarsh Mishra (LuC) - Software Developer, Web Engineer, and Gaming Enthusiast.',
+    title: 'Aarsh Mishra | Engineer at Nagarro - Developer & Gamer Portfolio',
+    description: 'Aarsh Mishra (LuC) - Engineer at Nagarro specializing in React, TypeScript, Next.js and modern web technologies.',
     siteName: 'Aarsh Mishra Portfolio',
     images: [
       {

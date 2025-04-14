@@ -24,7 +24,7 @@ export const metadata: Metadata = {
 
 export default async function Home() {
   const developerExperiences = await getExperiences()
-  const gamingExperiences = await getAllContentData("gaming-experience")
+  const gamingExperiences = await getExperiences('gaming-experience')
   const projects = await getAllContentData("projects")
   const blogs = await getAllContentData("blog")
   
