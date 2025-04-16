@@ -6,7 +6,7 @@ import ClientWrapper from "./ClientWrapper"
 export const metadata: Metadata = {
   title: "Community",
   description: "Join LuC's gaming community, watch streams, and connect with fellow gamers and enthusiasts.",
-  keywords: ['Aarsh Mishra', 'software developer', 'web developer', 'developer', 'portfolio', 'LuC', 'programmer', 'engineer', 'gamer', 'web developer', "Blog", "projects"],
+  keywords: ['Aarsh Mishra', 'discord', 'community', 'gaming', 'streaming', 'twitch', 'youtube', 'software developer', 'web developer', 'developer', 'portfolio', 'LuC', 'programmer', 'engineer', 'gamer', 'web developer', "Blog", "projects"],
   alternates: {
     canonical: 'https://www.byluc.in/community'
   }
