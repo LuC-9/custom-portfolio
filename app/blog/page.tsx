@@ -6,7 +6,7 @@ import { BlogFooter } from "@/components/blog-footer"
 export const metadata: Metadata = {
   title: "Blogs",
   description: "Articles and insights on web development, gaming, and technology from Aarsh Mishra (LuC).",
-  keywords: ['Aarsh Mishra', 'software developer', 'web developer', 'developer', 'portfolio', 'LuC', 'programmer', 'engineer', 'gamer', 'web developer', "Blog", "projects"],
+  keywords: ['Aarsh Mishra', 'software developer', 'web developer', 'developer', 'portfolio', 'LuC', 'programmer', 'engineer', 'gamer', 'web developer', "Blog","Blogs", "projects"],
   alternates: {
     canonical: 'https://www.byluc.in/blog'
   }
