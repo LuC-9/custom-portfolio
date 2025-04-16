@@ -2,7 +2,7 @@ import { getAllContentData } from "@/lib/content"
 import { MetadataRoute } from "next"
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
-  // Base URL - replace with your actual domain when deployed
+  // Base URL
   const baseUrl = "https://www.byluc.in"
   
   // Get all blog posts and projects
@@ -14,7 +14,16 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     url: `${baseUrl}/blog/${blog.id}`,
     lastModified: new Date(blog.date || Date.now()),
     changeFrequency: "monthly" as const,
-    priority: 0.7
+    priority: 0.7,
+    // Add image information if available
+    ...(blog.image && {
+      images: [
+        {
+          url: blog.image.startsWith('http') ? blog.image : `${baseUrl}${blog.image}`,
+          title: blog.title
+        }
+      ]
+    })
   }))
   
   // Create sitemap entries for projects
@@ -22,10 +31,19 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     url: `${baseUrl}/projects/${project.id}`,
     lastModified: new Date(project.date || Date.now()),
     changeFrequency: "monthly" as const,
-    priority: 0.8
+    priority: 0.8,
+    // Add image information if available
+    ...(project.image && {
+      images: [
+        {
+          url: project.image.startsWith('http') ? project.image : `${baseUrl}${project.image}`,
+          title: project.title
+        }
+      ]
+    })
   }))
   
-  // Static pages
+  // Static pages - remove /about since it redirects to home
   const staticPages = [
     {
       url: baseUrl,
@@ -46,12 +64,6 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       priority: 0.9
     },
     {
-      url: `${baseUrl}/about`,
-      lastModified: new Date(),
-      changeFrequency: "monthly" as const,
-      priority: 0.9
-    },
-    {
       url: `${baseUrl}/contact`,
       lastModified: new Date(),
       changeFrequency: "monthly" as const,
@@ -62,3 +74,4 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   // Combine all entries
   return [...staticPages, ...blogEntries, ...projectEntries]
 }
+

@@ -16,34 +16,35 @@ const jetbrainsMono = JetBrains_Mono({
 
 export const metadata: Metadata = {
   title: {
-    default: 'LuC | Aarsh Mishra - Developer & Gamer Portfolio',
+    default: 'LuC | Aarsh Mishra - Developer & Gamer',
     template: '%s | LuC (Aarsh Mishra) '
   },
   description: 'Aarsh Mishra (LuC) - Engineer at Nagarro specializing in React, TypeScript, Next.js and modern web technologies.',
-  keywords: ['Aarsh Mishra', 'Nagarro', 'Engineer', 'React Developer', 'TypeScript', 'Next.js', 'LuC', 'web developer'],
+  keywords: ['Aarsh Mishra', 'Nagarro', 'Engineer', 'React Developer', 'TypeScript', 'Next.js', 'LuC', 'web developer', "Blog", "projects"],
   authors: [{ name: 'Aarsh Mishra', url: 'https://github.com/LuC-9' }],
   creator: 'Aarsh Mishra',
   openGraph: {
     type: 'website',
     locale: 'en_US',
     url: 'https://www.byluc.in',
-    title: 'Aarsh Mishra | Engineer at Nagarro - Developer & Gamer Portfolio',
+    title: 'Aarsh Mishra | Engineer at Nagarro - Developer & Gamer',
     description: 'Aarsh Mishra (LuC) - Engineer at Nagarro specializing in React, TypeScript, Next.js and modern web technologies.',
     siteName: 'Aarsh Mishra Portfolio',
     images: [
       {
-        url: '/og-image.png',
+        url: '/profile.jpg',
         width: 1200,
         height: 630,
         alt: 'Aarsh Mishra (LuC) - Developer & Gamer'
       }
-    ]
+    ],
+    logo: 'https://www.byluc.in/genkai.gif'
   },
   twitter: {
     card: 'summary_large_image',
     title: 'LuC | Aarsh Mishra - Developer & Gamer',
     description: 'Personal portfolio of Aarsh Mishra (LuC) - Software Developer, Web Engineer, and Gaming Enthusiast.',
-    images: ['/og-image.png']
+    images: ['/profile.jpg']
   },
   robots: {
     index: true,
@@ -60,6 +61,10 @@ export default function RootLayout({
     <html lang="en" suppressHydrationWarning>
       <head>
         <link rel="icon" href="/genkai.gif" type="image/gif" />
+        <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
+        <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png" />
+        <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png" />
+        <link rel="manifest" href="/site.webmanifest" />
       </head>
       <body className={`${jetbrainsMono.variable} font-mono antialiased`}>
         <PersonaProvider>

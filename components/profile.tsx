@@ -30,7 +30,7 @@ export function Profile() {
             </a>
           </Button>
           <Button variant="outline" size="sm" asChild>
-            <a href="https://linkedin.com/in/yourusername" target="_blank" rel="noopener noreferrer">
+            <a href="https://linkedin.com/in/aarsh-mishra09" target="_blank" rel="noopener noreferrer">
               <FaLinkedin className="mr-2" /> LinkedIn
             </a>
           </Button>

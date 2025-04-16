@@ -2,16 +2,20 @@ import { getAllContentData } from "@/lib/content"
 import { ProjectsClient } from "./ProjectsClient"
 import { ProjectsSectionHeading } from "@/components/projects-section-heading"
 import { Footer } from "@/components/footer"
-import { Metadata } from "next"
+import type { Metadata } from 'next'
 
-// Generate static metadata for the projects listing page
 export const metadata: Metadata = {
-  title: "Projects",
-  description: "Explore my portfolio of software development and creative projects.",
+  title: "Projects | Aarsh Mishra's Portfolio",
+  description: "Explore Aarsh Mishra's software development projects, including web applications, games, and open-source contributions.",
+  keywords: ['Aarsh Mishra', 'projects', 'portfolio', 'web development', 'software engineering', 'React', 'Next.js', 'TypeScript'],
+  alternates: {
+    canonical: 'https://www.byluc.in/projects'
+  },
   openGraph: {
-    title: "Projects | LuC (Aarsh Mishra)",
-    description: "Explore my portfolio of software development and creative projects.",
-    type: "website"
+    title: "Projects | Aarsh Mishra's Portfolio",
+    description: "Explore Aarsh Mishra's software development projects and technical work.",
+    url: 'https://www.byluc.in/projects',
+    type: 'website'
   }
 }
 

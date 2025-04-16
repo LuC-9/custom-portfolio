@@ -6,7 +6,11 @@ import { Footer } from '@/components/footer'
 export const metadata: Metadata = {
   title: 'Contact Aarsh Mishra | Software Developer',
   description: 'Get in touch with Aarsh Mishra for collaboration, job opportunities, or questions.',
-  keywords: ['Aarsh Mishra', 'contact', 'hire', 'collaboration']
+  keywords: ['Aarsh Mishra', 'contact', 'hire', 'collaboration','Aarsh Mishra', 'software developer', 'web developer', 'developer', 'portfolio', 'LuC', 'programmer', 'engineer', 'gamer', 'web developer', "Blog", "projects"],
+  alternates: {
+    canonical: 'https://www.byluc.in/contact'
+  }
+  // keywords: ['Aarsh Mishra', 'contact', 'hire', 'collaboration']
 }
 
 export default function ContactPage() {

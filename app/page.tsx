@@ -16,9 +16,12 @@ import { PersonStructuredData, WebsiteStructuredData } from './structured-data'
 export const metadata: Metadata = {
   title: 'Aarsh Mishra | Software Developer & Gaming Enthusiast (LuC)',
   description: 'Official portfolio of Aarsh Mishra, software developer and web engineer. View projects, experience, and contact information.',
-  keywords: ['Aarsh Mishra', 'software developer', 'web developer', 'developer', 'portfolio', 'LuC', 'programmer', 'engineer', 'gamer'],
+  keywords: ['Aarsh Mishra', 'software developer', 'web developer', 'developer', 'portfolio', 'LuC', 'programmer', 'engineer', 'gamer', 'web developer', "Blog", "projects"],
   alternates: {
-    canonical: 'https://byluc.in'
+    canonical: 'https://www.byluc.in'
+  },
+  openGraph: {
+    images: ['/profile.jpg']
   }
 }
 

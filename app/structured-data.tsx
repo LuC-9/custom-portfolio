@@ -1,5 +1,24 @@
 import { JsonLd } from 'react-schemaorg'
-import { Person, WebSite } from 'schema-dts'
+import { Organization, WebSite, Person } from 'schema-dts'
+
+export function OrganizationStructuredData() {
+  return (
+    <JsonLd<Organization>
+      item={{
+        "@context": "https://schema.org",
+        "@type": "Organization",
+        name: "Aarsh Mishra | LuC",
+        url: "https://www.byluc.in",
+        logo: "https://www.byluc.in/genkai.gif",
+        sameAs: [
+          "https://github.com/LuC-9",
+          "https://linkedin.com/in/aarsh-mishra09",
+          "https://twitter.com/aarsh_mishra"
+        ]
+      }}
+    />
+  )
+}
 
 export function PersonStructuredData() {
   return (
@@ -44,6 +63,9 @@ export function WebsiteStructuredData() {
     />
   )
 }
+
+
+
 
 
 

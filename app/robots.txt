@@ -1,4 +1,15 @@
 User-agent: *
 Allow: /
+Allow: /genkai.gif
 
+Sitemap: https://www.byluc.in/sitemap-index.xml
 Sitemap: https://www.byluc.in/sitemap.xml
+Sitemap: https://www.byluc.in/sitemap/main
+Sitemap: https://www.byluc.in/sitemap/blog
+Sitemap: https://www.byluc.in/sitemap/projects
+
+
+
+
+
+
