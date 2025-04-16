@@ -22,6 +22,10 @@ export async function GET() {
       url: `${baseUrl}/sitemap/projects`,
       lastModified: new Date(),
     },
+    {
+      url: `${baseUrl}/sitemap/community`,
+      lastModified: new Date(),
+    },
   ]
   
   // Generate XML

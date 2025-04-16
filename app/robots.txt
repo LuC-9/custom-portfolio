@@ -7,9 +7,5 @@ Sitemap: https://www.byluc.in/sitemap.xml
 Sitemap: https://www.byluc.in/sitemap/main
 Sitemap: https://www.byluc.in/sitemap/blog
 Sitemap: https://www.byluc.in/sitemap/projects
-
-
-
-
-
+Sitemap: https://www.byluc.in/sitemap/community
 

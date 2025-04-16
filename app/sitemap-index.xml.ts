@@ -18,5 +18,9 @@ export default function sitemapIndex(): MetadataRoute.SitemapIndex {
       url: 'https://www.byluc.in/sitemap/projects',
       lastModified: new Date(),
     },
+    {
+      url: 'https://www.byluc.in/sitemap/community',
+      lastModified: new Date(),
+    },
   ]
 }
