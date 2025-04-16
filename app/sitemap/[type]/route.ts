@@ -5,7 +5,8 @@ export async function generateStaticParams() {
   return [
     { type: 'main' },
     { type: 'blog' },
-    { type: 'projects' }
+    { type: 'projects' },
+    { type: 'community' }
   ]
 }
 
@@ -43,6 +44,12 @@ export async function GET(
         lastModified: new Date(),
         changeFrequency: "monthly",
         priority: 0.8
+      },
+      {
+        url: `${baseUrl}/community`,
+        lastModified: new Date(),
+        changeFrequency: "weekly",
+        priority: 0.9
       }
     ]
   }
@@ -139,3 +146,5 @@ function generateSitemapXml(sitemapData) {
   xml += '</urlset>'
   return xml
 }
+
+
