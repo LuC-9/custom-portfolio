@@ -6,7 +6,8 @@ export async function generateStaticParams() {
     { type: 'main' },
     { type: 'blog' },
     { type: 'projects' },
-    { type: 'community' }
+    { type: 'community' },
+    { type: 'contact' }
   ]
 }
 
@@ -146,5 +147,6 @@ function generateSitemapXml(sitemapData) {
   xml += '</urlset>'
   return xml
 }
+
 
 

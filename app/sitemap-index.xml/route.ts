@@ -26,6 +26,10 @@ export async function GET() {
       url: `${baseUrl}/sitemap/community`,
       lastModified: new Date(),
     },
+    {
+      url: `${baseUrl}/sitemap/contact`,
+      lastModified: new Date(),
+    },
   ]
   
   // Generate XML
@@ -71,4 +75,5 @@ function escapeXml(unsafe: string): string {
     .replace(/"/g, '&quot;')
     .replace(/'/g, '&apos;');
 }
+
 
