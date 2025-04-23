@@ -27,7 +27,7 @@ export function Footer() {
             <Link href="https://www.linkedin.com/in/aarsh-mishra09/" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn">
               <Linkedin size={20} className="text-muted-foreground hover:text-primary transition-colors" />
             </Link>
-            <Link href="https://twitter.com/yourusername" target="_blank" rel="noopener noreferrer" aria-label="X (formerly Twitter)">
+            <Link href="https://twitter.com/xrshLuC" target="_blank" rel="noopener noreferrer" aria-label="X (formerly Twitter)">
               <XIcon size={20} className="text-muted-foreground hover:text-primary transition-colors" />
             </Link>
             <Link href="mailto:aarshmail@gmail.com" aria-label="Email">
