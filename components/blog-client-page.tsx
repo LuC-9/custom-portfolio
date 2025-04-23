@@ -50,7 +50,7 @@ export function BlogClientPage({ posts }) {
 
           <div className="flex items-center justify-end gap-2 mt-4">
             <a 
-              href="https://twitter.com/LuC" 
+              href="https://twitter.com/xrshLuC" 
               target="_blank" 
               rel="noopener noreferrer"
               className="bg-gray-700/80 hover:bg-gray-700 px-4 py-2 rounded-md text-sm transition-colors flex items-center shadow-md"
