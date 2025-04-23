@@ -149,7 +149,7 @@ export function HomeContent() {
                     <Link href="https://www.linkedin.com/in/aarsh-mishra09/" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn">
                       <Linkedin className="h-6 w-6 text-muted-foreground hover:text-primary transition-colors" />
                     </Link>
-                    <Link href="https://twitter.com/yourusername" target="_blank" rel="noopener noreferrer" aria-label="X (formerly Twitter)">
+                    <Link href="https://twitter.com/xrshLuC" target="_blank" rel="noopener noreferrer" aria-label="X (formerly Twitter)">
                       <XIcon className="h-6 w-6 text-muted-foreground hover:text-primary transition-colors" />
                     </Link>
                     <Link href="https://leetcode.com/u/LuC9/" target="_blank" rel="noopener noreferrer" aria-label="LeetCode">
@@ -164,7 +164,7 @@ export function HomeContent() {
                     <Link href="https://www.youtube.com/@LuC-Throws" target="_blank" rel="noopener noreferrer" aria-label="YouTube">
                       <Youtube className="h-6 w-6 text-muted-foreground hover:text-primary transition-colors" />
                     </Link>
-                    <Link href="https://twitter.com/yourusername" target="_blank" rel="noopener noreferrer" aria-label="X (formerly Twitter)">
+                    <Link href="https://twitter.com/xrshLuC" target="_blank" rel="noopener noreferrer" aria-label="X (formerly Twitter)">
                       <XIcon className="h-6 w-6 text-muted-foreground hover:text-primary transition-colors" />
                     </Link>
                   </>
