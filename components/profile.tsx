@@ -1,6 +1,6 @@
 import Image from "next/image"
 import { Button } from "@/components/ui/button"
-import { FaGithub, FaLinkedin, FaTwitter } from "react-icons/fa"
+import { FaGithub, FaLinkedin, Fa } from "react-icons/fa"
 import { MdEmail } from "react-icons/md"
 
 export function Profile() {
@@ -35,8 +35,8 @@ export function Profile() {
             </a>
           </Button>
           <Button variant="outline" size="sm" asChild>
-            <a href="https://twitter.com/yourusername" target="_blank" rel="noopener noreferrer">
-              <FaTwitter className="mr-2" /> Twitter
+            <a href="https://.com/xrshLuC" target="_blank" rel="noopener noreferrer">
+              <Fa className="mr-2" /> 
             </a>
           </Button>
           <Button variant="outline" size="sm" asChild>
