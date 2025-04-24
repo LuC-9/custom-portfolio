@@ -31,16 +31,9 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     url: `${baseUrl}/projects/${project.id}`,
     lastModified: new Date(project.date || Date.now()),
     changeFrequency: "monthly" as const,
-    priority: 0.8,
+    priority: 0.8
     // Add image information if available
-    ...(project.image && {
-      images: [
-        {
-          url: project.image.startsWith('http') ? project.image : `${baseUrl}${project.image}`,
-          title: project.title
-        }
-      ]
-    })
+
   }))
   
   // Static pages - remove /about since it redirects to home
