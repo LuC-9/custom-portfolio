@@ -79,5 +79,7 @@ export function BlogPost({ source, frontmatter }) {
       )}
       <MDXRemote source={source} components={components} />
     </article>
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-4199488761497959"
+     crossorigin="anonymous"></script>
   )
 }
