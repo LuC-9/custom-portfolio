@@ -10,6 +10,7 @@ import { motion } from "framer-motion"
 import { useEffect, useState } from "react"
 import { XIcon } from "@/components/icons/x-icon"
 import { LeetCodeIcon } from "@/components/icons/leetcode-icon"
+import { track } from "@vercel/analytics";
 
 export function HomeContent() {
   const { isDeveloper, isGamer } = usePersona()
@@ -132,7 +133,12 @@ export function HomeContent() {
                   </Link>
                 </Button>
                 {isDeveloper && (
-                  <Link href={activeContent.resumeButton.href} target="_blank" rel="noopener noreferrer">
+                  <Link 
+                    href={activeContent.resumeButton.href} 
+                    target="_blank" 
+                    rel="noopener noreferrer"
+                    onClick={() => track("resume_download")}
+                  >
                     <Button variant="outline" className="rounded-full">
                       {activeContent.resumeButton.text}
                     </Button>
