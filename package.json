@@ -41,6 +41,7 @@
     "@radix-ui/react-toggle": "latest",
     "@radix-ui/react-toggle-group": "latest",
     "@radix-ui/react-tooltip": "latest",
+    "@vercel/analytics": "^1.5.0",
     "class-variance-authority": "latest",
     "clsx": "latest",
     "cmdk": "latest",
@@ -60,6 +61,7 @@
     "react-dom": "^19",
     "react-hook-form": "latest",
     "react-resizable-panels": "^2.1.7",
+    "react-schemaorg": "latest",
     "recharts": "2.15.0",
     "rehype-prism-plus": "latest",
     "rehype-slug": "latest",
@@ -67,15 +69,14 @@
     "remark-gfm": "latest",
     "remark-parse": "latest",
     "remark-rehype": "latest",
+    "schema-dts": "latest",
     "sonner": "^1.7.1",
     "tailwind-merge": "^2.5.5",
     "tailwindcss-animate": "^1.0.7",
     "three": "latest",
     "unified": "latest",
     "vaul": "^0.9.6",
-    "zod": "latest",
-    "react-schemaorg": "latest",
-    "schema-dts": "latest"
+    "zod": "latest"
   },
   "devDependencies": {
     "@types/node": "^22",
