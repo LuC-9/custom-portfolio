@@ -75,6 +75,7 @@ export default function RootLayout({
             <main className="flex-grow flex flex-col">{children}</main>
           </div>
           <Toaster />
+          <Analytics />
         </PersonaProvider>
       </body>
     </html>
