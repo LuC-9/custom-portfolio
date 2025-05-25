@@ -11,6 +11,7 @@ import { useEffect, useState } from "react"
 import { XIcon } from "@/components/icons/x-icon"
 import { LeetCodeIcon } from "@/components/icons/leetcode-icon"
 import { track } from "@vercel/analytics";
+import { DiscordStatus } from "@/components/discord-status"
 
 export function HomeContent() {
   const { isDeveloper, isGamer } = usePersona()
@@ -137,7 +138,13 @@ export function HomeContent() {
                     href={activeContent.resumeButton.href} 
                     target="_blank" 
                     rel="noopener noreferrer"
-                    onClick={() => track("resume_download")}
+                    onClick={() => {
+                      console.log("Resume download clicked");
+                      track("resume_download", { 
+                        persona: "developer",
+                        resumeVersion: "latest" 
+                      });
+                    }}
                   >
                     <Button variant="outline" className="rounded-full">
                       {activeContent.resumeButton.text}
@@ -146,38 +153,42 @@ export function HomeContent() {
                 )}
               </div>
               
-              <div className="flex space-x-6 mt-8">
-                {isDeveloper ? (
-                  <>
-                    <Link href="https://github.com/LuC-9" target="_blank" rel="noopener noreferrer" aria-label="GitHub">
-                      <Github className="h-6 w-6 text-muted-foreground hover:text-primary transition-colors" />
-                    </Link>
-                    <Link href="https://www.linkedin.com/in/aarsh-mishra09/" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn">
-                      <Linkedin className="h-6 w-6 text-muted-foreground hover:text-primary transition-colors" />
-                    </Link>
-                    <Link href="https://twitter.com/xrshLuC" target="_blank" rel="noopener noreferrer" aria-label="X (formerly Twitter)">
-                      <XIcon className="h-6 w-6 text-muted-foreground hover:text-primary transition-colors" />
-                    </Link>
-                    <Link href="https://leetcode.com/u/LuC9/" target="_blank" rel="noopener noreferrer" aria-label="LeetCode">
-                      <LeetCodeIcon className="h-6 w-6 text-muted-foreground hover:text-primary transition-colors" />
-                    </Link>
-                  </>
-                ) : (
-                  <>
-                    <Link href="https://www.twitch.tv/xrshluc" target="_blank" rel="noopener noreferrer" aria-label="Twitch">
-                      <Twitch className="h-6 w-6 text-muted-foreground hover:text-primary transition-colors" />
-                    </Link>
-                    <Link href="https://www.youtube.com/@LuC-Throws" target="_blank" rel="noopener noreferrer" aria-label="YouTube">
-                      <Youtube className="h-6 w-6 text-muted-foreground hover:text-primary transition-colors" />
-                    </Link>
-                    <Link href="https://twitter.com/xrshLuC" target="_blank" rel="noopener noreferrer" aria-label="X (formerly Twitter)">
-                      <XIcon className="h-6 w-6 text-muted-foreground hover:text-primary transition-colors" />
-                    </Link>
-                  </>
-                )}
-                <Link href="mailto:aarshmail@gmail.com" aria-label="Email">
-                  <Mail className="h-6 w-6 text-muted-foreground hover:text-primary transition-colors" />
-                </Link>
+              <div className="mt-6">
+                <DiscordStatus />
+                
+                <div className="flex flex-wrap gap-2 mt-4">
+                  {isDeveloper ? (
+                    <>
+                      <Link href="https://github.com/LuC-9" target="_blank" rel="noopener noreferrer" aria-label="GitHub">
+                        <Github className="h-6 w-6 text-muted-foreground hover:text-primary transition-colors" />
+                      </Link>
+                      <Link href="https://www.linkedin.com/in/aarsh-mishra09/" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn">
+                        <Linkedin className="h-6 w-6 text-muted-foreground hover:text-primary transition-colors" />
+                      </Link>
+                      <Link href="https://twitter.com/xrshLuC" target="_blank" rel="noopener noreferrer" aria-label="X (formerly Twitter)">
+                        <XIcon className="h-6 w-6 text-muted-foreground hover:text-primary transition-colors" />
+                      </Link>
+                      <Link href="https://leetcode.com/u/LuC9/" target="_blank" rel="noopener noreferrer" aria-label="LeetCode">
+                        <LeetCodeIcon className="h-6 w-6 text-muted-foreground hover:text-primary transition-colors" />
+                      </Link>
+                    </>
+                  ) : (
+                    <>
+                      <Link href="https://www.twitch.tv/xrshluc" target="_blank" rel="noopener noreferrer" aria-label="Twitch">
+                        <Twitch className="h-6 w-6 text-muted-foreground hover:text-primary transition-colors" />
+                      </Link>
+                      <Link href="https://www.youtube.com/@LuC-Throws" target="_blank" rel="noopener noreferrer" aria-label="YouTube">
+                        <Youtube className="h-6 w-6 text-muted-foreground hover:text-primary transition-colors" />
+                      </Link>
+                      <Link href="https://twitter.com/xrshLuC" target="_blank" rel="noopener noreferrer" aria-label="X (formerly Twitter)">
+                        <XIcon className="h-6 w-6 text-muted-foreground hover:text-primary transition-colors" />
+                      </Link>
+                    </>
+                  )}
+                  <Link href="mailto:aarshmail@gmail.com" aria-label="Email">
+                    <Mail className="h-6 w-6 text-muted-foreground hover:text-primary transition-colors" />
+                  </Link>
+                </div>
               </div>
             </motion.div>
           </div>
