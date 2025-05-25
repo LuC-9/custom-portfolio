@@ -6,6 +6,7 @@ import { PersonaProvider } from "@/contexts/persona-context"
 import { Navigation } from "@/components/navigation"
 import { Toaster } from '@/components/ui/sonner'
 import { NavigationEventsWrapper } from '@/components/navigation-events-wrapper'
+import { Analytics } from "@vercel/analytics/next"
 
 // Load JetBrains Mono - a popular monospaced font for coding
 const jetbrainsMono = JetBrains_Mono({
@@ -74,6 +75,7 @@ export default function RootLayout({
             <main className="flex-grow flex flex-col">{children}</main>
           </div>
           <Toaster />
+          <Analytics />
         </PersonaProvider>
       </body>
     </html>
