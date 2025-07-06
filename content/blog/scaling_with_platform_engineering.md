@@ -5,7 +5,7 @@ date: "2025-07-06"
 # image: "/placeholder.svg?height=400&width=600"
 tags: ["Software Architecture", "DevOps", "Platform Engineering"]
 featured: true
-audioSummary: "/platformEng.wav"
+audioSummary: "/platformEng.mp3"
 ---
 
 # Scaling Modern Software Delivery with Platform Engineering: Lessons from the Field
