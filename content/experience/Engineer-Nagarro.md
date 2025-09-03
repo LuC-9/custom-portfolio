@@ -1,7 +1,7 @@
 ---
 title: "Engineer"
 company: "Nagarro"
-period: "Jan 2024 - Present"
+period: "Jan 2024 - Jul 2025"
 skills: ["React", "TypeScript", "Next.js", "TailwindCSS", "Node.js"]
 
 ---
