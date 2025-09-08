@@ -1,20 +1,68 @@
 "use client"
 
-import { useRef } from "react"
+import { useRef, useState, useEffect } from "react"
 import Link from "next/link"
 import Image from "next/image"
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
-import { Calendar, Clock, Tag } from "lucide-react"
+import { Input } from "@/components/ui/input"
+import { Calendar, Clock, Tag, Search, X } from "lucide-react"
 import { BlogSectionHeading } from "@/components/blog-section-heading"
 import { ScrollAnimationWrapper } from "@/components/scroll-animation-wrapper"
 import { BlogPostCard } from "@/components/blog-post-card"
 
-export function BlogClientPage({ posts }) {
+export function BlogClientPage({ posts }: { posts: any[] }) {
+  console.log('BlogClientPage posts:', posts) // Debug log
   const blogSectionRef = useRef(null)
+  const searchInputRef = useRef(null)
+  const [searchQuery, setSearchQuery] = useState("")
+  const [filteredPosts, setFilteredPosts] = useState(posts)
+  const [isSearchFocused, setIsSearchFocused] = useState(false)
+
+  // Filter posts based on search query
+  useEffect(() => {
+    if (!searchQuery.trim()) {
+      setFilteredPosts(posts)
+      return
+    }
+
+    const filtered = posts.filter(post => {
+      const searchTerm = searchQuery.toLowerCase()
+      return (
+        post.title?.toLowerCase().includes(searchTerm) ||
+        post.excerpt?.toLowerCase().includes(searchTerm) ||
+        post.tags?.some(tag => tag.toLowerCase().includes(searchTerm))
+      )
+    })
+    setFilteredPosts(filtered)
+  }, [searchQuery, posts])
+
+  // Keyboard shortcuts
+  useEffect(() => {
+    const handleKeyDown = (e) => {
+      // Cmd/Ctrl + K to focus search
+      if ((e.metaKey || e.ctrlKey) && e.key === 'k') {
+        e.preventDefault()
+        searchInputRef.current?.focus()
+      }
+      // Escape to clear search and blur
+      if (e.key === 'Escape') {
+        setSearchQuery("")
+        searchInputRef.current?.blur()
+      }
+    }
+
+    document.addEventListener('keydown', handleKeyDown)
+    return () => document.removeEventListener('keydown', handleKeyDown)
+  }, [])
 
   const scrollToBlogs = () => {
     blogSectionRef.current?.scrollIntoView({ behavior: "smooth" })
+  }
+
+  const clearSearch = () => {
+    setSearchQuery("")
+    searchInputRef.current?.focus()
   }
 
   return (
@@ -22,6 +70,39 @@ export function BlogClientPage({ posts }) {
       {/* Hero section with intro - reduced height and spacing */}
       <div className="min-h-[50vh] md:min-h-[60vh] flex flex-col justify-center mb-16 md:mb-24">
         <div className="bg-secondary/20 text-foreground p-6 md:p-8 rounded-lg border border-secondary/50">
+          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-6 gap-4">
+            <h1 className="font-mono text-xl font-bold">Blogs</h1>
+            <div className="relative">
+              <div className="relative">
+                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground h-4 w-4" />
+                <Input
+                  ref={searchInputRef}
+                  type="text"
+                  placeholder="Search blogs..."
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  onFocus={() => setIsSearchFocused(true)}
+                  onBlur={() => setIsSearchFocused(false)}
+                  className="pl-10 pr-20 w-full sm:w-64 bg-background/50 border-border/50 focus:border-primary/50"
+                />
+                <div className="absolute right-3 top-1/2 transform -translate-y-1/2 flex items-center gap-1">
+                  {searchQuery && (
+                    <button
+                      onClick={clearSearch}
+                      className="p-1 hover:bg-secondary/50 rounded transition-colors"
+                      aria-label="Clear search"
+                    >
+                      <X className="h-3 w-3 text-muted-foreground" />
+                    </button>
+                  )}
+                  <div className="hidden sm:flex items-center gap-1 text-xs text-muted-foreground bg-secondary/30 px-2 py-1 rounded border">
+                    <span>⌘</span><span>K</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          
           <p className="font-mono text-base md:text-lg mb-6">
             Hi there! I am Aarsh. Welcome to my personal blog. Thus far, I have written only a few articles. 
             My blogs mostly have content around tools and technologies, tutorials, book / research-paper summaries, Gaming, Gadgets & Tech etc.
@@ -70,13 +151,51 @@ export function BlogClientPage({ posts }) {
       </div>
       
       <div ref={blogSectionRef} className="pt-16 md:pt-24 mt-8 md:mt-16">
-        <BlogSectionHeading />
-        <div className="grid gap-8 mt-8 md:mt-12">
-          {posts.map((post, index) => (
-            <ScrollAnimationWrapper key={post.id} delay={index}>
-              <BlogPostCard post={post} />
-            </ScrollAnimationWrapper>
-          ))}
+        <div className="flex items-center justify-between mb-8">
+          <div>
+            <h2 className="text-2xl md:text-3xl font-bold">All Blogs</h2>
+          <p className="text-muted-foreground mt-2">
+              {searchQuery ? (
+                <span>
+                  {filteredPosts.length} result{filteredPosts.length !== 1 ? 's' : ''} for "{searchQuery}"
+                </span>
+              ) : (
+                <span>{posts?.length || 0} article{(posts?.length || 0) !== 1 ? 's' : ''} published</span>
+              )}
+            </p>
+          </div>
+        </div>
+        
+        <div className="grid gap-8">
+          {!posts || posts.length === 0 ? (
+            <div className="text-center py-16">
+              <div className="mx-auto h-12 w-12 text-muted-foreground/50 mb-4">📝</div>
+              <h3 className="text-lg font-semibold mb-2">No blog posts yet</h3>
+              <p className="text-muted-foreground">
+                Blog posts will appear here once they are published.
+              </p>
+            </div>
+          ) : filteredPosts.length > 0 ? (
+            filteredPosts.map((post, index) => (
+              <ScrollAnimationWrapper key={post.id} delay={index * 0.1}>
+                <BlogPostCard post={post} searchQuery={searchQuery} />
+              </ScrollAnimationWrapper>
+            ))
+          ) : (
+            <div className="text-center py-16">
+              <Search className="mx-auto h-12 w-12 text-muted-foreground/50 mb-4" />
+              <h3 className="text-lg font-semibold mb-2">No articles found</h3>
+              <p className="text-muted-foreground mb-4">
+                No articles match your search for "{searchQuery}". Try different keywords.
+              </p>
+              <button
+                onClick={clearSearch}
+                className="text-primary hover:underline"
+              >
+                Clear search
+              </button>
+            </div>
+          )}
         </div>
       </div>
     </div>

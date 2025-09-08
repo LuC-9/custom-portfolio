@@ -1,5 +1,7 @@
 import { Briefcase } from "lucide-react"
 import { AnimatedSectionHeading } from "@/components/animated-section-heading"
+import { HoverCard, HoverCardContent, HoverCardTrigger } from "@/components/ui/hover-card"
+import { ExperienceDialog } from "@/components/experience-dialog"
 
 type ExperienceItem = {
   id: string
@@ -9,7 +11,7 @@ type ExperienceItem = {
   platform?: string
   community?: string
   period: string
-  content: string
+  contentHtml: string
   skills?: string[] // Add skills array
 }
 
@@ -28,13 +30,34 @@ export function ExperienceSection({
               <Briefcase size={14} />
             </div>
 
-            <div className="experience-card group/exp relative overflow-hidden">
-              <h3 className="text-xl font-bold mb-1">{exp.title}</h3>
-              <p className="text-muted-foreground mb-2">
-                {isDeveloper ? exp.company : exp.team || exp.platform || exp.community || "Gaming Organization"}
-              </p>
-              <p className="experience-date mb-4">{exp.period}</p>
-              <div dangerouslySetInnerHTML={{ __html: exp.content }} />
+            <ExperienceDialog experience={exp} isDeveloper={isDeveloper}>
+              <div className="experience-card group/exp relative overflow-hidden">
+                <HoverCard>
+                  <HoverCardTrigger asChild>
+                    <div className="cursor-pointer">
+                      <h3 className="text-xl font-bold mb-1 hover:text-primary transition-colors">{exp.title}</h3>
+                      <p className="text-muted-foreground mb-2 hover:text-primary transition-colors">
+                        {isDeveloper ? exp.company : exp.team || exp.platform || exp.community || "Gaming Organization"}
+                      </p>
+                    </div>
+                  </HoverCardTrigger>
+                  <HoverCardContent className="w-80 bg-background border-primary/20 shadow-lg" side="right">
+                    <div className="space-y-2">
+                      <h4 className="text-sm font-semibold text-primary">{exp.title}</h4>
+                      <p className="text-xs text-muted-foreground">
+                        {isDeveloper ? exp.company : exp.team || exp.platform || exp.community || "Gaming Organization"} • {exp.period}
+                      </p>
+                      <div className="text-sm leading-relaxed">
+                        {exp.contentHtml ? (
+                          <div dangerouslySetInnerHTML={{ __html: exp.contentHtml }} />
+                        ) : (
+                          <p className="text-muted-foreground italic">No description available</p>
+                        )}
+                      </div>
+                    </div>
+                  </HoverCardContent>
+                </HoverCard>
+                <p className="experience-date mb-4">{exp.period}</p>
               
               {/* Display skills without heading */}
               {exp.skills && exp.skills.length > 0 && (
@@ -53,7 +76,8 @@ export function ExperienceSection({
               
               {/* Add subtle gradient effect on card hover */}
               <span className="absolute inset-0 opacity-0 group-hover/exp:opacity-100 bg-gradient-to-b from-primary/5 to-transparent transition-opacity duration-300"></span>
-            </div>
+              </div>
+            </ExperienceDialog>
           </div>
         ))}
       </div>
