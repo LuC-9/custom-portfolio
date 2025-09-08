@@ -2,7 +2,7 @@
 title: "Senior Engineer"
 company: "Nagarro"
 period: "Jul 2025 - Present"
-skills: ["React", "TypeScript", "Next.js", "TailwindCSS", "Node.js", Java, Jenkins, Linux, Spring-Boot]
+skills: ["Java", "Jenkins", "Linux", "Spring-Boot", "React", "TypeScript", "Next.js", "TailwindCSS", "Node.js" ]
 
 ---
 
