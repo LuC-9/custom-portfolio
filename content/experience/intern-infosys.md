@@ -2,9 +2,12 @@
 title: "Systems Engineer Intern"
 company: "Infosys"
 period: "Feb 2022 - May 2022"
-skills: ["React", "TypeScript", "Next.js", "CI/CD"]
+skills: ["Spring-Boot", "Angular", "MySQL", "Maven", "Git", "CI/CD"]
 
 ---
 
-Worked on the Securities Exchange Platform to enhance integration and data exchange capabilities, implementing solutions for secure financial data processing.
+• Engineered complaint management system for municipal operations supporting multiple departments with
+role-based access control for Citizens, Department Members, Mayors, and Admins
+
+• Tech Stack: Java, Spring Boot, Angular 10, REST APIs, MySQL, Maven, Git
 
