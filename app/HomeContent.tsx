@@ -36,7 +36,7 @@ export function HomeContent() {
     developer: {
       name: "Aarsh Mishra",
       description:
-        "A Software Developer specializing in building exceptional digital experiences with modern technologies.",
+        "A Software Engineer specializing in building exceptional digital experiences with modern technologies.",
       primaryButton: {
         text: "Get in touch",
         href: "/contact",
