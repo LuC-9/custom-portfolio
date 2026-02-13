@@ -97,9 +97,9 @@
 
 /* Comment out Custom cursor styles */
 
-.custom-cursor {
+/* .custom-cursor {
   @apply fixed pointer-events-none z-50 w-6 h-6 rounded-full mix-blend-difference bg-white transform -translate-x-1/2 -translate-y-1/2 transition-transform duration-100 ease-out;
-}
+} */
 
 /* For hiding scrollbar but keeping functionality */
 .no-scrollbar::-webkit-scrollbar {
