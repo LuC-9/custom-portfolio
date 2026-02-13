@@ -2,11 +2,17 @@
 title: "Engineer"
 company: "Nagarro"
 period: "Jan 2024 - Jul 2025"
-skills: ["React", "TypeScript", "Next.js", "TailwindCSS", "Node.js"]
+skills: ["Spring-Boot", "Microservices", "Redis", "AWS SQS", "REST"]
 
 ---
 
-Developing and maintaining modern web applications using React, TypeScript, and Next.js. Collaborating with designers to implement responsive and accessible user interfaces. Working with cross-functional teams to deliver high-quality software solutions.
+• Built and scaled Spring Boot microservices for a B2C stock trading platform serving 1M+ users with
+99.9% uptime
+• Supported 100K+ concurrent WebSocket connections and reduced API latency by 35% using Redis
+caching
+• Designed asynchronous workflows using AWS SQS to improve resilience under peak load
+• Reduced high/medium security vulnerabilities by 60%+
+
 
 
 
