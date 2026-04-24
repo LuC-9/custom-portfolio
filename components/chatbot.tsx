@@ -163,9 +163,9 @@ Be polite, concise, and helpful. If you don't know the answer based on the conte
         setMessages(prev => [...prev, { role: 'model', text: response.text ?? '' }]);
       }
     } catch (err: any) {
-      //console.error("Chat error details:", err);
+      console.error("Chat error details:", err);
       // More detailed error formatting specifically to help diagnosing
-      setError('Message is being Sent!' );
+      setError('Sorry, I encountered an error: ' + (err.message || String(err)));
     } finally {
       setIsLoading(false);
     }
