@@ -84,13 +84,15 @@ export function HomeContent() {
               transition={{ duration: 0.5 }}
               className="relative w-64 h-64 md:w-72 md:h-72"
             >
-              <div className="profile-border w-full h-full">
+              <div className="profile-border w-full h-full relative overflow-hidden rounded-full">
                 <Image
                   src={activeContent.profileImage}
                   alt={`${activeContent.name}'s profile picture`}
                   fill
                   priority
-                  className="object-cover rounded-full"
+                  className="object-cover"
+                  referrerPolicy="no-referrer"
+                  unoptimized={activeContent.profileImage.endsWith('.gif') || activeContent.profileImage.includes('.gif?')}
                 />
               </div>
             </motion.div>

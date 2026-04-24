@@ -6,36 +6,57 @@ import Image from "next/image"
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { Input } from "@/components/ui/input"
-import { Calendar, Clock, Tag, Search, X } from "lucide-react"
+import { Calendar, Clock, Tag, Search, X, Code, Gamepad2, LayoutGrid } from "lucide-react"
 import { BlogSectionHeading } from "@/components/blog-section-heading"
 import { ScrollAnimationWrapper } from "@/components/scroll-animation-wrapper"
 import { BlogPostCard } from "@/components/blog-post-card"
+import { usePersona } from "@/contexts/persona-context"
 
 export function BlogClientPage({ posts }: { posts: any[] }) {
   console.log('BlogClientPage posts:', posts) // Debug log
-  const blogSectionRef = useRef(null)
-  const searchInputRef = useRef(null)
+  const blogSectionRef = useRef<HTMLDivElement>(null)
+  const searchInputRef = useRef<HTMLInputElement>(null)
   const [searchQuery, setSearchQuery] = useState("")
+  const [personaFilter, setPersonaFilter] = useState<"all" | "developer" | "gamer">("all")
   const [filteredPosts, setFilteredPosts] = useState(posts)
   const [isSearchFocused, setIsSearchFocused] = useState(false)
+  const { persona } = usePersona()
 
-  // Filter posts based on search query
+  // Initialize filter based on global persona
   useEffect(() => {
-    if (!searchQuery.trim()) {
-      setFilteredPosts(posts)
-      return
+    setPersonaFilter(persona)
+  }, [persona])
+
+  // Filter posts based on search query and persona
+  useEffect(() => {
+    let filtered = posts;
+
+    if (personaFilter !== "all") {
+      const gamerTags = ["gaming", "streaming", "twitch", "youtube", "esports", "games", "game"];
+      filtered = filtered.filter(post => {
+        const postTags = (post.tags || []).map((t: string) => t.toLowerCase());
+        const hasGamerTag = postTags.some((t: string) => 
+          gamerTags.some(gt => t.includes(gt))
+        );
+        
+        if (personaFilter === "gamer") return hasGamerTag;
+        if (personaFilter === "developer") return !hasGamerTag;
+        return true;
+      });
     }
 
-    const filtered = posts.filter(post => {
+    if (searchQuery.trim()) {
       const searchTerm = searchQuery.toLowerCase()
-      return (
-        post.title?.toLowerCase().includes(searchTerm) ||
-        post.excerpt?.toLowerCase().includes(searchTerm) ||
-        post.tags?.some(tag => tag.toLowerCase().includes(searchTerm))
-      )
-    })
+      filtered = filtered.filter(post => {
+        return (
+          post.title?.toLowerCase().includes(searchTerm) ||
+          post.excerpt?.toLowerCase().includes(searchTerm) ||
+          post.tags?.some((tag: string) => tag.toLowerCase().includes(searchTerm))
+        )
+      })
+    }
     setFilteredPosts(filtered)
-  }, [searchQuery, posts])
+  }, [searchQuery, posts, personaFilter])
 
   // Keyboard shortcuts
   useEffect(() => {
@@ -151,18 +172,54 @@ export function BlogClientPage({ posts }: { posts: any[] }) {
       </div>
       
       <div ref={blogSectionRef} className="pt-16 md:pt-24 mt-8 md:mt-16">
-        <div className="flex items-center justify-between mb-8">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between mb-8 gap-4">
           <div>
             <h2 className="text-2xl md:text-3xl font-bold">All Blogs</h2>
-          <p className="text-muted-foreground mt-2">
+            <p className="text-muted-foreground mt-2">
               {searchQuery ? (
                 <span>
                   {filteredPosts.length} result{filteredPosts.length !== 1 ? 's' : ''} for "{searchQuery}"
                 </span>
               ) : (
-                <span>{posts?.length || 0} article{(posts?.length || 0) !== 1 ? 's' : ''} published</span>
+                <span>{filteredPosts.length} article{filteredPosts.length !== 1 ? 's' : ''} published</span>
               )}
             </p>
+          </div>
+          
+          <div className="flex items-center p-1 bg-secondary/30 rounded-lg border border-border/50">
+            <button
+              onClick={() => setPersonaFilter('all')}
+              className={`flex items-center gap-2 px-3 py-1.5 text-sm font-medium rounded-md transition-colors ${
+                personaFilter === 'all' 
+                  ? 'bg-background shadow-sm text-foreground' 
+                  : 'text-muted-foreground hover:text-foreground hover:bg-secondary/50'
+              }`}
+            >
+              <LayoutGrid className="w-4 h-4" />
+              All
+            </button>
+            <button
+              onClick={() => setPersonaFilter('developer')}
+              className={`flex items-center gap-2 px-3 py-1.5 text-sm font-medium rounded-md transition-colors ${
+                personaFilter === 'developer' 
+                  ? 'bg-background shadow-sm text-blue-500 dark:text-blue-400' 
+                  : 'text-muted-foreground hover:text-foreground hover:bg-secondary/50'
+              }`}
+            >
+              <Code className="w-4 h-4" />
+              Dev
+            </button>
+            <button
+              onClick={() => setPersonaFilter('gamer')}
+              className={`flex items-center gap-2 px-3 py-1.5 text-sm font-medium rounded-md transition-colors ${
+                personaFilter === 'gamer' 
+                  ? 'bg-background shadow-sm text-red-500 dark:text-red-400' 
+                  : 'text-muted-foreground hover:text-foreground hover:bg-secondary/50'
+              }`}
+            >
+              <Gamepad2 className="w-4 h-4" />
+              Gamer
+            </button>
           </div>
         </div>
         

@@ -137,6 +137,13 @@ Update your personal information in the following files:
 
 This project can be easily deployed to Vercel:
 
+### Setting Up Environment Variables on Vercel
+When deploying to Vercel, you need to configure the following environment variables in your Vercel project settings:
+
+1. `GEMINI_API_KEY`: Get this from Google AI Studio. It powers the Chatbot and AI Blog Summary feature.
+2. `NEXT_PUBLIC_GEMINI_API_KEY`: (Optional) Can be used as a fallback for the AI API key.
+3. `DISCORD_WEBHOOK_URL`: (Optional) Needed only if you want the contact form to send messages to your Discord server.
+
 ```bash
 npm run build
 # or
