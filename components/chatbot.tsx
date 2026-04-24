@@ -57,7 +57,8 @@ Your goal is to answer visitor questions about Aarsh's projects, experience, and
 - Twitch: https://www.twitch.tv/luc_throws
 
 # Contact Form Use
-If the user wants to contact Aarsh directly, leave a message for him, or hire him, you MUST use the \`submitContactForm\` tool to send a message. Make sure you collect their name, email, the reason for contact (General, Project Inquiry, Technical Support, Collaboration, Other), and the message body before calling the tool. Explain you can send a message on their behalf.
+If the user wants to contact Aarsh directly, leave a message for him, or hire him, you MUST use the \`submitContactForm\` tool to send a message. Make sure you collect their name, email, the reason for contact (Regarding an Opportunity, Need help in Project/Idea, Query regarding Topic/Tech, Need Guidance, Meet in-person, Others), and the message body before calling the tool. Explain you can send a message on their behalf.
+IMPORTANT: When you need to ask the user for the 'reason for contact', you MUST include the exact text "[REASON_DROPDOWN]" somewhere in your response. This will render a visual dropdown for them to select from.
 
 Here is the context data in JSON format:
 ${JSON.stringify(contextData)}
@@ -79,7 +80,18 @@ Be polite, concise, and helpful. If you don't know the answer based on the conte
                   properties: {
                     name: { type: Type.STRING, description: "The name of the user." },
                     email: { type: Type.STRING, description: "The email address of the user." },
-                    reason: { type: Type.STRING, description: "The reason for contact (e.g. General, Project Inquiry)." },
+                    reason: { 
+                      type: Type.STRING, 
+                      description: "The reason for contact.",
+                      enum: [
+                        "Regarding an Opportunity",
+                        "Need help in Project/Idea",
+                        "Query regarding Topic/Tech",
+                        "Need Guidance",
+                        "Meet in-person",
+                        "Others"
+                      ]
+                    },
                     message: { type: Type.STRING, description: "The body of the message to send to Aarsh." },
                   },
                   required: ["name", "email", "reason", "message"],
@@ -98,18 +110,19 @@ Be polite, concise, and helpful. If you don't know the answer based on the conte
     }
   }, [messages, isLoading, error]);
 
-  const handleSend = async () => {
-    if (!input.trim() || !aiClient || !chatSessionRef.current) return;
+  const handleSend = async (overrideMsg?: string) => {
+    const isString = typeof overrideMsg === 'string';
+    const messageToSend = (isString && overrideMsg) ? overrideMsg : input.trim();
+    if (!messageToSend || !aiClient || !chatSessionRef.current) return;
     
     setError(null);
-    const userMsg = input.trim();
     setInput('');
-    setMessages(prev => [...prev, { role: 'user', text: userMsg }]);
+    setMessages(prev => [...prev, { role: 'user', text: messageToSend }]);
     setIsLoading(true);
 
     try {
       const response = await chatSessionRef.current.sendMessage({
-        message: userMsg
+        message: messageToSend
       });
 
       if (response.functionCalls && response.functionCalls.length > 0) {
@@ -133,10 +146,10 @@ Be polite, concise, and helpful. If you don't know the answer based on the conte
 
             // Send tool response to Gemini
             const toolResponseResult = await chatSessionRef.current.sendMessage([{
-               functionResponse: {
-                 name: call.name,
-                 response: { success }
-               }
+                 functionResponse: {
+                   name: call.name,
+                   response: { result: success ? "success" : "failure" }
+                 }
             }]);
 
             if (toolResponseResult.text) {
@@ -150,8 +163,9 @@ Be polite, concise, and helpful. If you don't know the answer based on the conte
         setMessages(prev => [...prev, { role: 'model', text: response.text ?? '' }]);
       }
     } catch (err: any) {
-      console.error(err);
-      setError('Sorry, I encountered an error. Please try again.');
+      console.error("Chat error details:", err);
+      // More detailed error formatting specifically to help diagnosing
+      setError('Sorry, I encountered an error: ' + (err.message || String(err)));
     } finally {
       setIsLoading(false);
     }
@@ -215,9 +229,27 @@ Be polite, concise, and helpful. If you don't know the answer based on the conte
                     {message.role === 'user' ? (
                       message.text
                     ) : (
-                      <div className="markdown-body prose prose-slate dark:prose-invert prose-sm max-w-none">
-                        <Markdown remarkPlugins={[remarkGfm]}>{message.text}</Markdown>
-                      </div>
+                      <>
+                        <div className="markdown-body prose prose-slate dark:prose-invert prose-sm max-w-none">
+                          <Markdown remarkPlugins={[remarkGfm]}>{message.text.replace('[REASON_DROPDOWN]', '')}</Markdown>
+                        </div>
+                        {message.text.includes('[REASON_DROPDOWN]') && i === messages.length - 1 && (
+                          <div className="flex flex-col gap-2 mt-4 pt-4 border-t border-border/50">
+                            <span className="text-xs font-medium text-muted-foreground mb-1">Select Reason:</span>
+                            {["Regarding an Opportunity", "Need help in Project/Idea", "Query regarding Topic/Tech", "Need Guidance", "Meet in-person", "Others"].map(reason => (
+                              <Button 
+                                key={reason} 
+                                variant="outline" 
+                                size="sm" 
+                                className="justify-start text-xs h-auto py-2 whitespace-normal text-left sm:py-1.5"
+                                onClick={() => handleSend(reason)}
+                              >
+                                {reason}
+                              </Button>
+                            ))}
+                          </div>
+                        )}
+                      </>
                     )}
                   </div>
                 </div>
@@ -250,7 +282,7 @@ Be polite, concise, and helpful. If you don't know the answer based on the conte
                 className="flex-1 focus-visible:ring-1 focus-visible:ring-primary/50"
                 disabled={isLoading}
               />
-              <Button onClick={handleSend} disabled={!input.trim() || isLoading} size="icon" className="shrink-0 h-10 w-10">
+              <Button onClick={() => handleSend()} disabled={!input.trim() || isLoading} size="icon" className="shrink-0 h-10 w-10">
                 <Send className="h-4 w-4" />
               </Button>
             </div>
