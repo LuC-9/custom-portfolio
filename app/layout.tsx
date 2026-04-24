@@ -7,6 +7,7 @@ import { Navigation } from "@/components/navigation"
 import { Toaster } from '@/components/ui/sonner'
 import { NavigationEventsWrapper } from '@/components/navigation-events-wrapper'
 import { Analytics } from "@vercel/analytics/next"
+import { Chatbot } from "@/components/chatbot"
 
 // Load JetBrains Mono - a popular monospaced font for coding
 const jetbrainsMono = JetBrains_Mono({
@@ -76,6 +77,7 @@ export default function RootLayout({
           </div>
           <Toaster />
           <Analytics />
+          <Chatbot />
         </PersonaProvider>
       </body>
     </html>

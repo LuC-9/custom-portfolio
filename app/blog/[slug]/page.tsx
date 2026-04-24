@@ -6,6 +6,7 @@ import { BlogFooter } from "@/components/blog-footer"
 import { AudioSummary } from "@/components/audio-summary"
 import { Calendar, Clock } from "lucide-react"
 import { BlogPostStructuredData } from './structured-data'
+import { AiSummaryButton } from "@/components/ai-summary-button"
 
 // Generate metadata for each blog post
 export async function generateMetadata({ 
@@ -89,6 +90,8 @@ export default async function BlogPostPage({
                 />
               </div>
             )}
+            
+            <AiSummaryButton title={post.title} content={contentHtml} />
             
             <div className="flex flex-col lg:flex-row gap-6 lg:gap-8">
               <div className="lg:w-3/4">
