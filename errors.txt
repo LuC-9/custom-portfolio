@@ -1,0 +1,47 @@
+.next/types/app/sitemap/[type]/route.ts(49,7): error TS2344: Type '{ __tag__: "GET"; __param_position__: "second"; __param_type__: { params: { type: string; }; }; }' does not satisfy the constraint 'ParamCheck<RouteContext>'.
+  The types of '__param_type__.params' are incompatible between these types.
+    Type '{ type: string; }' is missing the following properties from type 'Promise<any>': then, catch, finally, [Symbol.toStringTag]
+app/HomeContent.tsx(140,41): error TS2339: Property 'resumeButton' does not exist on type '{ name: string; description: string; primaryButton: { text: string; href: string; icon: Element; }; secondaryButton: { text: string; href: string; }; profileImage: string; }'.
+app/HomeContent.tsx(152,38): error TS2339: Property 'resumeButton' does not exist on type '{ name: string; description: string; primaryButton: { text: string; href: string; icon: Element; }; secondaryButton: { text: string; href: string; }; profileImage: string; }'.
+app/blog/[slug]/structured-data.tsx(41,11): error TS2353: Object literal may only specify known properties, and 'logo' does not exist in type 'PersonLeaf'.
+app/layout.tsx(43,5): error TS2353: Object literal may only specify known properties, and 'logo' does not exist in type 'OpenGraphWebsite'.
+app/projects/ProjectsClient.tsx(30,26): error TS2719: Type 'ProjectProps' is not assignable to type 'ProjectProps'. Two different types with this name exist, but they are unrelated.
+  Property 'contentHtml' is optional in type 'ProjectProps' but required in type 'ProjectProps'.
+app/projects/page.tsx(33,27): error TS2322: Type 'ContentItem[]' is not assignable to type 'ProjectProps[]'.
+  Type 'ContentItem' is missing the following properties from type 'ProjectProps': description, content, image, tags
+app/sitemap-index.xml.ts(3,55): error TS2694: Namespace 'MetadataRoute' has no exported member 'SitemapIndex'.
+app/structured-data.tsx(60,11): error TS2353: Object literal may only specify known properties, and '"query-input"' does not exist in type 'SearchActionLeaf'.
+components/articles-section.tsx(2,2): error TS2304: Cannot find name 'Button'.
+components/articles-section.tsx(7,4): error TS2304: Cannot find name 'Link'.
+components/articles-section.tsx(8,6): error TS2304: Cannot find name 'BookOpen'.
+components/articles-section.tsx(10,5): error TS2304: Cannot find name 'Link'.
+components/articles-section.tsx(11,3): error TS2304: Cannot find name 'Button'.
+components/blog-client-page.tsx(238,43): error TS2322: Type '{ post: any; searchQuery: string; }' is not assignable to type 'IntrinsicAttributes & { post: any; }'.
+  Property 'searchQuery' does not exist on type 'IntrinsicAttributes & { post: any; }'.
+components/blog-section.tsx(33,14): error TS2304: Cannot find name 'ChevronDown'.
+components/blog-section.tsx(40,37): error TS2322: Type 'import("/app/applet/lib/blog").BlogPost' is not assignable to type 'BlogPost'.
+  Property 'image' is optional in type 'BlogPost' but required in type 'BlogPost'.
+components/blog-section.tsx(76,16): error TS2304: Cannot find name 'Clock'.
+components/discord-status.tsx(32,15): error TS2322: Type '{ track_id: string; timestamps: Timestamps; song: string; artist: string; album_art_url: string; album: string; }' is not assignable to type 'Spotify'.
+components/discord-status.tsx(66,30): error TS2339: Property 'activities' does not exist on type 'Status'.
+  Property 'activities' does not exist on type '"online"'.
+components/discord-status.tsx(76,38): error TS2339: Property 'song' does not exist on type 'Spotify'.
+  Property 'song' does not exist on type '{ listening_to_spotify: true; spotify: { track_id: string; timestamps: Timestamps; song: string; artist: string; album_art_url: string; album: string; }; }'.
+components/discord-status.tsx(77,24): error TS2339: Property 'artist' does not exist on type 'Spotify'.
+  Property 'artist' does not exist on type '{ listening_to_spotify: true; spotify: { track_id: string; timestamps: Timestamps; song: string; artist: string; album_art_url: string; album: string; }; }'.
+components/footer.tsx(31,22): error TS2322: Type '{ size: number; className: string; }' is not assignable to type 'IntrinsicAttributes & SVGProps<SVGSVGElement>'.
+  Property 'size' does not exist on type 'IntrinsicAttributes & SVGProps<SVGSVGElement>'.
+components/footer.tsx(42,31): error TS2322: Type '{ size: number; className: string; }' is not assignable to type 'IntrinsicAttributes & SVGProps<SVGSVGElement>'.
+  Property 'size' does not exist on type 'IntrinsicAttributes & SVGProps<SVGSVGElement>'.
+components/projects-section.tsx(33,14): error TS2304: Cannot find name 'ChevronDown'.
+components/projects-section.tsx(40,14): error TS2304: Cannot find name 'ProjectCard'.
+components/streams-section.tsx(2,2): error TS2304: Cannot find name 'Button'.
+components/streams-section.tsx(7,4): error TS2304: Cannot find name 'Link'.
+components/streams-section.tsx(8,6): error TS2304: Cannot find name 'Eye'.
+components/streams-section.tsx(10,5): error TS2304: Cannot find name 'Link'.
+components/streams-section.tsx(11,3): error TS2304: Cannot find name 'Button'.
+components/three/profile-mesh.tsx(24,5): error TS2554: Expected 1-2 arguments, but got 3.
+components/ui/sidebar.tsx(14,26): error TS2307: Cannot find module '@/components/ui/skeleton' or its corresponding type declarations.
+components/ui/toaster.tsx(3,26): error TS2307: Cannot find module '@/hooks/use-toast' or its corresponding type declarations.
+lib/blog.ts(14,10): error TS2304: Cannot find name 'getBlogPosts'.
+lib/projects.ts(15,10): error TS2304: Cannot find name 'getProjects'.

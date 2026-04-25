@@ -145,12 +145,15 @@ Be polite, concise, and helpful. If you don't know the answer based on the conte
             }
 
             // Send tool response to Gemini
-            const toolResponseResult = await chatSessionRef.current.sendMessage([{
+            const toolResponseResult = await chatSessionRef.current.sendMessage({
+              message: [{
                  functionResponse: {
+                   id: call.id,
                    name: call.name,
                    response: { result: success ? "success" : "failure" }
                  }
-            }]);
+              }]
+            });
 
             if (toolResponseResult.text) {
                setMessages(prev => [...prev, { role: 'model', text: toolResponseResult.text ?? '' }]);
