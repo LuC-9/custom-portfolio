@@ -1,12 +1,14 @@
 export async function sendTelegramMessage(message: string) {
   const telegramBotToken = process.env.TELEGRAM_BOT_TOKEN
+  const chatId = process.env.TELEGRAM_CHAT_ID
 
   if (!telegramBotToken) {
     throw new Error("TELEGRAM_BOT_TOKEN is not defined")
   }
 
-  // Default chat ID - in production, you'd want to set this to your own chat ID
-  const chatId = "123456789"
+  if (!chatId) {
+    throw new Error("TELEGRAM_CHAT_ID is not defined")
+  }
 
   const url = `https://api.telegram.org/bot${telegramBotToken}/sendMessage`
 

@@ -1,6 +1,4 @@
-"use client"
-
-import { BookOpen } from "lucide-react"
+import { BookOpen, ChevronDown, Clock } from "lucide-react"
 import { AnimatedSectionHeading } from "@/components/animated-section-heading"
 import Link from "next/link"
 import Image from "next/image"
@@ -15,10 +13,11 @@ type BlogPost = {
   tags?: string[]
   image: string
   readingTime?: string
+  [key: string]: any
 }
 
-export function BlogSection() {
-  const posts = getFeaturedBlogPosts();
+export async function BlogSection() {
+  const posts = await getFeaturedBlogPosts();
   
   return (
     <section className="py-12" id="blog">
