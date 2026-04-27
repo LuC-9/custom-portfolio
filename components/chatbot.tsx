@@ -50,6 +50,7 @@ export function Chatbot() {
 Your goal is to answer visitor questions about Aarsh's projects, experience, and articles.
 
 # Social Links & Contact Info
+- x/twitter: https://twitter.com/xrshLuC
 - GitHub: https://github.com/LuC-9
 - LinkedIn: https://www.linkedin.com/in/aarsh-mishra09/
 - YouTube: https://www.youtube.com/@LuC-Throws
