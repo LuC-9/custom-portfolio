@@ -4,6 +4,7 @@ import { useState, type ReactNode } from "react"
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog"
 import { Badge } from "@/components/ui/badge"
 import { Briefcase, Calendar, Building } from "lucide-react"
+import { emitGameEvent } from "@/lib/game/event-bus"
 
 interface ExperienceProps {
   id: string
@@ -27,10 +28,21 @@ export function ExperienceDialog({
   isDeveloper: boolean
 }) {
   const [isOpen, setIsOpen] = useState(false)
+  const handleOpen = () => {
+    emitGameEvent({
+      type: "experience_open",
+      taskId: `experience:${experience.id}`.toLowerCase(),
+      metadata: {
+        experienceId: experience.id,
+        experienceTitle: experience.title,
+      },
+    })
+    setIsOpen(true)
+  }
   
   return (
     <>
-      <div onClick={() => setIsOpen(true)}>
+      <div onClick={handleOpen}>
         {children}
       </div>
 

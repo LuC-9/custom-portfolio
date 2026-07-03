@@ -2,9 +2,20 @@
 
 import { usePersona } from "@/contexts/persona-context"
 import { motion } from "framer-motion"
+import { emitGameEvent } from "@/lib/game/event-bus"
 
 export function PersonaToggle() {
   const { persona, togglePersona } = usePersona()
+
+  const handleToggle = () => {
+    const nextPersona = persona === "developer" ? "gamer" : "developer"
+    emitGameEvent({
+      type: "persona_viewed",
+      taskId: `persona:${nextPersona}`,
+      metadata: { persona: nextPersona },
+    })
+    togglePersona()
+  }
 
   return (
     <div className="flex items-center gap-3">
@@ -13,7 +24,7 @@ export function PersonaToggle() {
       </span>
 
       <button
-        onClick={togglePersona}
+        onClick={handleToggle}
         className="relative h-6 w-12 rounded-full bg-secondary p-1 transition-colors focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 focus:ring-offset-background"
         aria-label={`Switch to ${persona === "developer" ? "gamer" : "developer"} mode`}
       >

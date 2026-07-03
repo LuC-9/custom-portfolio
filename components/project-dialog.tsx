@@ -1,10 +1,12 @@
+"use client"
+
 import { useState, type ReactNode } from "react"
-import Image from "next/image"
 import Link from "next/link"
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { ExternalLink, Github, Tag } from "lucide-react"
+import { emitGameEvent } from "@/lib/game/event-bus"
 
 interface ProjectProps {
   id: string
@@ -20,10 +22,21 @@ interface ProjectProps {
 
 export function ProjectDialog({ project, children }: { project: ProjectProps; children: ReactNode }) {
   const [isOpen, setIsOpen] = useState(false)
-  
+  const handleOpen = () => {
+    emitGameEvent({
+      type: "project_open",
+      taskId: `project:${project.id}`.toLowerCase(),
+      metadata: {
+        projectId: project.id,
+        projectTitle: project.title,
+      },
+    })
+    setIsOpen(true)
+  }
+
   return (
     <>
-      <div onClick={() => setIsOpen(true)} className="cursor-pointer">
+      <div onClick={handleOpen} className="cursor-pointer">
         {children}
       </div>
 

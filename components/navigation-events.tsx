@@ -1,35 +1,48 @@
 "use client"
 
 import { useState, useEffect, useRef } from "react"
-import { usePathname, useSearchParams } from "next/navigation"
+import { usePathname } from "next/navigation"
 import { LoadingSpinner } from "./loading-spinner"
 import { motion, AnimatePresence } from "framer-motion"
+import { emitGameEvent } from "@/lib/game/event-bus"
+
+const ROUTE_TASK_IDS: Record<string, string> = {
+  "/": "route:/",
+  "/projects": "route:/projects",
+  "/blog": "route:/blog",
+  "/community": "route:/community",
+  "/contact": "route:/contact",
+}
 
 export function NavigationEvents() {
   const [isLoading, setIsLoading] = useState(false)
   const loadedPages = useRef(new Set())
   const pathname = usePathname()
-  const searchParams = useSearchParams()
-  
-  // Create a unique key for this route (pathname + search params)
-  const routeKey = pathname + searchParams.toString()
+  const routeKey = pathname
 
   useEffect(() => {
-    // Only show loading if this page hasn't been loaded before
     if (!loadedPages.current.has(routeKey)) {
-      // Show loading state
+      const taskId = ROUTE_TASK_IDS[pathname]
+      if (taskId) {
+        emitGameEvent({
+          type: "page_visit",
+          taskId,
+          metadata: {
+            route: pathname,
+          },
+        })
+      }
+
       setIsLoading(true)
       
-      // Hide loading state after a delay
       const timer = setTimeout(() => {
         setIsLoading(false)
-        // Mark this page as loaded
         loadedPages.current.add(routeKey)
       }, 500)
       
       return () => clearTimeout(timer)
     }
-  }, [routeKey])
+  }, [pathname, routeKey])
 
   return (
     <AnimatePresence>
