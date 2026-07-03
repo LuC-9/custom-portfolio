@@ -8,6 +8,7 @@ import remarkGfm from 'remark-gfm';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { ScrollArea } from '@/components/ui/scroll-area';
+import { emitGameEvent } from '@/lib/game/event-bus';
 
 // Using NEXT_PUBLIC_GEMINI_API_KEY per guidelines
 const getAiClient = () => {
@@ -35,6 +36,7 @@ export function Chatbot() {
   const bottomRef = useRef<HTMLDivElement>(null);
   const aiClient = getAiClient();
   const chatSessionRef = useRef<any>(null);
+  const hasTrackedFirstMessageRef = useRef(false);
 
   useEffect(() => {
     // Fetch context on load securely
@@ -120,6 +122,13 @@ Be polite, concise, and helpful. If you don't know the answer based on the conte
     setInput('');
     setMessages(prev => [...prev, { role: 'user', text: messageToSend }]);
     setIsLoading(true);
+    if (!hasTrackedFirstMessageRef.current) {
+      emitGameEvent({
+        type: "chatbot_message",
+        taskId: "chatbot:first-message",
+      });
+      hasTrackedFirstMessageRef.current = true;
+    }
 
     try {
       const response = await chatSessionRef.current.sendMessage({
@@ -189,8 +198,11 @@ Be polite, concise, and helpful. If you don't know the answer based on the conte
       {/* Floating Button */}
       {!isOpen && (
         <Button
-          onClick={() => setIsOpen(true)}
-          className="fixed bottom-6 right-6 h-14 w-14 rounded-full shadow-lg z-50 flex items-center justify-center p-0 transition-transform hover:scale-105 hover:animate-none"
+          onClick={() => {
+            emitGameEvent({ type: "chatbot_open", taskId: "chatbot:open" });
+            setIsOpen(true);
+          }}
+          className="fixed bottom-20 left-6 sm:bottom-6 h-14 w-14 rounded-full shadow-lg z-50 flex items-center justify-center p-0 transition-transform hover:scale-105 hover:animate-none"
         >
           <MessageSquare className="h-6 w-6" />
         </Button>
@@ -199,7 +211,7 @@ Be polite, concise, and helpful. If you don't know the answer based on the conte
       {/* Chat Window */}
       {isOpen && (
         <div 
-          className={`fixed right-6 bottom-6 z-50 bg-background border border-border shadow-2xl rounded-2xl flex flex-col transition-all duration-300 ease-in-out
+          className={`fixed left-6 bottom-20 sm:bottom-6 z-50 bg-background border border-border shadow-2xl rounded-2xl flex flex-col transition-all duration-300 ease-in-out
             ${isExpanded ? 'w-[400px] sm:w-[500px] h-[600px] max-h-[85vh]' : 'w-[350px] h-[450px]'}`}
         >
           {/* Header */}

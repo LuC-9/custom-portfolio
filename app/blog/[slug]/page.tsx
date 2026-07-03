@@ -7,6 +7,7 @@ import { AudioSummary } from "@/components/audio-summary"
 import { Calendar, Clock } from "lucide-react"
 import { BlogPostStructuredData } from './structured-data'
 import { AiSummaryButton } from "@/components/ai-summary-button"
+import { BlogReadTracker } from "./blog-read-tracker"
 
 // Generate metadata for each blog post
 export async function generateMetadata({ 
@@ -61,6 +62,7 @@ export default async function BlogPostPage({
         slug={slug}
         image={post.image}
       />
+      <BlogReadTracker slug={slug} title={post.title} />
       <div className="blog-post-container">
         <div className="blog-content container mx-auto px-4 py-8 md:py-12 max-w-4xl">
           <article className="blog-post">

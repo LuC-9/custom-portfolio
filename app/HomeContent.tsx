@@ -4,7 +4,7 @@ import { usePersona } from "@/contexts/persona-context"
 import Link from "next/link"
 import Image from "next/image"
 import { PersonaToggle } from "@/components/persona-toggle"
-import { Clock, Github, Linkedin, Twitter, Youtube, Mail, Globe, Twitch, Code } from "lucide-react"
+import { Clock, Github, Linkedin, Twitter, Youtube, Mail, Globe, Twitch } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { motion } from "framer-motion"
 import { useEffect, useState } from "react"
@@ -12,8 +12,17 @@ import { XIcon } from "@/components/icons/x-icon"
 import { LeetCodeIcon } from "@/components/icons/leetcode-icon"
 import { track } from "@vercel/analytics";
 import { DiscordStatus } from "@/components/discord-status"
+import { emitGameEvent } from "@/lib/game/event-bus"
 
 export function HomeContent() {
+  const trackCuratedLink = (taskId: string, href: string) => {
+    emitGameEvent({
+      type: "link_click",
+      taskId,
+      metadata: { href },
+    })
+  }
+
   const { isDeveloper, isGamer } = usePersona()
   const [currentTime, setCurrentTime] = useState("")
   const [timeZone, setTimeZone] = useState("")
@@ -50,7 +59,6 @@ export function HomeContent() {
         text: "Resume",
         href: "/resume.pdf",
       },
-      profileImage: "/profile.jpg",
     },
     gamer: {
       name: "LuC",
@@ -65,7 +73,6 @@ export function HomeContent() {
         text: "Join Community",
         href: "/community",
       },
-      profileImage: "/gamer-profile.gif?v=1",
     },
   }
 
@@ -86,13 +93,12 @@ export function HomeContent() {
             >
               <div className="profile-border w-full h-full relative overflow-hidden rounded-full">
                 <Image
-                  src={activeContent.profileImage}
-                  alt={`${activeContent.name}'s profile picture`}
+                  src={isDeveloper ? "/profile.jpg" : "/gamer-profile.gif?v=1"}
+                  alt={isDeveloper ? "Aarsh Mishra profile photo" : "LuC gamer profile"}
                   fill
-                  priority
                   className="object-cover"
-                  referrerPolicy="no-referrer"
-                  unoptimized={activeContent.profileImage.endsWith('.gif') || activeContent.profileImage.includes('.gif?')}
+                  priority
+                  sizes="(max-width: 768px) 16rem, 18rem"
                 />
               </div>
             </motion.div>
@@ -114,8 +120,6 @@ export function HomeContent() {
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.5 }}
             >
-              {/* <h1 className="text-3xl font-bold mb-4">Aarsh Mishra</h1> */}
-              {/* <p className="text-xl mb-6">Software Developer & Gaming Enthusiast</p> */}
               <h1 className="text-4xl md:text-5xl font-bold mb-4">
                 Hi, I'm <span className="text-primary">{activeContent.name}</span>
               </h1>
@@ -141,7 +145,13 @@ export function HomeContent() {
                     target="_blank" 
                     rel="noopener noreferrer"
                     onClick={() => {
-                      console.log("Resume download clicked");
+                      emitGameEvent({
+                        type: "resume_download",
+                        taskId: "resume:download",
+                        metadata: {
+                          file: activeContent.resumeButton.href,
+                        },
+                      })
                       track("resume_download", { 
                         persona: "developer",
                         resumeVersion: "latest" 
@@ -161,33 +171,88 @@ export function HomeContent() {
                 <div className="flex flex-wrap gap-2 mt-4">
                   {isDeveloper ? (
                     <>
-                      <Link href="https://github.com/LuC-9" target="_blank" rel="noopener noreferrer" aria-label="GitHub">
+                      <Link
+                        href="https://github.com/LuC-9"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        aria-label="GitHub"
+                        onClick={() => trackCuratedLink("link:github", "https://github.com/LuC-9")}
+                      >
                         <Github className="h-6 w-6 text-muted-foreground hover:text-primary transition-colors" />
                       </Link>
-                      <Link href="https://www.linkedin.com/in/aarsh-mishra09/" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn">
+                      <Link
+                        href="https://www.linkedin.com/in/aarsh-mishra09/"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        aria-label="LinkedIn"
+                        onClick={() => trackCuratedLink("link:linkedin", "https://www.linkedin.com/in/aarsh-mishra09/")}
+                      >
                         <Linkedin className="h-6 w-6 text-muted-foreground hover:text-primary transition-colors" />
                       </Link>
-                      <Link href="https://twitter.com/xrshLuC" target="_blank" rel="noopener noreferrer" aria-label="X (formerly Twitter)">
+                      <Link
+                        href="https://twitter.com/xrshLuC"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        aria-label="X (formerly Twitter)"
+                        onClick={() => trackCuratedLink("link:twitter", "https://twitter.com/xrshLuC")}
+                      >
                         <XIcon className="h-6 w-6 text-muted-foreground hover:text-primary transition-colors" />
                       </Link>
-                      <Link href="https://leetcode.com/u/LuC9/" target="_blank" rel="noopener noreferrer" aria-label="LeetCode">
+                      <Link
+                        href="https://leetcode.com/u/LuC9/"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        aria-label="LeetCode"
+                        onClick={() => trackCuratedLink("link:leetcode", "https://leetcode.com/u/LuC9/")}
+                      >
                         <LeetCodeIcon className="h-6 w-6 text-muted-foreground hover:text-primary transition-colors" />
                       </Link>
                     </>
                   ) : (
                     <>
-                      <Link href="https://www.twitch.tv/xrshluc" target="_blank" rel="noopener noreferrer" aria-label="Twitch">
+                      <Link
+                        href="https://www.twitch.tv/xrshluc"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        aria-label="Twitch"
+                        onClick={() => trackCuratedLink("link:twitch", "https://www.twitch.tv/xrshluc")}
+                      >
                         <Twitch className="h-6 w-6 text-muted-foreground hover:text-primary transition-colors" />
                       </Link>
-                      <Link href="https://www.youtube.com/@LuC-Throws" target="_blank" rel="noopener noreferrer" aria-label="YouTube">
+                      <Link
+                        href="https://www.youtube.com/@LuC-Throws"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        aria-label="YouTube"
+                        onClick={() => trackCuratedLink("link:youtube", "https://www.youtube.com/@LuC-Throws")}
+                      >
                         <Youtube className="h-6 w-6 text-muted-foreground hover:text-primary transition-colors" />
                       </Link>
-                      <Link href="https://twitter.com/xrshLuC" target="_blank" rel="noopener noreferrer" aria-label="X (formerly Twitter)">
+                      <Link
+                        href="https://twitter.com/xrshLuC"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        aria-label="X (formerly Twitter)"
+                        onClick={() => trackCuratedLink("link:twitter", "https://twitter.com/xrshLuC")}
+                      >
                         <XIcon className="h-6 w-6 text-muted-foreground hover:text-primary transition-colors" />
                       </Link>
                     </>
                   )}
-                  <Link href="mailto:aarshmail@gmail.com" aria-label="Email">
+                  <Link
+                    href="https://discord.gg/Sd8Uq73FeK"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    aria-label="Discord server"
+                    onClick={() => trackCuratedLink("link:discord", "https://discord.gg/Sd8Uq73FeK")}
+                  >
+                    <Globe className="h-6 w-6 text-muted-foreground hover:text-primary transition-colors" />
+                  </Link>
+                  <Link
+                    href="mailto:aarshmail@gmail.com"
+                    aria-label="Email"
+                    onClick={() => trackCuratedLink("link:email", "mailto:aarshmail@gmail.com")}
+                  >
                     <Mail className="h-6 w-6 text-muted-foreground hover:text-primary transition-colors" />
                   </Link>
                 </div>
@@ -199,7 +264,3 @@ export function HomeContent() {
     </div>
   )
 }
-
-
-
-
