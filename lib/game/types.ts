@@ -1,5 +1,3 @@
-"use client"
-
 /**
  * User interactions that contribute to portfolio progression.
  */
