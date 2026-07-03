@@ -1,42 +1,43 @@
 # LuC's Portfolio
 
-A modern, responsive portfolio website built with Next.js, TypeScript, and Tailwind CSS. This portfolio features a unique dual persona concept - switching between developer and gamer profiles with distinct content and styling.
+A modern, responsive portfolio website built with Next.js, TypeScript, and Tailwind CSS. The site uses a dual persona concept so visitors can switch between developer and gamer profiles with distinct styling, navigation, and content.
 
 ![Portfolio Screenshot](public/ss1.png)
 
 ## Features
 
 - 🌓 Dual persona toggle (Developer/Gamer)
-- 🎨 Dark/Light mode with theme persistence
-- 📱 Fully responsive design
-- 📝 Blog with Markdown support
-- 🚀 Projects showcase with filtering
-- 🔍 SEO optimized
-- ⚡ Fast performance with Next.js App Router
+- 🎨 Dark/light mode with theme persistence
+- 📱 Responsive App Router pages for home, blog, projects, contact, and community
+- 📝 Markdown content for blogs, projects, work experience, and gaming experience
+- 🤖 Gemini-powered portfolio chatbot and blog TL;DR summaries
+- 📬 Contact form delivery through Telegram
+- 🔎 Persona-aware blog filtering, search, SEO metadata, structured data, and sitemap routes
 
 ## Tech Stack
 
-- **Framework**: [Next.js 14](https://nextjs.org/)
+- **Framework**: [Next.js 15](https://nextjs.org/) App Router with [React 19](https://react.dev/)
 - **Language**: [TypeScript](https://www.typescriptlang.org/)
-- **Styling**: [Tailwind CSS](https://tailwindcss.com/)
-- **UI Components**: [shadcn/ui](https://ui.shadcn.com/)
-- **Icons**: [Lucide Icons](https://lucide.dev/)
-- **Content**: Markdown with [gray-matter](https://github.com/jonschlinkert/gray-matter)
-- **Markdown Rendering**: [react-markdown](https://github.com/remarkjs/react-markdown)
+- **Styling**: [Tailwind CSS](https://tailwindcss.com/) and [shadcn/ui](https://ui.shadcn.com/)
+- **Animation/3D**: [Framer Motion](https://www.framer.com/motion/) and [Three.js](https://threejs.org/)
+- **Icons**: [Lucide Icons](https://lucide.dev/) and React Icons
+- **Content**: Markdown/MDX files parsed with [gray-matter](https://github.com/jonschlinkert/gray-matter), `unified`, `remark`, and `rehype`
+- **AI**: [`@google/genai`](https://www.npmjs.com/package/@google/genai) using Gemini 2.5 Flash
+- **Operational integrations**: Telegram Bot API for contact messages, Vercel Analytics, and Discord Lanyard status
 
 ## Getting Started
 
 ### Prerequisites
 
-- Node.js 14or later
-- npm or yarn
+- Node.js 20 or later (`@google/genai` requires Node 20+)
+- npm
 
 ### Installation
 
 1. Clone the repository:
 
 ```bash
-git clone https://github.com/yourusername/custom-portfolio.git
+git clone https://github.com/LuC-9/custom-portfolio.git
 cd custom-portfolio
 ```
 
@@ -44,113 +45,213 @@ cd custom-portfolio
 
 ```bash
 npm install
-# or
-yarn install
 ```
 
-3. Run the development server:
+3. Create local environment variables:
+
+```bash
+cp .env.example .env.local
+```
+
+Fill only the values you need for local testing. The site still runs without AI or Telegram credentials, but the chatbot and AI summary widgets are hidden when Gemini is not configured.
+
+4. Run the development server:
 
 ```bash
 npm run dev
-# or
-yarn dev
 ```
 
-4. Open [http://localhost:3000](http://localhost:3000) in your browser to see the result.
+5. Open [http://localhost:3000](http://localhost:3000) in your browser.
+
+## Environment Variables
+
+| Variable | Required for | Notes |
+| --- | --- | --- |
+| `GEMINI_API_KEY` | Chatbot and AI blog summaries | `next.config.mjs` exposes this as `NEXT_PUBLIC_GEMINI_API_KEY` for browser-side Gemini calls. Treat it as public to site visitors. |
+| `TELEGRAM_BOT_TOKEN` | Contact form and chatbot contact tool | Used by `app/api/contact/route.ts` to call Telegram's `sendMessage` API. |
+| `TELEGRAM_CHAT_ID` | Contact form and chatbot contact tool | Destination chat for Telegram contact submissions. |
+| `APP_URL` | Hosting/platform metadata | Present in `.env.example`; not required for the active chatbot or contact route. |
+
+There is no active `DISCORD_WEBHOOK_URL` contact path. Contact submissions use Telegram.
 
 ## Project Structure
 
-```
-├── app/                  # Next.js App Router pages
-│   ├── blog/             # Blog pages
-│   ├── projects/         # Projects pages
-│   ├── layout.tsx        # Root layout
-│   └── page.tsx          # Home page
-├── components/           # Reusable UI components
-├── content/              # Markdown content
-│   ├── blog/             # Blog posts
-│   └── projects/         # Project descriptions
-├── lib/                  # Utility functions
-├── public/               # Static assets
-└── styles/               # Global styles
+```text
+├── app/                         # Next.js App Router pages, API routes, metadata, and sitemaps
+│   ├── api/contact/             # Telegram-backed contact endpoint
+│   ├── api/portfolio-context/   # JSON context consumed by the chatbot
+│   ├── blog/                    # Blog listing, detail pages, audio summary wrapper
+│   ├── community/               # Gamer/community page
+│   ├── contact/                 # Contact page
+│   ├── projects/                # Project listing page
+│   └── sitemap*/                # Sitemap index and route handlers
+├── components/                  # Reusable UI, chatbot, summaries, persona sections, search
+├── contexts/                    # Persona context provider
+├── content/                     # Markdown content loaded by lib/content.ts
+│   ├── blog/
+│   ├── experience/
+│   ├── gaming-experience/
+│   └── projects/
+├── hooks/                       # Client hooks
+├── lib/                         # Content, Telegram, and utility helpers
+├── public/                      # Static assets
+├── app/globals.css              # Global styles and theme variables
+└── tailwind.config.ts           # Tailwind and theme configuration
 ```
 
 ## Content Management
 
+`lib/content.ts` is the source of truth for loading content. It reads Markdown/MDX from `content/<type>/`, parses frontmatter with `gray-matter`, renders Markdown to HTML, calculates reading time, and sorts content by `order`, then `date`, then `title` where available.
+
 ### Adding Blog Posts
 
-Create a new markdown file in `content/blog/` with the following format:
+Create a Markdown file in `content/blog/`:
 
 ```markdown
 ---
 title: "Your Blog Post Title"
-date: "YYYY-MM-DD"
 excerpt: "A brief summary of your blog post"
-tags: ["tag1", "tag2"]
-image: "/path/to/image.jpg"  # Optional
+date: "YYYY-MM-DD"
+tags: ["Next.js", "React"]
+featured: true
+audioSummary: "/optional-audio-file.wav"
+image: "/optional-image.jpg"
 ---
 
 Your blog post content in Markdown...
 ```
 
+Blog search matches title, excerpt, and tags. Persona filtering is tag-based: posts with tags containing `gaming`, `streaming`, `twitch`, `youtube`, `esports`, `games`, or `game` appear in the Gamer filter; other posts appear in the Developer filter.
+
 ### Adding Projects
 
-Create a new markdown file in `content/projects/` with the following format:
+Create a Markdown file in `content/projects/`:
 
 ```markdown
 ---
 title: "Project Title"
 description: "Brief project description"
-image: "/path/to/image.jpg"  # Optional
-tags: ["tag1", "tag2"]
+image: "/project-image.jpg"
+tags: ["Next.js", "Tailwind CSS"]
 github: "https://github.com/yourusername/project"
 demo: "https://demo-link.com"
-featured: true  # Optional, for featured projects
-order: 1  # Optional, for sorting
+featured: true
+order: 1
 ---
 
 Detailed project description in Markdown...
 ```
 
+Use `order` for deterministic project ordering. Featured project sections read the `featured` flag from frontmatter.
+
+### Adding Work Experience
+
+Create a Markdown file in `content/experience/`:
+
+```markdown
+---
+title: "Senior Engineer"
+company: "Company Name"
+period: "Jul 2025 - Present"
+skills: ["Java", "Kubernetes", "Argo-CD"]
+---
+
+- Describe impact, systems, and measurable outcomes.
+```
+
+Experience entries are sorted by `order` when present; otherwise, the start date in `period` is parsed and sorted newest first. Use a `"Month YYYY - Month YYYY"` or `"Month YYYY - Present"` format for predictable sorting.
+
+### Adding Gaming Experience
+
+Create a Markdown file in `content/gaming-experience/`:
+
+```markdown
+---
+title: "Casual Gamer"
+team: "Team Name"
+period: "Mar 2021 - Present"
+---
+
+Describe the role, communities, platforms, and highlights.
+```
+
+Gaming experience uses the same period-sorting helper as work experience.
+
 ## Persona Toggle
 
-The site features a unique dual persona toggle that switches between Developer and Gamer profiles. Each persona has:
+The global persona state lives in `contexts/persona-context.tsx`. It updates the document with a persona-specific class and CSS variables so pages can switch color themes and content emphasis. Main persona-aware surfaces include:
 
-- Different color schemes
-- Tailored content
-- Unique social links
-- Persona-specific projects and blog posts
+- `app/HomeContent.tsx` for home-page copy, social links, and featured sections
+- `components/navigation.tsx` for developer vs. gamer navigation
+- `components/blog-client-page.tsx` for persona-aware blog filtering
+- `components/home-experience-section.tsx` and `components/home-featured-section.tsx` for home-page content
+
+## AI and Contact Workflows
+
+### Chatbot
+
+`components/chatbot.tsx` mounts globally from `app/layout.tsx`. When `GEMINI_API_KEY` is configured, it:
+
+1. Fetches `/api/portfolio-context`.
+2. Builds a Gemini system prompt with projects, work experience, gaming experience, blog metadata, and trimmed blog content.
+3. Creates a browser-side Gemini 2.5 Flash chat session.
+4. Uses the `submitContactForm` function tool when a visitor wants to contact Aarsh.
+5. Posts tool calls to `/api/contact`, which sends the message to Telegram.
+
+If Gemini is not configured, the chatbot is not rendered. If `/api/portfolio-context` fails, the failure is logged in the browser console and the chat session is not initialized.
+
+### Blog AI summaries
+
+`components/ai-summary-button.tsx` appears on blog detail pages when Gemini is configured. It strips HTML from the rendered blog content and asks Gemini 2.5 Flash for a short TL;DR summary.
+
+### API routes
+
+| Route | Method | Purpose |
+| --- | --- | --- |
+| `/api/portfolio-context` | `GET` | Returns sanitized project, experience, gaming, and blog data for chatbot context. |
+| `/api/contact` | `POST` | Validates `{ name, email, reason, message }` and sends a Telegram message. |
+| `/api/chat` | `POST` | Server-side Gemini chat route retained in the codebase, but not used by the active chatbot UI. |
+| `/api/summarize` | `POST` | Server-side summary route retained in the codebase, but not used by the active blog summary UI. |
+
+## Troubleshooting
+
+| Symptom | Check |
+| --- | --- |
+| Chatbot or AI summary button is missing | Confirm `GEMINI_API_KEY` exists before starting/building the app. The browser widgets read `NEXT_PUBLIC_GEMINI_API_KEY`, which is populated from `GEMINI_API_KEY` in `next.config.mjs`. |
+| Contact submissions fail | Confirm `TELEGRAM_BOT_TOKEN` and `TELEGRAM_CHAT_ID` are set and that the bot can send messages to the target chat. |
+| Blog persona filter shows unexpected posts | Review the post tags. Gamer classification uses simple substring matching against gaming-related tag names. |
+| Experience ordering looks wrong | Ensure `period` starts with a parseable month/year, for example `Jul 2025 - Present`. |
+| Build succeeds despite type/lint errors | `next.config.mjs` currently sets `typescript.ignoreBuildErrors` and `eslint.ignoreDuringBuilds` to `true`; run local checks before relying on build output. |
 
 ## Customization
 
 ### Theme Colors
 
-Edit the `tailwind.config.js` file to customize the color schemes for both light and dark modes, as well as for each persona.
+Edit `tailwind.config.ts` and `app/globals.css` to customize light, dark, and persona-specific color schemes.
 
 ### Personal Information
 
-Update your personal information in the following files:
-- `app/HomeContent.tsx` - Main profile information
-- `app/layout.tsx` - Site metadata and SEO
+Update personal information in:
+
+- `app/HomeContent.tsx` - main profile copy, social links, and persona-specific home sections
+- `app/layout.tsx` - site metadata and global layout
+- `components/chatbot.tsx` - chatbot system prompt, social links, and contact tool instructions
+- `content/` - Markdown-backed projects, blogs, experience, and gaming experience
 
 ## Deployment
 
-This project can be easily deployed to Vercel:
+The app is ready for Vercel or any standard Next.js hosting platform.
 
-### Setting Up Environment Variables on Vercel
-When deploying to Vercel, you need to configure the following environment variables in your Vercel project settings:
-
-1. `GEMINI_API_KEY`: Get this from Google AI Studio. It powers the Chatbot and AI Blog Summary feature.
-2. `NEXT_PUBLIC_GEMINI_API_KEY`: (Optional) Can be used as a fallback for the AI API key.
-3. `DISCORD_WEBHOOK_URL`: (Optional) Needed only if you want the contact form to send messages to your Discord server.
+1. Configure the environment variables listed above.
+2. Build the app:
 
 ```bash
 npm run build
-# or
-vercel
 ```
 
-For other platforms, follow the standard Next.js deployment process for that platform.
+3. Deploy using your platform's Next.js flow.
+
+Remember that Gemini browser features expose the configured API key to the client bundle through `NEXT_PUBLIC_GEMINI_API_KEY`.
 
 ## License
 
@@ -158,7 +259,7 @@ This project is licensed under the MIT License - see the LICENSE file for detail
 
 ## Acknowledgements
 
-- [Next.js](https://nextjs.org/) for the amazing React framework
-- [shadcn/ui](https://ui.shadcn.com/) for the beautiful UI components
-- [Tailwind CSS](https://tailwindcss.com/) for the utility-first CSS framework
-- [Lucide Icons](https://lucide.dev/) for the clean SVG icons
+- [Next.js](https://nextjs.org/) for the React framework
+- [shadcn/ui](https://ui.shadcn.com/) for UI components
+- [Tailwind CSS](https://tailwindcss.com/) for utility-first styling
+- [Lucide Icons](https://lucide.dev/) for SVG icons
