@@ -10,7 +10,8 @@
     "test": "vitest run",
     "test:watch": "vitest",
     "test:coverage": "vitest run --coverage",
-    "test:smoke": "vitest run tests/smoke"
+    "test:smoke": "vitest run tests/smoke",
+    "record:demo": "node scripts/record-demo.mjs"
   },
   "dependencies": {
     "@google/genai": "^1.50.1",
