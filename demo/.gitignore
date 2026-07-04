@@ -1,3 +1,10 @@
 .raw/
 testreel-output/
+demo-raw/
+recording.jsonc
+recording.json
+recording.yaml
+recording.yml
+.setup.mjs
 *.webm
+# portfolio-demo.mp4 is tracked via Git LFS (see .gitattributes)
