@@ -956,4 +956,4 @@ While this is concise and suitable for many Python applications, implementing th
 * LRU is widely used in browsers, operating systems, databases, CDNs, API gateways, JVMs, IDEs, and backend services.
 * Although classic LRU is powerful, production systems often adopt enhanced algorithms like **TinyLFU**, **ARC**, or **SLRU** for better cache hit rates under complex workloads.
 
-Mastering the LRU Cache not only prepares you for coding interviews but also provides insight into how high-performance systems manage memory efficiently in the real world.
+Mastering the LRU Cache provides insight into how high-performance systems manage memory efficiently in the real world.
