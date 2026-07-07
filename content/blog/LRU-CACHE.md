@@ -3,7 +3,7 @@
 title: "Mastering the LRU Cache: Design, Implementation, Internals, and Real-World Applications"
 date: "2026-07-08"
 excerpt: "A complete guide to understanding the Least Recently Used (LRU) Cache—from fundamentals and design decisions to production use cases, interview questions, and implementation in O(1)."
-tags:
+tags: [algorithms, data-structures, system-design, caching]
 
 * Data Structures
 * Algorithms
