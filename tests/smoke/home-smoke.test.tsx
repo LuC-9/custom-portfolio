@@ -11,6 +11,7 @@ vi.mock("@/contexts/persona-context", () => ({
   usePersona: () => ({
     isDeveloper: true,
     isGamer: false,
+    persona: "developer",
   }),
 }))
 
