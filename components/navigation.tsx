@@ -42,7 +42,7 @@ export function Navigation() {
   return (
     <>
       <header
-        className={`fixed inset-x-0 top-0 z-30 border-b transition-all duration-[var(--dur-base)] ${
+        className={`fixed left-0 top-0 z-30 w-[100dvw] max-w-full border-b transition-all duration-[var(--dur-base)] ${
           scrolled ? "h-16 bg-background/60 border-border/60 backdrop-blur-md" : "h-[72px] bg-transparent border-transparent"
         }`}
       >
@@ -94,7 +94,7 @@ export function Navigation() {
             animate={{ opacity: 1 }}
             exit={reduceMotion ? { opacity: 1 } : { opacity: 0 }}
             transition={reduceMotion ? { duration: 0 } : { duration: 0.2 }}
-            className="fixed inset-0 z-20 bg-background/95 px-6 pb-10 pt-28 backdrop-blur-md md:hidden"
+            className="fixed left-0 top-0 z-20 h-[100dvh] w-[100dvw] bg-background/95 px-6 pb-10 pt-28 backdrop-blur-md md:hidden"
           >
             <div className="mx-auto w-full max-w-[1400px]">
               <RevealStagger

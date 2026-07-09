@@ -112,7 +112,7 @@ export function HeroIntro({ persona, onDone }: HeroIntroProps) {
           role="dialog"
           aria-modal="true"
           aria-label={`Persona intro: ${cfg.name}, ${cfg.label}`}
-          className="fixed inset-0 flex min-h-[100dvh] w-full items-center overflow-hidden"
+          className="fixed left-0 top-0 flex h-[100dvh] w-[100dvw] items-center overflow-hidden"
           initial={{ opacity: reduce ? 0 : 1 }}
           animate={{ opacity: 1 }}
           exit={

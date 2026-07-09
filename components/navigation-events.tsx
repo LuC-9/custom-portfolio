@@ -51,7 +51,7 @@ export function NavigationEvents() {
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
-          className="fixed inset-0 flex items-center justify-center bg-background/80 backdrop-blur-sm z-50"
+          className="fixed left-0 top-0 z-50 flex h-[100dvh] w-[100dvw] items-center justify-center bg-background/80 backdrop-blur-sm"
         >
           <LoadingSpinner size="lg" />
         </motion.div>
