@@ -9,3 +9,7 @@ errors.txt
 tsconfig.tsbuildinfo
 .env*
 !.env.example
+
+# Demo recording raw artifacts (see scripts/record-demo.mjs, scripts/capture-snapshots.mjs)
+artifacts/
+

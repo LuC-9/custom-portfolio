@@ -6,13 +6,19 @@ A modern, responsive portfolio website built with Next.js, TypeScript, and Tailw
 
 ## Features
 
-- 🌓 Dual persona toggle (Developer/Gamer)
-- 🎨 Dark/light mode with theme persistence
+- 🌓 Dual persona toggle (Developer/Gamer) that reroutes home content, navigation, blog filters, and accent language without a page reload
+- 🎬 Cinematic hero intro overlay on first landing per session (portal-mounted so it sits above the game HUD stacking context)
+- 📜 Center-spine zigzag experience timeline with directional slide-in reveal and a milestone dot on the spine
+- 🎞️ Seamless kinetic marquee of tech / games (two duplicated halves + `w-max` track for a gapless loop)
+- 🧩 Persona-aware featured bento: developer persona interleaves projects and blog posts across six cells; gamer persona swaps to Twitch/YouTube cards + gamer blogs
+- 🕹️ Gamer HUD: achievements, class card, floating hints, focus toggle, live Discord status, and Spotify activity card
+- 🎨 Dark theme with persona-specific accent variables
 - 📱 Responsive App Router pages for home, blog, projects, contact, and community
-- 📝 Markdown content for blogs, projects, work experience, and gaming experience
+- 📝 Markdown content for blogs, projects, work experience, gaming experience, and the home-page marquee strings
 - 🤖 Gemini-powered portfolio chatbot and blog TL;DR summaries
 - 📬 Contact form delivery through Telegram
-- 🔎 Persona-aware blog filtering, search, SEO metadata, structured data, and sitemap routes
+- 🔎 Persona-aware blog filtering, keyword search, SEO metadata, structured data, and sitemap routes
+- 🎥 Reproducible demo pipeline (`npm run record:demo`) that produces a testreel MP4 + screenshot step log
 
 ## Tech Stack
 
@@ -63,6 +69,21 @@ npm run dev
 
 5. Open [http://localhost:3000](http://localhost:3000) in your browser.
 
+## Demo
+
+A production walkthrough of the site ships with the repo:
+
+- **Video**: `demo/portfolio-demo.mp4` (tracked via Git LFS)
+- **Screenshot step log**: `demo/steps/*.png` for each captured beat (intro cinematic, persona flip, kinetic marquee, experience timeline, featured work, blog, mobile view)
+
+Regenerate both artifacts locally:
+
+```bash
+npm run record:demo
+```
+
+The script runs a fresh production build and drives the `testreel` walkthrough against the running app. Global one-time setup is documented in [AGENTS.md](AGENTS.md).
+
 ## Environment Variables
 
 | Variable | Required for | Notes |
@@ -86,15 +107,22 @@ There is no active `DISCORD_WEBHOOK_URL` contact path. Contact submissions use T
 │   ├── projects/                # Project listing page
 │   └── sitemap*/                # Sitemap index and route handlers
 ├── components/                  # Reusable UI, chatbot, summaries, persona sections, search
+│   ├── intro/                   # Hero intro cinematic overlay (portal-mounted)
+│   ├── game/                    # Gamer HUD: achievements, class card, floating hints, focus toggle
+│   ├── home-marquee-client.tsx  # Seamless kinetic marquee client
+│   └── home-experience-section.tsx  # Zigzag center-spine timeline
 ├── contexts/                    # Persona context provider
 ├── content/                     # Markdown content loaded by lib/content.ts
 │   ├── blog/
 │   ├── experience/
 │   ├── gaming-experience/
+│   ├── home/                    # Home-page marquee sources (skills, games)
 │   └── projects/
-├── hooks/                       # Client hooks
+├── hooks/                       # Client hooks (use-intro-gate, use-floating-hint, use-reduced-motion)
 ├── lib/                         # Content, Telegram, and utility helpers
+│   └── content/                 # Small typed loaders for home marquee content
 ├── public/                      # Static assets
+├── demo/                        # Demo pipeline output (MP4 via Git LFS, screenshot step log)
 ├── app/globals.css              # Global styles and theme variables
 └── tailwind.config.ts           # Tailwind and theme configuration
 ```

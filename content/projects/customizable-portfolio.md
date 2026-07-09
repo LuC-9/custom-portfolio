@@ -1,169 +1,94 @@
 ---
-title: "Minimalist Portfolio"
-description: "An interactive portfolio website built with Next.js."
+title: "byluc.in Portfolio"
+description: "Dual-persona Next.js 15 portfolio with a cinematic intro, zigzag experience timeline, kinetic marquee, gamification HUD, and Gemini-powered chatbot."
 image: "/portfolioSS.png?height=400&width=600"
-tags: ["Tailwind CSS", "Next.js", "Markdown", "Framer Motion"]
-github: "https://github.com"
+tags: ["Next.js 15", "React 19", "TypeScript", "Tailwind CSS", "Motion", "Three.js", "Gemini", "Markdown"]
+github: "https://github.com/LuC-9/custom-portfolio"
 demo: "https://byluc.in"
 featured: true
-order: 4
+order: 1
 ---
 
 ![Portfolio Screenshot](/ss1.png)
 ![Portfolio Screenshot](/ss2.png)
 
-A modern, responsive portfolio website built with Next.js, TypeScript, and Tailwind CSS. This portfolio features a unique dual persona concept - switching between developer and gamer profiles with distinct content and styling.
+A modern, responsive portfolio built on Next.js 15 App Router and React 19. The site runs a dual-persona concept: visitors switch between a developer profile (project bento, work history, engineering blog) and a gamer profile (Twitch/YouTube surfaces, gaming experience, streaming notes). Persona flips the home content, navigation, blog filter, and accent language without a page reload.
 
+## What it does
 
+- **Cinematic intro overlay** on first landing per session, mounted through a React portal so it sits above the game HUD stacking context.
+- **Persona toggle** (developer vs gamer) that reroutes home sections, navigation, blog filters, and featured cards.
+- **Center-spine zigzag experience timeline** with directional slide-in reveal and a milestone dot on the spine for the active role.
+- **Seamless kinetic marquee** of the current tech/games strip (two duplicated halves + `w-max` track for a gapless loop).
+- **Featured bento grid** on the home page: developer persona interleaves projects and blog posts across six cells with an asymmetric span map; gamer persona swaps to Twitch/YouTube cards + gamer blogs.
+- **Blog page** with persona-aware filtering, keyword search, tag pills, featured cards, and a "More posts" list with an edge-to-edge hairline divider.
+- **Gemini-powered chatbot** grounded in a JSON feed built from the site's own projects, work history, gaming experience, and blog content.
+- **Blog TL;DR summaries** generated on demand via Gemini 2.5 Flash.
+- **Contact form** that ships submissions to Telegram through a server route.
+- **Gamification HUD** for the gamer persona: achievements, class card, floating hints, focus toggle, and live Discord status.
+- **Persona-aware SEO** with structured data, per-route metadata, and sitemap handlers.
 
-## Tech Stack
+## Tech stack
 
-- **Framework**: [Next.js 14](https://nextjs.org/)
+- **Framework**: [Next.js 15](https://nextjs.org/) App Router on [React 19](https://react.dev/)
 - **Language**: [TypeScript](https://www.typescriptlang.org/)
-- **Styling**: [Tailwind CSS](https://tailwindcss.com/)
-- **UI Components**: [shadcn/ui](https://ui.shadcn.com/)
-- **Icons**: [Lucide Icons](https://lucide.dev/)
-- **Content**: Markdown with [gray-matter](https://github.com/jonschlinkert/gray-matter)
-- **Markdown Rendering**: [react-markdown](https://github.com/remarkjs/react-markdown)
+- **Styling**: [Tailwind CSS](https://tailwindcss.com/) with [shadcn/ui](https://ui.shadcn.com/) primitives
+- **Animation**: [Motion](https://motion.dev/) (formerly Framer Motion) for UI reveals, GSAP + ScrollTrigger for pinned scroll pieces, [Three.js](https://threejs.org/) for accent backgrounds
+- **Icons**: [Lucide](https://lucide.dev/) and React Icons
+- **Content**: Markdown/MDX parsed with [gray-matter](https://github.com/jonschlinkert/gray-matter), rendered via `unified`, `remark`, and `rehype`
+- **AI**: [`@google/genai`](https://www.npmjs.com/package/@google/genai) with Gemini 2.5 Flash
+- **Integrations**: Telegram Bot API (contact form), Discord Lanyard (live status), Vercel Analytics
 
-## Features
+## Content model
 
-- 🌓 Dual persona toggle (Developer/Gamer)
-- 🎨 Dark/Light mode with theme persistence
-- 📱 Fully responsive design
-- 📝 Blog with Markdown support
-- 🚀 Projects showcase with filtering
-- 🔍 SEO optimized
-- ⚡ Fast performance with Next.js App Router
+Every content type lives in Markdown under `content/`:
 
-## Getting Started
+- `content/blog/` for essays and build notes
+- `content/projects/` for project cards (this file is one of them)
+- `content/experience/` for developer work history
+- `content/gaming-experience/` for gaming timeline
+- `content/home/` for the kinetic marquee's skill and game strings
 
-### Prerequisites
+`lib/content.ts` parses frontmatter, renders Markdown to HTML, and sorts by `order`, then `date`, then `title`.
 
-- Node.js 18.18 or later
-- npm or yarn
-
-### Installation
-
-1. Clone the repository:
-
-```bash
-git clone https://github.com/yourusername/portfolio.git
-cd portfolio
-```
-
-2. Install dependencies:
-
-```bash
-npm install
-# or
-yarn install
-```
-
-3. Run the development server:
-
-```bash
-npm run dev
-# or
-yarn dev
-```
-
-4. Open [http://localhost:3000](http://localhost:3000) in your browser to see the result.
-
-## Project Structure
-
-```
-├── app/                  # Next.js App Router pages
-│   ├── blog/             # Blog pages
-│   ├── projects/         # Projects pages
-│   ├── layout.tsx        # Root layout
-│   └── page.tsx          # Home page
-├── components/           # Reusable UI components
-├── content/              # Markdown content
-│   ├── blog/             # Blog posts
-│   └── projects/         # Project descriptions
-├── lib/                  # Utility functions
-├── public/               # Static assets
-└── styles/               # Global styles
-```
-
-## Content Management
-
-### Adding Blog Posts
-
-Create a new markdown file in `content/blog/` with the following format:
-
-```markdown
----
-title: "Your Blog Post Title"
-date: "YYYY-MM-DD"
-excerpt: "A brief summary of your blog post"
-tags: ["tag1", "tag2"]
-image: "/path/to/image.jpg"  # Optional
----
-
-Your blog post content in Markdown...
-```
-
-### Adding Projects
-
-Create a new markdown file in `content/projects/` with the following format:
+### Adding a project
 
 ```markdown
 ---
 title: "Project Title"
-description: "Brief project description"
-image: "/path/to/image.jpg"  # Optional
-tags: ["tag1", "tag2"]
-github: "https://github.com/yourusername/project"
-demo: "https://demo-link.com"
-featured: true  # Optional, for featured projects
-order: 1  # Optional, for sorting
+description: "One-line pitch"
+image: "/project-image.jpg"
+tags: ["Next.js", "TypeScript"]
+github: "https://github.com/you/project"
+demo: "https://demo.example"
+featured: true
+order: 1
 ---
 
-Detailed project description in Markdown...
+Detailed description in Markdown.
 ```
 
-## Persona Toggle
+Featured project sections read the `featured` flag from frontmatter. Use `order` for deterministic sorting on the projects page.
 
-The site features a unique dual persona toggle that switches between Developer and Gamer profiles. Each persona has:
-
-- Different color schemes
-- Tailored content
-- Unique social links
-- Persona-specific projects and blog posts
-
-## Customization
-
-### Theme Colors
-
-Edit the `tailwind.config.js` file to customize the color schemes for both light and dark modes, as well as for each persona.
-
-### Personal Information
-
-Update your personal information in the following files:
-- `app/HomeContent.tsx` - Main profile information
-- `app/layout.tsx` - Site metadata and SEO
-
-## Deployment
-
-This project can be easily deployed to Vercel:
+## Running locally
 
 ```bash
-npm run build
-# or
-vercel
+git clone https://github.com/LuC-9/custom-portfolio.git
+cd custom-portfolio
+npm install --legacy-peer-deps
+npm run dev
 ```
 
-For other platforms, follow the standard Next.js deployment process for that platform.
+`.env.local` is optional for baseline browsing. Gemini chatbot and blog TL;DR are hidden unless `GEMINI_API_KEY` is set. Contact-form delivery requires `TELEGRAM_BOT_TOKEN` and `TELEGRAM_CHAT_ID`.
 
-## License
+## Demo video
 
-This project is licensed under the MIT License - see the LICENSE file for details.
+The repository ships a production walkthrough at `demo/portfolio-demo.mp4` (tracked via Git LFS) plus a screenshot step log at `demo/steps/`. Regenerate both with:
 
-## Acknowledgements
+```bash
+npm run record:demo
+```
 
-- [Next.js](https://nextjs.org/) for the amazing React framework
-- [shadcn/ui](https://ui.shadcn.com/) for the beautiful UI components
-- [Tailwind CSS](https://tailwindcss.com/) for the utility-first CSS framework
-- [Lucide Icons](https://lucide.dev/) for the clean SVG icons
+## Source
+
+Full source, environment reference, deployment notes, and troubleshooting live in the [repository README](https://github.com/LuC-9/custom-portfolio#readme).
