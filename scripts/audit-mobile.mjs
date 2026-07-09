@@ -24,7 +24,7 @@ async function shoot(persona, path, name) {
   await context.addInitScript((p) => {
     try {
       localStorage.setItem("persona", p)
-      sessionStorage.setItem("portfolio:hero-intro:v1", "1")
+      sessionStorage.setItem("portfolio:hero-intro:skip:v1", "1")
     } catch {}
   }, persona)
   const page = await context.newPage()

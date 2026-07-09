@@ -47,7 +47,7 @@ try {
     })
     await context.addInitScript(({ persona }) => {
       try { localStorage.setItem("persona", persona) } catch {}
-      try { sessionStorage.setItem("portfolio:hero-intro:v1", "1") } catch {}
+      try { sessionStorage.setItem("portfolio:hero-intro:skip:v1", "1") } catch {}
       try { document.documentElement.setAttribute("data-persona", persona) } catch {}
     }, { persona })
     const page = await context.newPage()

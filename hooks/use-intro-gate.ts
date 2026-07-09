@@ -2,12 +2,14 @@
 
 import { useCallback, useEffect, useState } from "react"
 
-const STORAGE_KEY = "portfolio:hero-intro:v1"
+const SKIP_STORAGE_KEY = "portfolio:hero-intro:skip:v1"
+
+let playedInCurrentDocument = false
 
 /**
- * Session-scoped gate for the hero cinematic. Returns `null` during hydration
- * so callers can render nothing on the server, then flips to `true` on first
- * visit and `false` for every subsequent navigation within the same tab.
+ * Document-scoped gate for the hero cinematic. Returns `null` during hydration
+ * so callers can render nothing on the server, then flips to `true` for each
+ * full document load/reload and `false` after the intro plays in that document.
  */
 export function useIntroGate() {
   const [shouldPlay, setShouldPlay] = useState<boolean | null>(null)
@@ -15,21 +17,19 @@ export function useIntroGate() {
   useEffect(() => {
     if (typeof window === "undefined") return
     try {
-      const seen = window.sessionStorage.getItem(STORAGE_KEY) === "1"
-      setShouldPlay(!seen)
+      if (window.sessionStorage.getItem(SKIP_STORAGE_KEY) === "1") {
+        setShouldPlay(false)
+        return
+      }
     } catch {
-      setShouldPlay(false)
+      // sessionStorage unavailable (private mode etc.) — continue normally.
     }
+    setShouldPlay(!playedInCurrentDocument)
   }, [])
 
   const markPlayed = useCallback(() => {
+    playedInCurrentDocument = true
     setShouldPlay(false)
-    if (typeof window === "undefined") return
-    try {
-      window.sessionStorage.setItem(STORAGE_KEY, "1")
-    } catch {
-      // sessionStorage unavailable (private mode etc.) — silently ignore.
-    }
   }, [])
 
   return { shouldPlay, markPlayed }
