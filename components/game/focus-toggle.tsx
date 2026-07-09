@@ -17,7 +17,7 @@ export function FocusToggle() {
       variant="outline"
       size="sm"
       onClick={toggleFocusMode}
-      className="fixed right-4 top-20 z-40 rounded-full border-border/60 bg-card/70 px-4 font-mono shadow-kinetic backdrop-blur focus-visible:ring-2 focus-visible:ring-primary"
+      className="fixed right-4 top-20 z-40 hidden rounded-full border-border/60 bg-card/70 px-4 font-mono shadow-kinetic backdrop-blur focus-visible:ring-2 focus-visible:ring-primary md:inline-flex"
       aria-pressed={state.focusMode}
       aria-label={state.focusMode ? "Switch to game mode" : "Switch to focus mode"}
     >

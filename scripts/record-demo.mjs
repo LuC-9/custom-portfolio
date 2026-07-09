@@ -22,11 +22,11 @@
  *   ARTIFACTS_DIR     default ./artifacts (also mirrored to demo/portfolio-demo.mp4)
  */
 import { chromium } from "playwright"
-import { recordPage, hideCursor, showCursor } from "testreel"
 import { copyFileSync, existsSync, mkdirSync } from "node:fs"
 import { execSync } from "node:child_process"
+import os from "node:os"
 import { dirname, join } from "node:path"
-import { fileURLToPath } from "node:url"
+import { fileURLToPath, pathToFileURL } from "node:url"
 
 const HERE = dirname(fileURLToPath(import.meta.url))
 const REPO_ROOT = join(HERE, "..")
@@ -38,29 +38,56 @@ const DEMO_OUT = process.env.DEMO_OUT || join(REPO_ROOT, "demo", "portfolio-demo
 mkdirSync(ARTIFACTS_DIR, { recursive: true })
 mkdirSync(dirname(DEMO_OUT), { recursive: true })
 
-// testreel looks for ffmpeg via `ffmpeg-static` first and falls back to
-// FFMPEG_PATH. Bundled ffmpeg-static isn't shipped with the git install, so
-// auto-detect a system ffmpeg (scoop / brew / apt / choco) when unset.
+// -----------------------------------------------------------------------------
+// testreel resolution — mirrors record-app skill's `resolve-testreel-deps.mjs`.
+// Prefers the LuC-9 fork at ~/.local/testreel (no `npm link` needed), falls
+// back to `node_modules/testreel` if the project installed it locally.
+// -----------------------------------------------------------------------------
+function resolveTestreelEntry() {
+  const home = process.env.USERPROFILE ?? os.homedir()
+  const globalEntry = join(home, ".local", "testreel", "dist", "index.js")
+  if (existsSync(globalEntry)) return globalEntry
+  const projectEntry = join(REPO_ROOT, "node_modules", "testreel", "dist", "index.js")
+  if (existsSync(projectEntry)) return projectEntry
+  throw new Error(
+    [
+      "testreel not found. Install once:",
+      "  git clone https://github.com/LuC-9/testreel.git ~/.local/testreel",
+      "  cd ~/.local/testreel && npm install && npm run build",
+      "Or per-project: npm install -D github:LuC-9/testreel",
+    ].join("\n"),
+  )
+}
+const testreelEntry = resolveTestreelEntry()
+const { recordPage, hideCursor, showCursor } = await import(pathToFileURL(testreelEntry).href)
+
+// -----------------------------------------------------------------------------
+// ffmpeg — testreel's git fork doesn't ship ffmpeg-static, so `recorder.stop()`
+// fails with ENOENT unless FFMPEG_PATH is set. Same detection as the skill's
+// `ffmpeg-utils.mjs → ensureFfmpeg()` (silent variant).
+// -----------------------------------------------------------------------------
 if (!process.env.FFMPEG_PATH) {
+  const home = process.env.USERPROFILE ?? os.homedir()
   const candidates = [
-    process.env.USERPROFILE && join(process.env.USERPROFILE, "scoop", "shims", "ffmpeg.exe"),
+    home && join(home, "scoop", "shims", "ffmpeg.exe"),
+    home && join(home, "scoop", "apps", "ffmpeg", "current", "bin", "ffmpeg.exe"),
     "C:/ProgramData/chocolatey/bin/ffmpeg.exe",
-    "/usr/bin/ffmpeg",
-    "/usr/local/bin/ffmpeg",
+    "C:/ffmpeg/bin/ffmpeg.exe",
     "/opt/homebrew/bin/ffmpeg",
+    "/usr/local/bin/ffmpeg",
+    "/usr/bin/ffmpeg",
   ].filter(Boolean)
-  const resolved = candidates.find((p) => existsSync(p))
-  if (resolved) {
-    process.env.FFMPEG_PATH = resolved
-  } else {
+  let resolved = candidates.find((p) => existsSync(p))
+  if (!resolved) {
     try {
-      const which = process.platform === "win32" ? "where ffmpeg" : "which ffmpeg"
-      const out = execSync(which, { stdio: ["ignore", "pipe", "ignore"] }).toString().trim().split(/\r?\n/)[0]
-      if (out && existsSync(out)) process.env.FFMPEG_PATH = out
+      const cmd = process.platform === "win32" ? "where ffmpeg" : "which ffmpeg"
+      const out = execSync(cmd, { stdio: ["ignore", "pipe", "ignore"] }).toString().trim().split(/\r?\n/)[0]
+      if (out && existsSync(out)) resolved = out
     } catch {
       /* leave unset — testreel will surface a clear error */
     }
   }
+  if (resolved) process.env.FFMPEG_PATH = resolved
 }
 if (process.env.FFMPEG_PATH) console.log(`Using ffmpeg: ${process.env.FFMPEG_PATH}`)
 

@@ -17,7 +17,7 @@ export function PlayerHUD() {
   return (
     <section
       aria-live="polite"
-      className="fixed bottom-24 left-4 right-4 z-40 rounded-xl border border-border/60 bg-card/90 p-4 shadow-kinetic backdrop-blur md:bottom-6 md:left-6 md:right-auto md:w-[min(360px,40vw)]"
+      className="fixed bottom-6 left-6 right-auto z-40 hidden w-[min(360px,40vw)] rounded-xl border border-border/60 bg-card/90 p-4 shadow-kinetic backdrop-blur md:block"
     >
       <div className="flex items-start justify-between gap-3">
         <div>

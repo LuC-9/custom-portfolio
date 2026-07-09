@@ -44,6 +44,12 @@ export function AchievementToast() {
 
   useEffect(() => {
     if (state.focusMode || !pending) return
+    // Gamification chrome is a desktop-only feature — the class card + hint bubbles
+    // are hidden below md, so silencing the toast here keeps the layer consistent.
+    if (typeof window !== "undefined" && window.matchMedia("(max-width: 767px)").matches) {
+      markAchievementShown(pending)
+      return
+    }
 
     const achievement = achievements.find((item) => item.id === pending)
     if (!achievement) return

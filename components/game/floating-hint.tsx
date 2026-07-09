@@ -171,7 +171,7 @@ export function FloatingHint() {
 
   return (
     <div
-      className="pointer-events-none fixed left-4 top-20 z-30 h-[240px] w-full max-w-md max-w-[calc(100vw-180px)] md:max-w-md"
+      className="pointer-events-none fixed left-4 top-20 z-30 hidden h-[240px] w-full max-w-md md:block md:max-w-md"
       aria-live="polite"
       role="status"
     >
