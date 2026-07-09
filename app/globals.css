@@ -272,6 +272,15 @@ table td {
   animation-direction: reverse;
 }
 
+.skills-marquee-track {
+  animation: skills-marquee 40s linear infinite;
+  will-change: transform;
+}
+
+.skills-marquee-track:hover {
+  animation-play-state: paused;
+}
+
 .spotlight-border::before {
   content: "";
   position: absolute;
@@ -305,8 +314,22 @@ table td {
   }
 }
 
+@keyframes skills-marquee {
+  from {
+    transform: translate3d(0, 0, 0);
+  }
+  to {
+    transform: translate3d(-50%, 0, 0);
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
   .animate-marquee {
+    animation: none !important;
+    transform: none !important;
+  }
+
+  .skills-marquee-track {
     animation: none !important;
     transform: none !important;
   }
@@ -324,4 +347,23 @@ table td {
     backdrop-filter: none !important;
     -webkit-backdrop-filter: none !important;
   }
+}
+
+@keyframes spotify-progress {
+  from { transform: scaleX(0); }
+  to { transform: scaleX(1); }
+}
+
+.spotify-progress-fill {
+  animation-name: spotify-progress;
+  animation-duration: var(--total-ms, 1ms);
+  animation-delay: var(--elapsed-ms, 0ms);
+  animation-timing-function: linear;
+  animation-fill-mode: forwards;
+  animation-play-state: running;
+  will-change: transform;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .spotify-progress-fill { animation: none; transform: scaleX(0); }
 }

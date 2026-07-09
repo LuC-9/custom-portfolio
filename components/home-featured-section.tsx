@@ -111,8 +111,8 @@ export function HomeFeaturedSection({
           <RevealStagger
             as="div"
             className="grid grid-cols-1 gap-4 md:grid-cols-3 md:auto-rows-[minmax(280px,1fr)] md:grid-flow-dense"
-            staggerMs={90}
-            amount={0.2}
+            staggerMs={35}
+            amount={0.05}
           >
             {developerCells.map((cell, index) => (
               <div key={`${cell.kind}-${cell.item.id}`} className={getDeveloperSpanClass(index, developerCells.length)}>
@@ -121,7 +121,13 @@ export function HomeFeaturedSection({
                     <Link href={cell.item.demo ?? "/projects"} className="flex h-full flex-col bg-card/60 p-4">
                       {cell.item.image ? (
                         <div className="relative mb-4 aspect-video overflow-hidden rounded-lg">
-                          <Image src={cell.item.image} alt={cell.item.title} fill className="object-cover" />
+                          <Image
+                            src={cell.item.image}
+                            alt={cell.item.title}
+                            fill
+                            sizes="(max-width: 768px) 100vw, 33vw"
+                            className="object-cover"
+                          />
                         </div>
                       ) : null}
                       <h3 className="font-sans text-xl font-semibold">{cell.item.title}</h3>
@@ -136,7 +142,13 @@ export function HomeFeaturedSection({
                     <Link href={`/blog/${cell.item.id}`} className="flex h-full flex-col bg-card/60 p-4">
                       {cell.item.image ? (
                         <div className="relative mb-4 aspect-video overflow-hidden rounded-lg">
-                          <Image src={cell.item.image} alt={cell.item.title} fill className="object-cover" />
+                          <Image
+                            src={cell.item.image}
+                            alt={cell.item.title}
+                            fill
+                            sizes="(max-width: 768px) 100vw, 33vw"
+                            className="object-cover"
+                          />
                         </div>
                       ) : null}
                       <p className="font-mono text-xs text-muted-foreground">{formatDate(cell.item.date)}</p>
@@ -161,7 +173,11 @@ export function HomeFeaturedSection({
               </Button>
             </MagneticHover>
             <MagneticHover>
-              <Button variant="outline" asChild className="rounded-full">
+              <Button
+                variant="secondary"
+                asChild
+                className="rounded-full border border-border/70 bg-card/80 text-foreground hover:bg-card"
+              >
                 <Link href="/blog">View all articles</Link>
               </Button>
             </MagneticHover>
@@ -172,8 +188,8 @@ export function HomeFeaturedSection({
           <RevealStagger
             as="div"
             className="grid grid-cols-1 gap-4 md:grid-cols-2 md:auto-rows-[minmax(240px,1fr)] md:grid-flow-dense"
-            staggerMs={90}
-            amount={0.2}
+            staggerMs={35}
+            amount={0.05}
           >
             {streamCards.map(({ id, label, href, cta, pitch, Icon }) => (
               <div key={id} className="md:row-span-2">
@@ -202,7 +218,13 @@ export function HomeFeaturedSection({
                   <Link href={`/blog/${blog.id}`} className="flex h-full flex-col bg-card/60 p-4">
                     {blog.image ? (
                       <div className="relative mb-4 aspect-video overflow-hidden rounded-lg">
-                        <Image src={blog.image} alt={blog.title} fill className="object-cover" />
+                        <Image
+                          src={blog.image}
+                          alt={blog.title}
+                          fill
+                          sizes="(max-width: 768px) 100vw, 50vw"
+                          className="object-cover"
+                        />
                       </div>
                     ) : null}
                     <p className="font-mono text-xs text-muted-foreground">{formatDate(blog.date)}</p>
@@ -226,7 +248,11 @@ export function HomeFeaturedSection({
               </Button>
             </MagneticHover>
             <MagneticHover>
-              <Button variant="outline" asChild className="rounded-full">
+              <Button
+                variant="secondary"
+                asChild
+                className="rounded-full border border-border/70 bg-card/80 text-foreground hover:bg-card"
+              >
                 <Link href="/blog">View all articles</Link>
               </Button>
             </MagneticHover>

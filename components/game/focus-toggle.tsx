@@ -24,12 +24,12 @@ export function FocusToggle() {
       {state.focusMode ? (
         <>
           <Eye className="h-4 w-4 mr-2" />
-          Focus
+          
         </>
       ) : (
         <>
           <Gamepad2 className="h-4 w-4 mr-2" />
-          Game On
+          
         </>
       )}
       <span className="ml-2 text-[10px] text-muted-foreground">G</span>

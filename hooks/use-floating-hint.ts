@@ -1,11 +1,18 @@
 "use client"
 
 import { useCallback, useEffect, useMemo, useState } from "react"
-import { QUEST_CATALOG, type QuestDefinition } from "@/lib/game/quests"
+import { QUEST_CATALOG } from "@/lib/game/quests"
 
 type FloatingHintState = {
   order: string[]
   index: number
+}
+
+export type HintItem = {
+  id: string
+  label: string
+  route: string | null
+  icon: "route" | "sparkle"
 }
 
 function shuffleTaskIds(taskIds: string[]): string[] {
@@ -17,10 +24,26 @@ function shuffleTaskIds(taskIds: string[]): string[] {
   return shuffled
 }
 
+function toHintItem(taskId: string, label: string): HintItem {
+  const route = taskId.startsWith("route:") ? taskId.slice("route:".length) : null
+  return {
+    id: taskId,
+    label,
+    route,
+    icon: route !== null ? "route" : "sparkle",
+  }
+}
+
 /**
  * Rotates incomplete quest hints and reshuffles once each pass is exhausted.
  */
-export function useFloatingHint(completedTaskIds: string[]) {
+export function useFloatingHints(
+  completedTaskIds: string[],
+  options?: { max?: number },
+): {
+  hints: HintItem[]
+  dismissHint: (id: string) => void
+} {
   const completedTaskSet = useMemo(
     () => new Set(completedTaskIds.map((taskId) => taskId.toLowerCase())),
     [completedTaskIds],
@@ -54,7 +77,7 @@ export function useFloatingHint(completedTaskIds: string[]) {
     })
   }, [availableKey, availableHintIds])
 
-  const advanceHint = useCallback(() => {
+  const dismissHint = useCallback((id: string) => {
     setState((previous) => {
       if (availableHintIds.length === 0) return { order: [], index: 0 }
 
@@ -66,38 +89,60 @@ export function useFloatingHint(completedTaskIds: string[]) {
         }
       }
 
-      if (previous.index < normalizedOrder.length - 1) {
+      const dismissedIndex = normalizedOrder.indexOf(id)
+      if (dismissedIndex === -1) {
         return {
           order: normalizedOrder,
-          index: previous.index + 1,
+          index: previous.index % normalizedOrder.length,
         }
       }
 
-      return {
-        order: shuffleTaskIds(availableHintIds),
-        index: 0,
+      if (dismissedIndex < normalizedOrder.length - 1) {
+        return { order: normalizedOrder, index: dismissedIndex + 1 }
       }
+
+      return { order: shuffleTaskIds(availableHintIds), index: 0 }
     })
   }, [availableHintIds, hintById])
 
-  useEffect(() => {
-    if (availableHintIds.length === 0) return
-    const timer = window.setInterval(() => {
-      advanceHint()
-    }, 8000)
-    return () => window.clearInterval(timer)
-  }, [advanceHint, availableHintIds.length])
+  const maxHints = Math.max(1, options?.max ?? 3)
 
-  const currentHint: QuestDefinition | null = useMemo(() => {
-    if (availableHintIds.length === 0) return null
+  const hints = useMemo(() => {
+    if (availableHintIds.length === 0) return []
 
     const normalizedOrder = state.order.filter((taskId) => hintById.has(taskId))
-    const currentTaskId = normalizedOrder[state.index] ?? normalizedOrder[0] ?? availableHintIds[0]
-    return hintById.get(currentTaskId) ?? null
-  }, [availableHintIds, hintById, state.index, state.order])
+    const currentOrder = normalizedOrder.length > 0 ? normalizedOrder : availableHintIds
+    if (currentOrder.length === 0) return []
+
+    const startIndex = state.index % currentOrder.length
+    const count = Math.min(maxHints, currentOrder.length)
+
+    return Array.from({ length: count }, (_, offset) => {
+      const index = (startIndex + offset) % currentOrder.length
+      const taskId = currentOrder[index]
+      const quest = hintById.get(taskId)
+      if (!quest) return null
+      return toHintItem(quest.taskId, quest.label)
+    }).filter((hint): hint is HintItem => hint !== null)
+  }, [availableHintIds, hintById, maxHints, state.index, state.order])
+
+  return {
+    hints,
+    dismissHint,
+  }
+}
+
+export function useFloatingHint(completedTaskIds: string[]) {
+  const { hints, dismissHint } = useFloatingHints(completedTaskIds, { max: 1 })
+  const currentHint = hints[0] ?? null
+
+  const dismissCurrentHint = useCallback(() => {
+    if (!currentHint) return
+    dismissHint(currentHint.id)
+  }, [currentHint, dismissHint])
 
   return {
     currentHint,
-    dismissHint: advanceHint,
+    dismissHint: dismissCurrentHint,
   }
 }

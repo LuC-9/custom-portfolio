@@ -30,7 +30,7 @@ export function BlogPostCard({ post, variant = "featured" }: BlogPostCardProps) 
     return (
       <Link
         href={`/blog/${post.id}`}
-        className="group block space-y-3 py-4 transition-colors first:pt-0 last:pb-0 hover:text-primary"
+        className="group block space-y-3 py-5 transition-colors first:pt-1 last:pb-1 hover:text-primary"
       >
         <h3 className="font-sans text-xl font-semibold tracking-tight text-foreground transition-colors group-hover:text-primary">
           {post.title}

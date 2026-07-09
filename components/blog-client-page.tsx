@@ -85,8 +85,8 @@ export function BlogClientPage({ posts }: { posts: any[] }) {
         </p>
       </header>
 
-      <section className="grid gap-6 rounded-xl border border-border/60 bg-card/40 p-5 md:p-7 lg:grid-cols-12">
-        <div className="space-y-2 lg:col-span-6">
+      <section className="flex flex-col gap-4 rounded-xl border border-border/60 bg-card/40 p-5 md:grid md:grid-cols-[minmax(0,1fr)_auto] md:items-center md:gap-12 md:p-7">
+        <div className="w-full space-y-2 md:max-w-2xl">
           <label htmlFor="blog-search" className="block text-sm font-medium text-foreground">
             Search articles
           </label>
@@ -114,9 +114,9 @@ export function BlogClientPage({ posts }: { posts: any[] }) {
           <p className="text-xs text-muted-foreground">Shortcut: Cmd/Ctrl + K</p>
         </div>
 
-        <div className="space-y-2 lg:col-span-6">
+        <div className="space-y-2 md:justify-self-end md:text-right">
           <p className="text-sm font-medium text-foreground">Filter by persona</p>
-          <div className="flex flex-wrap items-center gap-2">
+          <div className="flex flex-wrap items-center gap-2 md:justify-end">
             {[
               { key: "all", label: "All", icon: LayoutGrid },
               { key: "developer", label: "Developer", icon: Code },
@@ -168,11 +168,13 @@ export function BlogClientPage({ posts }: { posts: any[] }) {
 
           <div className="rounded-xl border border-border/60 bg-card/40 p-5 lg:col-span-4">
             <h2 className="font-sans text-2xl font-semibold tracking-tight">More posts</h2>
-            <div className="mt-4 divide-y divide-border/40">
+            <ul className="mt-5 -mx-5 divide-y divide-border/60">
               {compactPosts.map((post) => (
-                <BlogPostCard key={post.id} post={post} variant="compact" />
+                <li key={post.id} className="px-5">
+                  <BlogPostCard post={post} variant="compact" />
+                </li>
               ))}
-            </div>
+            </ul>
           </div>
         </section>
       ) : (
