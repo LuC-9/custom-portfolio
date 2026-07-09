@@ -112,7 +112,7 @@ export function HeroIntro({ persona, onDone }: HeroIntroProps) {
           role="dialog"
           aria-modal="true"
           aria-label={`Persona intro: ${cfg.name}, ${cfg.label}`}
-          className="fixed left-0 top-0 flex h-[100dvh] w-[100dvw] items-center overflow-hidden"
+          className="fixed left-0 top-0 flex h-[100dvh] w-[100dvw] items-end overflow-hidden md:items-center"
           initial={{ opacity: reduce ? 0 : 1 }}
           animate={{ opacity: 1 }}
           exit={
@@ -171,12 +171,26 @@ export function HeroIntro({ persona, onDone }: HeroIntroProps) {
                 sizes="(max-width: 768px) 100vw, 60vw"
                 className="object-cover object-center"
               />
+              {/* Desktop: image lives in the right ~60%, copy sits on the
+                 left backdrop, so a horizontal dark→clear sweep is enough. */}
               <div
                 aria-hidden
-                className="pointer-events-none absolute inset-0"
+                className="pointer-events-none absolute inset-0 hidden md:block"
                 style={{
                   background:
                     "linear-gradient(90deg, rgba(3,5,16,0.88) 0%, rgba(3,5,16,0.30) 32%, rgba(3,5,16,0) 62%, rgba(3,5,16,0.20) 100%)",
+                }}
+              />
+              {/* Mobile: image spans full width and copy stacks at the bottom,
+                 so a vertical dark→clear→dark sweep keeps the portrait
+                 readable up top while guaranteeing solid contrast for the
+                 label + heading + tagline at the bottom. */}
+              <div
+                aria-hidden
+                className="pointer-events-none absolute inset-0 md:hidden"
+                style={{
+                  background:
+                    "linear-gradient(180deg, rgba(3,5,16,0.55) 0%, rgba(3,5,16,0.15) 30%, rgba(3,5,16,0.45) 60%, rgba(3,5,16,0.9) 100%)",
                 }}
               />
               <div
@@ -187,7 +201,7 @@ export function HeroIntro({ persona, onDone }: HeroIntroProps) {
             </div>
           </motion.div>
 
-          <div className="relative z-10 mx-auto flex w-full max-w-[1400px] flex-col justify-center gap-6 px-6 py-16 md:px-10 md:gap-8 lg:px-14">
+          <div className="relative z-10 mx-auto flex w-full max-w-[1400px] flex-col justify-end gap-4 px-6 pb-[max(env(safe-area-inset-bottom),20px)] pt-16 sm:gap-6 md:justify-center md:gap-8 md:px-10 md:py-16 lg:px-14">
             <motion.div
               initial={reduce ? { opacity: 0 } : { opacity: 0, y: -8 }}
               animate={{ opacity: 1, y: 0 }}
