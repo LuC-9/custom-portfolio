@@ -266,10 +266,10 @@ export function HeroIntro({ persona, onDone }: HeroIntroProps) {
           <button
             type="button"
             onClick={finish}
-            className="absolute right-4 top-4 z-30 inline-flex items-center gap-1.5 rounded-full border border-white/30 bg-black/45 px-3 py-1.5 font-mono text-[11px] uppercase tracking-[0.22em] text-white backdrop-blur-md transition-colors hover:bg-white/15 focus:outline-none focus-visible:ring-2 focus-visible:ring-white/70"
+            className="absolute right-3 top-3 z-30 inline-flex min-h-[44px] min-w-[44px] items-center justify-center gap-1.5 rounded-full border border-white/30 bg-black/50 px-4 py-2 font-mono text-[12px] uppercase tracking-[0.22em] text-white backdrop-blur-md transition-colors hover:bg-white/15 focus:outline-none focus-visible:ring-2 focus-visible:ring-white/70 md:right-4 md:top-4 md:min-h-0 md:min-w-0 md:bg-black/45 md:px-3 md:py-1.5 md:text-[11px]"
             aria-label="Skip intro"
           >
-            <X className="h-3 w-3" aria-hidden />
+            <X className="h-3.5 w-3.5 md:h-3 md:w-3" aria-hidden />
             SKIP
           </button>
 
