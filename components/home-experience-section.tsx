@@ -58,7 +58,9 @@ export function HomeExperienceSection({
             const startYear = extractStartYear(experience.period)
             // Newest entry on the right; alternate from there.
             const isRight = index % 2 === 0
-            const enterX = reduce ? 0 : isRight ? 56 : -56
+            // Horizontal reveal is desktop-only; mobile starts at x=0 to avoid
+            // offscreen transforms increasing the document scroll width.
+            const enterX = reduce ? 0 : "var(--experience-enter-x)"
 
             return (
               <li key={experience.id} className="relative md:grid md:grid-cols-2 md:gap-16 lg:gap-24">
@@ -95,6 +97,9 @@ export function HomeExperienceSection({
                   className={cn(
                     // Mobile: left border acts as spine, single-column body.
                     "border-l border-border/50 pl-6 md:border-0 md:pl-0",
+                    isRight
+                      ? "[--experience-enter-x:0px] md:[--experience-enter-x:56px]"
+                      : "[--experience-enter-x:0px] md:[--experience-enter-x:-56px]",
                     // Desktop: pin card to the side that touches the spine,
                     // constrain width so both sides stay balanced.
                     "md:max-w-[460px]",

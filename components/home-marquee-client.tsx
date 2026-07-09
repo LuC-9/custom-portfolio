@@ -34,13 +34,13 @@ export function HomeMarqueeClient({ developerSkills, gamerGames }: HomeMarqueeCl
   const skills = source.length > 0 ? source : developerSkills
 
   return (
-    <div className="w-full" style={fadeMask}>
+    <div className="min-w-0 w-full overflow-hidden" style={fadeMask}>
       <ul className="sr-only" aria-label="Tech stack">
         {skills.map((skill) => (
           <li key={`sr-${skill}`}>{skill}</li>
         ))}
       </ul>
-      <div aria-hidden="true" className="overflow-hidden">
+      <div aria-hidden="true" className="w-full overflow-hidden">
         {reduceMotion ? (
           <MarqueeHalf skills={skills} />
         ) : (
