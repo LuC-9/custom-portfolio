@@ -38,7 +38,7 @@ export function HomeExperienceSection({
   if (experiences.length === 0) return null
 
   return (
-    <section aria-label="Selected experience" className="relative">
+    <section aria-label="Selected experience" className="relative overflow-x-hidden">
       <div className="relative">
         {/* Spine: sits at left on mobile, centered on desktop. Fades at head + tail. */}
         <div
