@@ -1,43 +1,64 @@
 "use client"
 
 import { usePersona } from "@/contexts/persona-context"
-import { motion } from "framer-motion"
+import { motion } from "motion/react"
 import { emitGameEvent } from "@/lib/game/event-bus"
+import { motionSpring, useReducedMotionSafe } from "@/hooks/use-reduced-motion"
 
 export function PersonaToggle() {
-  const { persona, togglePersona } = usePersona()
+  const { persona, setPersona } = usePersona()
+  const reduceMotion = useReducedMotionSafe()
 
-  const handleToggle = () => {
-    const nextPersona = persona === "developer" ? "gamer" : "developer"
+  const switchPersona = (nextPersona: "developer" | "gamer") => {
+    if (persona === nextPersona) return
+
+    emitGameEvent({
+      type: "persona_switch",
+      taskId: "persona:toggle",
+      metadata: { to: nextPersona },
+    })
     emitGameEvent({
       type: "persona_viewed",
       taskId: `persona:${nextPersona}`,
       metadata: { persona: nextPersona },
     })
-    togglePersona()
+    setPersona(nextPersona)
   }
 
   return (
-    <div className="flex items-center gap-3">
-      <span className={`text-sm font-medium ${persona === "developer" ? "text-primary" : "text-muted-foreground"}`}>
-        Developer
-      </span>
-
+    <div
+      className="relative inline-flex rounded-full border border-border bg-card p-1"
+      role="group"
+      aria-label="Persona toggle"
+    >
+      <motion.div
+        layout
+        className="absolute inset-y-1 w-[calc(50%-0.25rem)] rounded-full bg-primary"
+        style={{ left: persona === "developer" ? "0.25rem" : "calc(50% + 0.25rem)" }}
+        transition={reduceMotion ? { duration: 0 } : motionSpring}
+      />
       <button
-        onClick={handleToggle}
-        className="relative h-6 w-12 rounded-full bg-secondary p-1 transition-colors focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 focus:ring-offset-background"
-        aria-label={`Switch to ${persona === "developer" ? "gamer" : "developer"} mode`}
+        type="button"
+        role="button"
+        aria-pressed={persona === "developer"}
+        onClick={() => switchPersona("developer")}
+        className={`relative z-10 min-w-[132px] rounded-full px-4 py-2 font-mono text-[11px] uppercase tracking-[0.2em] transition-colors ${
+          persona === "developer" ? "text-primary-foreground" : "text-muted-foreground hover:text-foreground"
+        }`}
       >
-        <motion.div
-          className="h-4 w-4 rounded-full bg-primary"
-          animate={{ x: persona === "developer" ? 0 : 24 }}
-          transition={{ type: "spring", stiffness: 500, damping: 30 }}
-        />
+        DEVELOPER
       </button>
-
-      <span className={`text-sm font-medium ${persona === "gamer" ? "text-primary" : "text-muted-foreground"}`}>
-        Gamer
-      </span>
+      <button
+        type="button"
+        role="button"
+        aria-pressed={persona === "gamer"}
+        onClick={() => switchPersona("gamer")}
+        className={`relative z-10 min-w-[132px] rounded-full px-4 py-2 font-mono text-[11px] uppercase tracking-[0.2em] transition-colors ${
+          persona === "gamer" ? "text-primary-foreground" : "text-muted-foreground hover:text-foreground"
+        }`}
+      >
+        GAMER
+      </button>
     </div>
   )
 }

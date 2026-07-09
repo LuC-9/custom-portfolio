@@ -21,18 +21,19 @@ export const metadata: Metadata = {
 
 export default async function ProjectsPage() {
   try {
-    // Fetch projects data with processed content
     const projects = await getAllContentData("projects")
     
     return (
       <div className="flex flex-col min-h-screen">
-        <div className="container mx-auto px-4 flex-grow">
-          <div className="pt-24 pb-12">
+        <div className="mx-auto w-full max-w-[1400px] flex-grow px-4 pb-16 pt-28 md:px-6 lg:pt-32">
+          <div className="pb-10">
             <ProjectsSectionHeading />
           </div>
           <ProjectsClient projects={projects} />
         </div>
-        <Footer />
+        <div className="mx-auto w-full max-w-[1400px] px-4 pb-10 md:px-6">
+          <Footer />
+        </div>
       </div>
     )
   } catch (error) {

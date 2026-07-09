@@ -202,7 +202,7 @@ Be polite, concise, and helpful. If you don't know the answer based on the conte
             emitGameEvent({ type: "chatbot_open", taskId: "chatbot:open" });
             setIsOpen(true);
           }}
-          className="fixed bottom-20 left-6 sm:bottom-6 h-14 w-14 rounded-full shadow-lg z-50 flex items-center justify-center p-0 transition-transform hover:scale-105 hover:animate-none"
+          className="fixed bottom-6 right-6 z-50 h-14 w-14 rounded-full border border-primary/40 bg-primary p-0 text-primary-foreground shadow-kinetic transition-transform hover:scale-105"
         >
           <MessageSquare className="h-6 w-6" />
         </Button>
@@ -211,14 +211,14 @@ Be polite, concise, and helpful. If you don't know the answer based on the conte
       {/* Chat Window */}
       {isOpen && (
         <div 
-          className={`fixed left-6 bottom-20 sm:bottom-6 z-50 bg-background border border-border shadow-2xl rounded-2xl flex flex-col transition-all duration-300 ease-in-out
-            ${isExpanded ? 'w-[400px] sm:w-[500px] h-[600px] max-h-[85vh]' : 'w-[350px] h-[450px]'}`}
+          className={`fixed bottom-24 right-6 z-50 flex max-h-[70vh] w-[380px] max-w-[calc(100vw-3rem)] flex-col overflow-hidden rounded-xl border border-border bg-popover shadow-kinetic transition-all duration-300 ease-in-out
+            ${isExpanded ? 'h-[70vh]' : 'h-[540px]'}`}
         >
           {/* Header */}
-          <div className="flex items-center justify-between p-4 border-b">
+          <div className="flex items-center justify-between border-b border-border/60 p-4">
             <div className="flex items-center gap-2">
               <MessageSquare className="h-5 w-5 text-primary" />
-              <h3 className="font-semibold text-sm">Ask about my portfolio</h3>
+              <h3 className="font-sans text-sm font-semibold tracking-tight">Ask about my portfolio</h3>
             </div>
             <div className="flex items-center gap-1">
               <Button variant="ghost" size="icon" className="h-8 w-8" onClick={() => setIsExpanded(!isExpanded)}>
@@ -236,10 +236,10 @@ Be polite, concise, and helpful. If you don't know the answer based on the conte
               {messages.map((message, i) => (
                 <div key={i} className={`flex ${message.role === 'user' ? 'justify-end' : 'justify-start'}`}>
                   <div 
-                    className={`max-w-[85%] rounded-2xl px-4 py-3 text-sm ${
+                    className={`max-w-[85%] rounded-xl px-4 py-3 text-sm ${
                       message.role === 'user' 
-                        ? 'bg-primary text-primary-foreground rounded-br-none' 
-                        : 'bg-muted rounded-bl-none'
+                        ? 'rounded-br-none bg-primary text-primary-foreground' 
+                        : 'rounded-bl-none bg-card'
                     }`}
                   >
                     {message.role === 'user' ? (
@@ -272,7 +272,7 @@ Be polite, concise, and helpful. If you don't know the answer based on the conte
               ))}
               {isLoading && (
                 <div className="flex justify-start">
-                  <div className="bg-muted max-w-[85%] rounded-2xl rounded-bl-none px-4 py-3 flex items-center gap-2">
+                  <div className="max-w-[85%] rounded-xl rounded-bl-none bg-card px-4 py-3 flex items-center gap-2">
                     <Loader2 className="h-4 w-4 animate-spin text-muted-foreground" />
                     <span className="text-sm text-muted-foreground">Thinking...</span>
                   </div>
@@ -288,17 +288,17 @@ Be polite, concise, and helpful. If you don't know the answer based on the conte
           </ScrollArea>
 
           {/* Input Area */}
-          <div className="p-4 border-t bg-background rounded-b-2xl">
+          <div className="rounded-b-xl border-t border-border/60 bg-popover p-4">
             <div className="flex gap-2 items-center">
               <Input
                 placeholder="Ask something..."
                 value={input}
                 onChange={e => setInput(e.target.value)}
                 onKeyDown={handleKeyDown}
-                className="flex-1 focus-visible:ring-1 focus-visible:ring-primary/50"
+                className="h-10 flex-1 rounded-full border border-border bg-input px-4 focus-visible:ring-1 focus-visible:ring-primary/50"
                 disabled={isLoading}
               />
-              <Button onClick={() => handleSend()} disabled={!input.trim() || isLoading} size="icon" className="shrink-0 h-10 w-10">
+              <Button onClick={() => handleSend()} disabled={!input.trim() || isLoading} size="icon" className="h-10 w-10 shrink-0 rounded-full">
                 <Send className="h-4 w-4" />
               </Button>
             </div>

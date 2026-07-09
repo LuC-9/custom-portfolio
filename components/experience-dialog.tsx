@@ -47,7 +47,7 @@ export function ExperienceDialog({
       </div>
 
       <Dialog open={isOpen} onOpenChange={setIsOpen}>
-        <DialogContent className="max-w-3xl w-[95vw] sm:w-auto overflow-hidden flex flex-col">
+        <DialogContent className="w-[95vw] max-w-4xl rounded-xl border-border/60 bg-popover shadow-kinetic">
           <DialogHeader className="mb-4">
             <div className="flex items-center gap-2 mb-2">
               <Briefcase className="h-5 w-5 text-primary" />
@@ -69,7 +69,7 @@ export function ExperienceDialog({
             {experience.skills && experience.skills.length > 0 && (
               <div className="flex flex-wrap gap-2 mt-4">
                 {experience.skills.map((skill, i) => (
-                  <Badge key={i} variant="secondary" className="text-xs">
+                  <Badge key={i} variant="secondary" className="rounded-full border border-border/60 bg-card/70 px-2 py-1 font-mono text-[10px] uppercase tracking-[0.15em] text-muted-foreground">
                     {skill}
                   </Badge>
                 ))}
@@ -77,7 +77,7 @@ export function ExperienceDialog({
             )}
           </DialogHeader>
 
-          <div className="overflow-y-auto max-h-[60vh] pr-2 -mr-2">
+          <div className="max-h-[60vh] overflow-y-auto rounded-xl border border-border/50 bg-card/50 p-4">
             <div
               className="prose prose-sm lg:prose-base dark:prose-invert max-w-none text-sm break-words"
               dangerouslySetInnerHTML={{ __html: experience.contentHtml }}

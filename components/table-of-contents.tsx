@@ -2,14 +2,13 @@
 
 import { useState, useEffect } from "react"
 import { ChevronDown } from "lucide-react"
+import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion"
 
 export function TableOfContents({ content }: { content: string }) {
   const [headings, setHeadings] = useState<{ id: string; text: string; level: number }[]>([])
   const [activeId, setActiveId] = useState<string>("")
-  const [isOpen, setIsOpen] = useState(false)
 
   useEffect(() => {
-    // Extract headings from content
     const doc = new DOMParser().parseFromString(content, 'text/html')
     const headingElements = Array.from(doc.querySelectorAll('h2, h3, h4'))
     
@@ -21,7 +20,6 @@ export function TableOfContents({ content }: { content: string }) {
     
     setHeadings(extractedHeadings)
     
-    // Set up intersection observer for active heading
     const observer = new IntersectionObserver(
       (entries) => {
         entries.forEach(entry => {
@@ -33,7 +31,6 @@ export function TableOfContents({ content }: { content: string }) {
       { rootMargin: '0px 0px -80% 0px' }
     )
     
-    // Observe all headings
     headingElements.forEach(heading => {
       if (heading.id) {
         const element = document.getElementById(heading.id)
@@ -53,42 +50,52 @@ export function TableOfContents({ content }: { content: string }) {
 
   if (headings.length === 0) return null
 
+  const links = (
+    <nav aria-label="Table of contents">
+      <ul className="space-y-1.5 text-sm">
+        {headings.map((heading) => (
+          <li
+            key={heading.id}
+            className={`${
+              heading.level === 2 ? "pl-0" : heading.level === 3 ? "pl-3" : "pl-6"
+            }`}
+          >
+            <a
+              href={`#${heading.id}`}
+              className={`block rounded-md px-2 py-1 transition-colors ${
+                activeId === heading.id
+                  ? "bg-primary/10 text-primary"
+                  : "text-muted-foreground hover:bg-secondary/60 hover:text-foreground"
+              }`}
+            >
+              {heading.text}
+            </a>
+          </li>
+        ))}
+      </ul>
+    </nav>
+  )
+
   return (
-    <div className="bg-secondary/20 rounded-lg p-4 border border-secondary/50">
-      <div 
-        className="flex items-center justify-between font-medium mb-2 cursor-pointer lg:cursor-default"
-        onClick={() => setIsOpen(!isOpen)}
-      >
-        <h3 className="text-base md:text-lg">Table of Contents</h3>
-        <ChevronDown className={`h-4 w-4 transition-transform lg:hidden ${isOpen ? 'rotate-180' : ''}`} />
+    <>
+      <div className="xl:hidden">
+        <Accordion type="single" collapsible className="w-full rounded-xl border border-border/60 bg-card/50 px-4">
+          <AccordionItem value="toc" className="border-none">
+            <AccordionTrigger className="py-3 text-base font-semibold hover:no-underline">
+              <span className="inline-flex items-center gap-2">
+                <ChevronDown className="h-4 w-4 text-primary" />
+                Table of Contents
+              </span>
+            </AccordionTrigger>
+            <AccordionContent className="pb-4">{links}</AccordionContent>
+          </AccordionItem>
+        </Accordion>
       </div>
-      
-      <div className={`${isOpen ? 'block' : 'hidden'} lg:block`}>
-        <nav className="toc-nav">
-          <ul className="space-y-1 text-sm">
-            {headings.map((heading) => (
-              <li 
-                key={heading.id}
-                className={`${
-                  heading.level === 2 ? 'pl-0' : 
-                  heading.level === 3 ? 'pl-3' : 
-                  'pl-6'
-                }`}
-              >
-                <a
-                  href={`#${heading.id}`}
-                  className={`block py-1 hover:text-primary transition-colors ${
-                    activeId === heading.id ? 'text-primary font-medium' : 'text-muted-foreground'
-                  }`}
-                  onClick={() => setIsOpen(false)}
-                >
-                  {heading.text}
-                </a>
-              </li>
-            ))}
-          </ul>
-        </nav>
+
+      <div className="hidden rounded-xl border border-border/60 bg-card/50 p-4 xl:block">
+        <h3 className="mb-3 font-mono text-xs uppercase tracking-[0.18em] text-muted-foreground">On this page</h3>
+        {links}
       </div>
-    </div>
+    </>
   )
 }

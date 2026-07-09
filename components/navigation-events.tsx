@@ -3,7 +3,7 @@
 import { useState, useEffect, useRef } from "react"
 import { usePathname } from "next/navigation"
 import { LoadingSpinner } from "./loading-spinner"
-import { motion, AnimatePresence } from "framer-motion"
+import { motion, AnimatePresence } from "motion/react"
 import { emitGameEvent } from "@/lib/game/event-bus"
 
 const ROUTE_TASK_IDS: Record<string, string> = {

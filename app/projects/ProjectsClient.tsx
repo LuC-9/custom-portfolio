@@ -1,15 +1,10 @@
 "use client"
 
-import { useEffect, useState } from "react"
-import { usePersona } from "@/contexts/persona-context"
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
 import { ProjectDialog } from "@/components/project-dialog"
 import Image from "next/image"
-import { Badge } from "@/components/ui/badge"
-import { ScrollAnimationWrapper } from "@/components/scroll-animation-wrapper"
 import { FileCode } from "lucide-react"
+import { SpotlightBorder } from "@/components/motion/spotlight-border"
 
-// Define project type
 interface ProjectProps {
   id: string
   title: string
@@ -23,62 +18,57 @@ interface ProjectProps {
 }
 
 export function ProjectsClient({ projects }: { projects: ProjectProps[] }) {
+  const rhythm = [
+    "lg:col-span-2 lg:row-span-2",
+    "lg:col-span-1 lg:row-span-1",
+    "lg:col-span-1 lg:row-span-1",
+    "lg:col-span-1 lg:row-span-2",
+    "lg:col-span-2 lg:row-span-1",
+    "lg:col-span-1 lg:row-span-1",
+  ]
+
   return (
-    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+    <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3 lg:auto-rows-[minmax(320px,auto)]">
       {projects.map((project, index) => (
-        <ScrollAnimationWrapper key={project.id} delay={index % 3}>
+        <div key={project.id} className={rhythm[index % rhythm.length]}>
           <ProjectDialog project={project}>
-            <Card className="h-full flex flex-col overflow-hidden hover:shadow-xl transition-all duration-300 cursor-pointer hover:scale-[1.02] hover:border-primary/30 relative">
-              {project.image ? (
-                <div className="aspect-video relative overflow-hidden">
-                  <Image
-                    src={project.image}
-                    alt={project.title}
-                    fill
-                    className="object-cover transition-transform duration-500 hover:scale-105"
-                  />
+            <SpotlightBorder className="h-full overflow-hidden rounded-xl">
+              <article className="group flex h-full cursor-pointer flex-col overflow-hidden rounded-xl border border-border/60 bg-card/70 transition-transform duration-300 hover:-translate-y-0.5">
+                {project.image ? (
+                  <div className={`relative overflow-hidden ${index % rhythm.length === 0 || index % rhythm.length === 3 ? "aspect-[4/3]" : "aspect-video"}`}>
+                    <Image
+                      src={project.image}
+                      alt={project.title}
+                      fill
+                      className="object-cover transition-transform duration-500 group-hover:scale-[1.03]"
+                      sizes="(max-width: 1024px) 100vw, 50vw"
+                    />
+                  </div>
+                ) : (
+                  <div className="flex aspect-video items-center justify-center bg-muted/40">
+                    <FileCode className="h-10 w-10 text-muted-foreground/50" />
+                  </div>
+                )}
+
+                <div className="flex flex-1 flex-col space-y-3 p-5 md:p-6">
+                  <h3 className="font-sans text-xl font-semibold tracking-tight md:text-2xl">{project.title}</h3>
+                  <p className="line-clamp-2 text-sm text-muted-foreground">{project.description}</p>
+                  <div className="mt-auto flex flex-wrap gap-2">
+                    {project.tags?.slice(0, 5).map((tag) => (
+                      <span
+                        key={tag}
+                        className="rounded-full border border-border/60 px-2 py-1 font-mono text-[10px] uppercase tracking-[0.15em] text-muted-foreground"
+                      >
+                        {tag}
+                      </span>
+                    ))}
+                  </div>
                 </div>
-              ) : (
-                <div className="aspect-video bg-muted/50 flex items-center justify-center">
-                  <FileCode className="h-12 w-12 text-muted-foreground/40" />
-                </div>
-              )}
-              
-              <div className="p-4 flex flex-col flex-grow">
-                <h3 className="text-xl font-bold mb-2 line-clamp-1">{project.title}</h3>
-                <p className="text-muted-foreground text-sm mb-4 line-clamp-3">{project.description}</p>
-                <div className="flex flex-wrap gap-2 mt-auto">
-                  {project.tags && project.tags.slice(0, 4).map((tag, i) => (
-                    <span 
-                      key={i} 
-                      className="text-xs bg-secondary px-2 py-1 rounded-full relative overflow-hidden group/tag"
-                    >
-                      <span className="relative z-10">{tag}</span>
-                      <span className="absolute inset-0 opacity-0 group-hover/tag:opacity-100 bg-gradient-to-r from-red-500/20 via-purple-500/20 to-blue-500/20 transition-opacity duration-300"></span>
-                    </span>
-                  ))}
-                  {project.tags && project.tags.length > 4 && (
-                    <span className="text-xs bg-secondary px-2 py-1 rounded-full">
-                      +{project.tags.length - 4}
-                    </span>
-                  )}
-                </div>
-              </div>
-            </Card>
+              </article>
+            </SpotlightBorder>
           </ProjectDialog>
-        </ScrollAnimationWrapper>
+        </div>
       ))}
     </div>
   )
 }
-
-
-
-
-
-
-
-
-
-
-

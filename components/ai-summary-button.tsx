@@ -1,12 +1,13 @@
 'use client';
 
-import React, { useState } from 'react';
-import { Sparkles, Loader2, FileText, ChevronDown, ChevronUp } from 'lucide-react';
+import React, { useEffect, useState } from 'react';
+import { Sparkles, Loader2 } from 'lucide-react';
 import { GoogleGenAI } from '@google/genai';
 import Markdown from 'react-markdown';
 import { Button } from '@/components/ui/button';
+import { MagneticHover } from '@/components/motion/magnetic-hover';
+import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetDescription } from '@/components/ui/sheet';
 
-// Using NEXT_PUBLIC_GEMINI_API_KEY per guidelines
 const getAiClient = () => {
   const apiKey = process.env.NEXT_PUBLIC_GEMINI_API_KEY;
   if (!apiKey) return null;
@@ -21,26 +22,31 @@ interface AiSummaryButtonProps {
 export function AiSummaryButton({ title, content }: AiSummaryButtonProps) {
   const [summary, setSummary] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
-  const [isExpanded, setIsExpanded] = useState(true);
+  const [isOpen, setIsOpen] = useState(false);
+  const [reducedTransparency, setReducedTransparency] = useState(false);
   const [error, setError] = useState<string | null>(null);
   
   const aiClient = getAiClient();
 
+  useEffect(() => {
+    if (typeof window === "undefined" || typeof window.matchMedia !== "function") return;
+    const media = window.matchMedia("(prefers-reduced-transparency: reduce)");
+    setReducedTransparency(media.matches);
+  }, []);
+
   const handleGenerateSummary = async () => {
     if (!aiClient || isLoading) return;
     
-    // If we already have the summary, just toggle visibility
     if (summary) {
-      setIsExpanded(!isExpanded);
+      setIsOpen(true);
       return;
     }
 
     setIsLoading(true);
     setError(null);
-    setIsExpanded(true);
+    setIsOpen(true);
 
     try {
-      // Strip some HTML just to lighten the payload (basic regex)
       const lightContent = content.replace(/<[^>]*>?/gm, ' ');
 
       const response = await aiClient.models.generateContent({
@@ -66,43 +72,45 @@ export function AiSummaryButton({ title, content }: AiSummaryButtonProps) {
 
   return (
     <div className="my-6">
-      <Button 
-        onClick={handleGenerateSummary} 
-        variant={summary ? "outline" : "default"}
-        className="flex items-center gap-2 group"
-      >
-        {isLoading ? (
-          <Loader2 className="h-4 w-4 animate-spin" />
-        ) : summary ? (
-          isExpanded ? <ChevronUp className="h-4 w-4" /> : <ChevronDown className="h-4 w-4" />
-        ) : (
-          <Sparkles className="h-4 w-4 text-amber-400 group-hover:text-amber-500" />
-        )}
-        <span className="font-medium">
-          {isLoading 
-            ? "Generating AI Summary..." 
-            : summary 
-              ? (isExpanded ? "Hide TL;DR" : "Show TL;DR") 
-              : "Generate AI TL;DR"
-          }
-        </span>
-      </Button>
+      <MagneticHover>
+        <Button
+          onClick={handleGenerateSummary}
+          variant="outline"
+          className="rounded-full border-primary/40 bg-transparent px-5"
+        >
+          {isLoading ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <Sparkles className="mr-2 h-4 w-4 text-primary" />}
+          {isLoading ? "Generating AI Summary..." : "Open AI TL;DR"}
+        </Button>
+      </MagneticHover>
 
-      {summary && isExpanded && (
-        <div className="mt-4 p-5 rounded-xl border border-border bg-muted/30 relative overflow-hidden">
-          <div className="absolute top-0 left-0 w-1 h-full bg-gradient-to-b from-primary to-amber-500"></div>
-          <div className="flex items-center gap-2 mb-3 text-primary">
-            <Sparkles className="h-4 w-4 text-amber-500" />
-            <h4 className="font-semibold text-sm uppercase tracking-wider">AI Summary</h4>
+      <Sheet open={isOpen} onOpenChange={setIsOpen}>
+        <SheetContent
+          side="right"
+          className={`w-[420px] max-w-[calc(100vw-1rem)] rounded-xl border-border/60 shadow-kinetic ${
+            reducedTransparency ? "bg-popover" : "bg-popover/80 backdrop-blur-xl"
+          }`}
+        >
+          <SheetHeader className="mb-3">
+            <SheetTitle className="flex items-center gap-2 font-sans text-xl tracking-tight">
+              <Sparkles className="h-4 w-4 text-primary" />
+              AI Summary
+            </SheetTitle>
+            <SheetDescription>{title}</SheetDescription>
+          </SheetHeader>
+          <div className="h-full overflow-y-auto pr-1">
+            {summary ? (
+              <div className="prose prose-sm max-w-none text-muted-foreground dark:prose-invert">
+                <Markdown>{summary}</Markdown>
+              </div>
+            ) : (
+              <p className="text-sm text-muted-foreground">Summary will appear here once generated.</p>
+            )}
           </div>
-          <div className="prose dark:prose-invert prose-sm max-w-none text-muted-foreground">
-            <Markdown>{summary}</Markdown>
-          </div>
-        </div>
-      )}
+        </SheetContent>
+      </Sheet>
 
       {error && (
-        <div className="mt-4 p-4 rounded-xl border border-destructive/20 bg-destructive/10 text-destructive text-sm">
+        <div className="mt-4 rounded-xl border border-destructive/20 bg-destructive/10 p-4 text-sm text-destructive">
           {error}
         </div>
       )}

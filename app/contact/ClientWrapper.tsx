@@ -3,10 +3,9 @@
 import { Suspense } from "react"
 import dynamic from "next/dynamic"
 
-// Dynamically import the ContactForm component with suspense
 const ContactForm = dynamic(() => import("@/components/contact-form"), {
-  loading: () => <div>Loading form...</div>,
-  ssr: false // Disable SSR for this component
+  loading: () => <div className="rounded-xl border border-border/60 bg-card/40 p-6 text-sm text-muted-foreground">Loading form...</div>,
+  ssr: false
 })
 
 export default function ClientWrapper() {

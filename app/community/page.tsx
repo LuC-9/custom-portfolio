@@ -16,11 +16,15 @@ export const metadata: Metadata = {
 export default function CommunityPage() {
   return (
     <div className="min-h-screen flex flex-col">
-      <div className="container mx-auto px-4 py-16 flex-grow">
+      <div className="mx-auto w-full max-w-[1400px] flex-grow px-4 pb-16 pt-28 md:px-6 lg:pt-32">
         <CommunitySectionHeading />
-        <ClientWrapper />
+        <div className="mt-10">
+          <ClientWrapper />
+        </div>
       </div>
-      <BlogFooter />
+      <div className="mx-auto w-full max-w-[1400px] px-4 pb-10 md:px-6">
+        <BlogFooter />
+      </div>
     </div>
   )
 }

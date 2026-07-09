@@ -3,10 +3,11 @@
 import { useState, type ReactNode } from "react"
 import Link from "next/link"
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog"
-import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
-import { ExternalLink, Github, Tag } from "lucide-react"
+import Image from "next/image"
+import { ExternalLink, Github } from "lucide-react"
 import { emitGameEvent } from "@/lib/game/event-bus"
+import { MagneticHover } from "@/components/motion/magnetic-hover"
 
 interface ProjectProps {
   id: string
@@ -41,50 +42,71 @@ export function ProjectDialog({ project, children }: { project: ProjectProps; ch
       </div>
 
       <Dialog open={isOpen} onOpenChange={setIsOpen}>
-        <DialogContent className="max-w-4xl w-[95vw] sm:w-auto overflow-hidden flex flex-col">
-          {/* Project links */}
-          <div className="flex flex-wrap gap-3 mb-4">
-            {project.github && (
-              <Link href={project.github} target="_blank" rel="noopener noreferrer">
-                <Button variant="outline" size="sm" className="gap-2">
-                  <Github size={16} />
-                  GitHub
-                </Button>
-              </Link>
-            )}
-            
-            {project.demo && (
-              <Link href={project.demo} target="_blank" rel="noopener noreferrer">
-                <Button variant="outline" size="sm" className="gap-2">
-                  <ExternalLink size={16} />
-                  Live Demo
-                </Button>
-              </Link>
-            )}
-          </div>
-          
-          <DialogHeader className="mb-2 sm:mb-4">
-            <DialogTitle className="text-lg sm:text-2xl break-words">{project.title}</DialogTitle>
-            <DialogDescription className="text-xs sm:text-base mt-1 break-words">{project.description}</DialogDescription>
-            
-            {/* Tech Stack Tags */}
-            {project.tags && project.tags.length > 0 && (
-              <div className="flex flex-wrap gap-2 mt-3">
-                {project.tags.map((tag, i) => (
-                  <Badge key={i} variant="secondary" className="text-xs">
-                    <Tag className="h-3 w-3 mr-1" />
-                    {tag}
-                  </Badge>
-                ))}
+        <DialogContent className="w-[95vw] max-w-5xl rounded-xl border-border/60 bg-popover shadow-kinetic">
+          <div className="grid gap-6 md:grid-cols-2">
+            <div className="space-y-4">
+              <div className="relative aspect-[4/3] overflow-hidden rounded-xl border border-border/60 bg-muted/40">
+                {project.image ? (
+                  <Image
+                    src={project.image}
+                    alt={project.title}
+                    fill
+                    className="object-cover"
+                    sizes="(max-width: 768px) 100vw, 50vw"
+                  />
+                ) : null}
               </div>
-            )}
-          </DialogHeader>
+              <div className="grid grid-cols-2 gap-3">
+                {project.github ? (
+                  <MagneticHover>
+                    <Button variant="outline" className="w-full rounded-full" asChild>
+                      <Link href={project.github} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-2">
+                        <Github className="h-4 w-4" />
+                        GitHub
+                      </Link>
+                    </Button>
+                  </MagneticHover>
+                ) : null}
+                {project.demo ? (
+                  <MagneticHover>
+                    <Button variant="outline" className="w-full rounded-full" asChild>
+                      <Link href={project.demo} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-2">
+                        <ExternalLink className="h-4 w-4" />
+                        Demo
+                      </Link>
+                    </Button>
+                  </MagneticHover>
+                ) : null}
+              </div>
+            </div>
 
-          <div className="overflow-y-auto max-h-[70vh] pr-2 -mr-2">
-            <div
-              className="prose prose-xs sm:prose-sm lg:prose-base dark:prose-invert max-w-none mb-3 sm:mb-6 text-sm break-words"
-              dangerouslySetInnerHTML={{ __html: project.contentHtml }}
-            />
+            <div className="space-y-4">
+              <DialogHeader>
+                <DialogTitle className="font-sans text-2xl font-semibold tracking-tight">{project.title}</DialogTitle>
+                <DialogDescription className="text-sm text-muted-foreground">{project.description}</DialogDescription>
+              </DialogHeader>
+              {project.tags?.length ? (
+                <div className="space-y-2">
+                  <p className="font-mono text-[11px] uppercase tracking-[0.2em] text-muted-foreground">Technologies</p>
+                  <div className="flex flex-wrap gap-2">
+                    {project.tags.map((tag) => (
+                      <span
+                        key={tag}
+                        className="rounded-full border border-border/60 px-2 py-1 font-mono text-[10px] uppercase tracking-[0.15em] text-muted-foreground"
+                      >
+                        {tag}
+                      </span>
+                    ))}
+                  </div>
+                </div>
+              ) : null}
+              <div className="max-h-[50vh] overflow-y-auto rounded-xl border border-border/50 bg-card/50 p-4">
+                <div
+                  className="prose prose-sm max-w-none break-words dark:prose-invert"
+                  dangerouslySetInnerHTML={{ __html: project.contentHtml }}
+                />
+              </div>
+            </div>
           </div>
         </DialogContent>
       </Dialog>

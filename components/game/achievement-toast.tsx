@@ -11,20 +11,20 @@ function tierStyles(tier: AchievementTier) {
     return {
       label: "Legendary",
       icon: Crown,
-      className: "border-yellow-400/50 bg-yellow-500/10",
+      className: "border-primary/40 bg-card",
     }
   }
   if (tier === "rare") {
     return {
       label: "Rare",
       icon: Medal,
-      className: "border-purple-400/50 bg-purple-500/10",
+      className: "border-primary/40 bg-card",
     }
   }
   return {
     label: "Common",
     icon: ShieldCheck,
-    className: "border-primary/40 bg-secondary/30",
+    className: "border-primary/40 bg-card",
   }
 }
 
@@ -54,7 +54,7 @@ export function AchievementToast() {
     toast.custom(
       () => (
         <div
-          className={`w-[min(90vw,360px)] rounded-lg border p-4 shadow-lg ${tier.className}`}
+          className={`w-[min(90vw,360px)] rounded-xl border p-4 shadow-kinetic ${tier.className}`}
           role="status"
           aria-live="polite"
         >
@@ -72,6 +72,7 @@ export function AchievementToast() {
       ),
       {
         duration: 3800,
+        position: "bottom-left",
       },
     )
 

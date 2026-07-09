@@ -1,124 +1,128 @@
 "use client"
 
-import { useState, useEffect } from "react"
+import { useEffect, useMemo, useState } from "react"
 import Link from "next/link"
 import { usePathname } from "next/navigation"
-import { motion, AnimatePresence } from "framer-motion"
+import { AnimatePresence, motion } from "motion/react"
 import { Menu, X } from "lucide-react"
 import { usePersona } from "@/contexts/persona-context"
+import { useNavScrolled } from "@/components/motion/use-nav-scrolled"
+import { RevealStagger } from "@/components/motion/reveal-stagger"
+import { useReducedMotionSafe } from "@/hooks/use-reduced-motion"
 
 export function Navigation() {
   const [isOpen, setIsOpen] = useState(false)
-  const [scrolled, setScrolled] = useState(false)
+  const scrolled = useNavScrolled()
+  const reduceMotion = useReducedMotionSafe()
   const pathname = usePathname()
   const { isDeveloper, isGamer } = usePersona()
 
-  // Handle scroll event
+  const links = useMemo(
+    () =>
+      isDeveloper
+        ? [
+            { href: "/", label: "Home" },
+            { href: "/projects", label: "Projects" },
+            { href: "/blog", label: "Blog" },
+            { href: "/contact", label: "Contact" },
+          ]
+        : [
+            { href: "/", label: "Home" },
+            { href: "/community", label: "Community" },
+            { href: "/blog", label: "Blog" },
+            { href: "/contact", label: "Contact" },
+          ],
+    [isDeveloper],
+  )
+
   useEffect(() => {
-    const handleScroll = () => {
-      setScrolled(window.scrollY > 10)
-    }
-    window.addEventListener("scroll", handleScroll)
-    return () => window.removeEventListener("scroll", handleScroll)
-  }, [])
-
-  // Define navigation links based on persona
-  const developerLinks = [
-    { href: "/", label: "Home" },
-    { href: "/projects", label: "Projects" },
-    { href: "/blog", label: "Blog" },
-    { href: "/contact", label: "Contact" },
-  ]
-
-  const gamerLinks = [
-    { href: "/", label: "Home" },
-    { href: "/community", label: "Community" },
-    { href: "/blog", label: "Blog" },
-    { href: "/contact", label: "Contact" },
-  ]
-
-  // Select links based on current persona
-  const links = isDeveloper ? developerLinks : gamerLinks
+    setIsOpen(false)
+  }, [pathname])
 
   return (
-    <header
-      className={`fixed top-0 w-full z-50 transition-all duration-300 ${
-        scrolled ? "bg-background/80 backdrop-blur-md py-3 shadow-md" : "bg-transparent py-5"
-      }`}
-    >
-      <div className="container mx-auto px-4 md:px-6">
-        <div className="flex items-center justify-between">
-          <Link href="/" className="text-xl font-bold flex items-center">
-            <span className="text-primary mr-1">{isDeveloper ? "AM." : "LuC"}</span>
+    <>
+      <header
+        className={`fixed inset-x-0 top-0 z-30 border-b transition-all duration-[var(--dur-base)] ${
+          scrolled ? "h-16 bg-background/60 border-border/60 backdrop-blur-md" : "h-[72px] bg-transparent border-transparent"
+        }`}
+      >
+        <div className="mx-auto flex h-full w-full max-w-[1400px] items-center justify-between px-4 md:px-6">
+          <Link
+            href="/"
+            className="font-sans text-lg font-semibold tracking-tight text-foreground transition-colors hover:text-primary"
+          >
+            {isGamer ? "LuC" : "Aarsh Mishra"}
           </Link>
 
-          {/* Desktop Navigation */}
-          <nav className="hidden md:flex items-center space-x-8">
+          <nav className="hidden items-center gap-8 md:flex">
             {links.map((link) => (
               <Link
                 key={link.href}
                 href={link.href}
-                className={`relative hover:text-primary transition-colors ${
-                  pathname === link.href ? "text-primary" : "text-foreground/80"
+                className={`relative whitespace-nowrap text-sm font-medium tracking-tight transition-colors ${
+                  pathname === link.href ? "text-primary" : "text-foreground/80 hover:text-primary"
                 }`}
               >
                 {link.label}
                 {pathname === link.href && (
                   <motion.span
                     layoutId="underline"
-                    className="absolute left-0 top-full block h-[2px] w-full bg-primary"
+                    className="absolute -bottom-2 left-0 block h-0.5 w-full rounded-full bg-primary"
+                    transition={reduceMotion ? { duration: 0 } : { duration: 0.25 }}
                   />
                 )}
               </Link>
             ))}
           </nav>
 
-          {/* Mobile Navigation Toggle */}
-          <div className="flex items-center md:hidden gap-4">
-            <button
-              onClick={() => setIsOpen(!isOpen)}
-              className="p-2 focus:outline-none"
-              aria-label={isOpen ? "Close menu" : "Open menu"}
-            >
-              {isOpen ? <X size={24} /> : <Menu size={24} />}
-            </button>
-          </div>
+          <button
+            type="button"
+            onClick={() => setIsOpen((prev) => !prev)}
+            className="inline-flex h-10 w-10 items-center justify-center rounded-full border border-border/60 bg-card/60 text-foreground transition-colors hover:border-primary/40 hover:text-primary md:hidden"
+            aria-label={isOpen ? "Close menu" : "Open menu"}
+            aria-expanded={isOpen}
+          >
+            {isOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
+          </button>
         </div>
-      </div>
+      </header>
 
-      {/* Mobile Navigation Menu */}
       <AnimatePresence>
         {isOpen && (
           <motion.div
-            initial={{ opacity: 0, height: 0 }}
-            animate={{ opacity: 1, height: "auto" }}
-            exit={{ opacity: 0, height: 0 }}
-            transition={{ duration: 0.3 }}
-            className="md:hidden bg-background/95 backdrop-blur-md"
+            initial={reduceMotion ? false : { opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={reduceMotion ? { opacity: 1 } : { opacity: 0 }}
+            transition={reduceMotion ? { duration: 0 } : { duration: 0.2 }}
+            className="fixed inset-0 z-20 bg-background/95 px-6 pb-10 pt-28 backdrop-blur-md md:hidden"
           >
-            <div className="container mx-auto px-4 py-4">
-              <nav className="flex flex-col space-y-4">
+            <div className="mx-auto w-full max-w-[1400px]">
+              <RevealStagger
+                as="ul"
+                className="space-y-4"
+                delay={0}
+                staggerMs={80}
+                amount={0.2}
+              >
                 {links.map((link) => (
-                  <Link
-                    key={link.href}
-                    href={link.href}
-                    onClick={() => setIsOpen(false)}
-                    className={`py-2 ${
-                      pathname === link.href ? "text-primary" : "text-foreground/80"
-                    }`}
-                  >
-                    {link.label}
-                  </Link>
+                  <li key={link.href}>
+                    <Link
+                      href={link.href}
+                      className={`block rounded-xl border px-5 py-4 font-sans text-2xl font-semibold tracking-tight transition-colors ${
+                        pathname === link.href
+                          ? "border-primary/40 bg-primary/10 text-primary"
+                          : "border-border/60 bg-card/40 text-foreground/90"
+                      }`}
+                    >
+                      {link.label}
+                    </Link>
+                  </li>
                 ))}
-              </nav>
+              </RevealStagger>
             </div>
           </motion.div>
         )}
       </AnimatePresence>
-    </header>
+    </>
   )
 }
-
-
-
-

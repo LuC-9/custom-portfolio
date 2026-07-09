@@ -1,16 +1,10 @@
 import { HomeContent } from "./HomeContent"
+import { HomeMarquee } from "@/components/home-marquee"
 import { HomeExperienceSection } from "@/components/home-experience-section"
 import { HomeFeaturedSection } from "@/components/home-featured-section"
 import { Footer } from "@/components/footer"
 import { getAllContentData, getExperiences } from "@/lib/content"
 import { Metadata } from "next"
-import Link from "next/link"
-import Image from "next/image"
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { Badge } from "@/components/ui/badge"
-import { Clock, ChevronDown } from "lucide-react"
-import { ProjectDialog } from "@/components/project-dialog"
-import { ScrollAnimationWrapper } from "@/components/scroll-animation-wrapper"
 import { PersonStructuredData, WebsiteStructuredData } from './structured-data'
 
 export const metadata: Metadata = {
@@ -42,29 +36,26 @@ export default async function Home() {
       <main className="flex flex-col min-h-screen">
         <div className="flex-1">
           <HomeContent />
-          
-          {/* Add more space above the experience section */}
-          <div className="mt-8">
-            <HomeExperienceSection 
-              developerExperiences={developerExperiences} 
-              gamingExperiences={gamingExperiences} 
+          <HomeMarquee />
+
+          <div className="mx-auto mt-24 w-full max-w-[1400px] px-4 md:px-6">
+            <HomeExperienceSection
+              developerExperiences={developerExperiences}
+              gamingExperiences={gamingExperiences}
             />
           </div>
 
-          {/* Featured content section - conditionally rendered based on persona */}
-          <HomeFeaturedSection 
-            featuredProjects={featuredProjects} 
-            featuredBlogs={featuredBlogs} 
-          />
+          <div className="mx-auto mt-24 w-full max-w-[1400px] px-4 md:px-6">
+            <HomeFeaturedSection
+              featuredProjects={featuredProjects}
+              featuredBlogs={featuredBlogs}
+            />
+          </div>
         </div>
-        <div className="container mx-auto px-4">
+        <div className="mx-auto mt-24 w-full max-w-[1400px] px-4 md:px-6">
           <Footer />
         </div>
       </main>
     </>
   )
 }
-
-
-
-

@@ -3,7 +3,7 @@ import { Metadata } from "next"
 import { notFound } from "next/navigation"
 import { TableOfContentsWrapper } from "@/app/blog/[slug]/table-of-contents-wrapper"
 import { BlogFooter } from "@/components/blog-footer"
-import { AudioSummary } from "@/components/audio-summary"
+import { AudioSummaryWrapper } from "./audio-summary-wrapper"
 import { Calendar, Clock } from "lucide-react"
 import { BlogPostStructuredData } from './structured-data'
 import { AiSummaryButton } from "@/components/ai-summary-button"
@@ -63,56 +63,59 @@ export default async function BlogPostPage({
         image={post.image}
       />
       <BlogReadTracker slug={slug} title={post.title} />
-      <div className="blog-post-container">
-        <div className="blog-content container mx-auto px-4 py-8 md:py-12 max-w-4xl">
-          <article className="blog-post">
-            <h1 className="text-2xl md:text-3xl lg:text-4xl font-bold mb-3 md:mb-4">{post.title}</h1>
-            
-            <div className="flex flex-wrap items-center gap-3 md:gap-4 text-muted-foreground mb-4 md:mb-6 text-sm">
-              <div className="flex items-center">
-                <Calendar className="h-3 w-3 md:h-4 md:w-4 mr-1" />
-                <span>{new Date(post.date).toLocaleDateString('en-US', {
-                  year: 'numeric',
-                  month: 'long',
-                  day: 'numeric'
-                })}</span>
+      <main className="min-h-screen">
+        <div className="mx-auto w-full max-w-[1400px] px-4 pb-20 pt-28 md:px-6 lg:pt-32">
+          <article>
+            <header className="mx-auto max-w-[65ch] space-y-5">
+              <h1 className="font-sans text-4xl font-extrabold tracking-tighter md:text-6xl">{post.title}</h1>
+              <div className="flex flex-wrap items-center gap-4 text-sm text-muted-foreground">
+                <span className="inline-flex items-center gap-1.5">
+                  <Calendar className="h-4 w-4" />
+                  {new Date(post.date).toLocaleDateString('en-US', {
+                    year: 'numeric',
+                    month: 'long',
+                    day: 'numeric'
+                  })}
+                </span>
+                <span className="inline-flex items-center gap-1.5">
+                  <Clock className="h-4 w-4" />
+                  {post.readingTime || "5 min read"}
+                </span>
               </div>
-              <div className="flex items-center">
-                <Clock className="h-3 w-3 md:h-4 md:w-4 mr-1" />
-                <span>{post.readingTime || "5 min read"}</span>
+            </header>
+
+            <div className="mx-auto mt-8 max-w-[65ch] space-y-5">
+              {post.audioSummary && (
+                <AudioSummaryWrapper 
+                  audioSrc={post.audioSummary} 
+                  title="Listen as audio" 
+                />
+              )}
+              <AiSummaryButton title={post.title} content={contentHtml} />
+              <div className="xl:hidden">
+                <TableOfContentsWrapper content={contentHtml} />
               </div>
             </div>
-            
-            {/* Add Audio Summary if available */}
-            {post.audioSummary && (
-              <div className="mb-6 md:mb-8">
-                <AudioSummary 
-                  audioSrc={post.audioSummary} 
-                  title="Listen it as a podcast" 
+
+            <div className="mt-10 grid gap-10 xl:grid-cols-12">
+              <div className="xl:col-span-9">
+                <div
+                  className="prose prose-sm dark:prose-invert mx-auto max-w-[65ch] leading-relaxed md:prose-base"
+                  dangerouslySetInnerHTML={{ __html: contentHtml }}
                 />
               </div>
-            )}
-            
-            <AiSummaryButton title={post.title} content={contentHtml} />
-            
-            <div className="flex flex-col lg:flex-row gap-6 lg:gap-8">
-              <div className="lg:w-3/4">
-                <div className="prose prose-sm md:prose dark:prose-invert max-w-none" 
-                     dangerouslySetInnerHTML={{ __html: contentHtml }} />
-              </div>
-              
-              <div className="order-first lg:order-last lg:w-1/4 mb-6 lg:mb-0">
-                <div className="lg:sticky lg:top-24">
+              <aside className="hidden xl:col-span-3 xl:block">
+                <div className="sticky top-24">
                   <TableOfContentsWrapper content={contentHtml} />
                 </div>
-              </div>
+              </aside>
             </div>
           </article>
         </div>
-        <div className="blog-footer-wrapper">
+        <div className="mx-auto w-full max-w-[1400px] px-4 pb-10 md:px-6">
           <BlogFooter />
         </div>
-      </div>
+      </main>
     </>
   )
 }

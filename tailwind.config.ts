@@ -14,6 +14,8 @@ const config: Config = {
               border: 'hsl(var(--border))',
               background: 'hsl(var(--background))',
               foreground: 'hsl(var(--foreground))',
+              input: "hsl(var(--input))",
+              ring: "hsl(var(--ring))",
               card: {
                   DEFAULT: 'hsl(var(--card))',
                   foreground: 'hsl(var(--card-foreground))'
@@ -42,10 +44,20 @@ const config: Config = {
                   DEFAULT: 'hsl(var(--destructive))',
                   foreground: 'hsl(var(--destructive-foreground))'
               },
+              success: "hsl(var(--success))",
+              warning: "hsl(var(--warning))",
+              "surface-inset": "hsl(var(--surface-inset))",
           },
           fontFamily: {
-              sans: ['var(--font-mono)'],
+              sans: ['var(--font-sans)'],
               mono: ['var(--font-mono)'],
+          },
+          borderRadius: {
+              lg: "var(--radius)",
+              md: "calc(var(--radius) - 2px)",
+              sm: "calc(var(--radius) - 4px)",
+              xl: "calc(var(--radius) + 4px)",
+              "2xl": "calc(var(--radius) + 8px)",
           },
           keyframes: {
               'accordion-down': {
@@ -63,11 +75,16 @@ const config: Config = {
                   to: {
                       height: '0'
                   }
+              },
+              "marquee-x": {
+                  from: { transform: "translateX(0)" },
+                  to: { transform: "translateX(-50%)" },
               }
           },
           animation: {
               'accordion-down': 'accordion-down 0.2s ease-out',
-              'accordion-up': 'accordion-up 0.2s ease-out'
+              'accordion-up': 'accordion-up 0.2s ease-out',
+              marquee: "marquee-x 30s linear infinite",
           }
       }
   },

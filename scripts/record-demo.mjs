@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-/** Thin project wrapper — delegates to globally installed record-app skill scripts. */
+/** Thin project wrapper: delegates to globally installed record-app skill scripts. */
 import fs from "node:fs"
 import path from "node:path"
 import { pathToFileURL } from "node:url"

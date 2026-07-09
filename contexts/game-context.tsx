@@ -33,6 +33,7 @@ const EVENT_TYPES: GameEventType[] = [
   "project_open",
   "blog_read",
   "resume_download",
+  "persona_switch",
   "persona_viewed",
   "experience_open",
   "chatbot_open",

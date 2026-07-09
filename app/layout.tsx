@@ -1,7 +1,7 @@
 import type React from "react"
 import "./globals.css"
 import type { Metadata } from "next"
-import { JetBrains_Mono } from "next/font/google"
+import { JetBrains_Mono, Outfit } from "next/font/google"
 import { PersonaProvider } from "@/contexts/persona-context"
 import { GameProvider } from "@/contexts/game-context"
 import { Navigation } from "@/components/navigation"
@@ -16,6 +16,13 @@ const jetbrainsMono = JetBrains_Mono({
   subsets: ['latin'],
   variable: '--font-mono',
   display: 'swap',
+})
+
+// P4a fallback: Satoshi is not bundled locally yet, so Outfit is mounted as the sans display stand-in.
+const outfit = Outfit({
+  subsets: ["latin"],
+  variable: "--font-sans",
+  display: "swap",
 })
 
 export const metadata: Metadata = {
@@ -62,12 +69,17 @@ export default function RootLayout({
   children: React.ReactNode
 }) {
   return (
-    <html lang="en" suppressHydrationWarning>
+    <html
+      lang="en"
+      data-persona="developer"
+      className={`${outfit.variable} ${jetbrainsMono.variable}`}
+      suppressHydrationWarning
+    >
       <head>
         <link rel="icon" href="/genkai.gif" type="image/gif" />
         <link rel="manifest" href="/site.webmanifest" />
       </head>
-      <body className={`${jetbrainsMono.variable} font-mono antialiased`}>
+      <body className="font-sans antialiased">
         <PersonaProvider>
           <GameProvider>
             <div className="flex flex-col min-h-screen">

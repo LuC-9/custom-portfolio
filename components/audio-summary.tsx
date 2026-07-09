@@ -36,20 +36,19 @@ export function AudioSummary({ audioSrc, title = "Audio Summary" }: AudioSummary
     const setAudioTime = () => {
       setCurrentTime(audio.currentTime)
     }
+    const handleEnded = () => setIsPlaying(false)
 
-    // Events
     audio.addEventListener('loadeddata', setAudioData)
     audio.addEventListener('timeupdate', setAudioTime)
-    audio.addEventListener('ended', () => setIsPlaying(false))
+    audio.addEventListener('ended', handleEnded)
 
     return () => {
       audio.removeEventListener('loadeddata', setAudioData)
       audio.removeEventListener('timeupdate', setAudioTime)
-      audio.removeEventListener('ended', () => setIsPlaying(false))
+      audio.removeEventListener('ended', handleEnded)
     }
   }, [])
 
-  // Handle play/pause
   const togglePlay = () => {
     if (!audioRef.current) return
     
@@ -61,7 +60,6 @@ export function AudioSummary({ audioSrc, title = "Audio Summary" }: AudioSummary
     setIsPlaying(!isPlaying)
   }
 
-  // Handle volume
   const toggleMute = () => {
     if (!audioRef.current) return
     
@@ -83,7 +81,6 @@ export function AudioSummary({ audioSrc, title = "Audio Summary" }: AudioSummary
     }
   }
 
-  // Handle seek
   const handleSeek = (value: number[]) => {
     if (!audioRef.current) return
     
@@ -91,7 +88,6 @@ export function AudioSummary({ audioSrc, title = "Audio Summary" }: AudioSummary
     setCurrentTime(value[0])
   }
 
-  // Handle playback rate
   const handlePlaybackRateChange = (rate: number) => {
     if (!audioRef.current) return
     
@@ -99,7 +95,6 @@ export function AudioSummary({ audioSrc, title = "Audio Summary" }: AudioSummary
     setPlaybackRate(rate)
   }
 
-  // Format time
   const formatTime = (time: number) => {
     const minutes = Math.floor(time / 60)
     const seconds = Math.floor(time % 60)
@@ -107,15 +102,15 @@ export function AudioSummary({ audioSrc, title = "Audio Summary" }: AudioSummary
   }
 
   return (
-    <div className="bg-card rounded-lg p-4 mb-6">
+    <div className="mb-6 rounded-xl border border-border/60 bg-primary/5 p-4 md:p-5">
       <audio ref={audioRef} src={audioSrc} preload="metadata" />
       
-      <div className="flex items-center justify-between mb-3">
-        <h3 className="text-lg font-medium">{title}</h3>
+      <div className="mb-4 flex items-center justify-between gap-4">
+        <h3 className="font-sans text-lg font-semibold tracking-tight">{title}</h3>
         
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
-            <Button variant="ghost" size="sm" className="h-8 px-2 text-xs">
+            <Button variant="outline" size="sm" className="h-8 rounded-full px-3 text-xs">
               {playbackRate}x <ChevronDown size={14} className="ml-1" />
             </Button>
           </DropdownMenuTrigger>
@@ -133,17 +128,18 @@ export function AudioSummary({ audioSrc, title = "Audio Summary" }: AudioSummary
         </DropdownMenu>
       </div>
       
-      <div className="flex items-center gap-4">
+      <div className="flex flex-wrap items-center gap-3 md:gap-4">
         <Button 
-          variant="ghost" 
-          size="icon" 
-          className="h-10 w-10 rounded-full bg-primary/10 hover:bg-primary/20 text-primary"
+          variant="outline"
+          size="sm"
+          className="h-10 rounded-full border-primary/40 bg-primary/10 px-4 text-primary hover:bg-primary/15"
           onClick={togglePlay}
         >
-          {isPlaying ? <Pause size={20} /> : <Play size={20} />}
+          {isPlaying ? <Pause size={16} className="mr-2" /> : <Play size={16} className="mr-2" />}
+          {isPlaying ? "Pause" : "Play"}
         </Button>
         
-        <div className="flex-1">
+        <div className="min-w-[200px] flex-1">
           <Slider 
             value={[currentTime]} 
             max={duration || 100}
@@ -160,7 +156,7 @@ export function AudioSummary({ audioSrc, title = "Audio Summary" }: AudioSummary
         <Button 
           variant="ghost" 
           size="icon"
-          className="h-8 w-8"
+          className="h-8 w-8 rounded-full border border-border/60"
           onClick={toggleMute}
         >
           {isMuted ? <VolumeX size={18} /> : <Volume2 size={18} />}

@@ -1,20 +1,62 @@
-'use client'
+"use client"
 
-import { usePersona } from "@/contexts/persona-context"
-import Link from "next/link"
 import Image from "next/image"
-import { PersonaToggle } from "@/components/persona-toggle"
-import { Clock, Github, Linkedin, Twitter, Youtube, Mail, Globe, Twitch } from "lucide-react"
+import Link from "next/link"
+import { motion } from "motion/react"
+import { Github, Globe, Linkedin, Mail, Twitch, Youtube } from "lucide-react"
+import { track } from "@vercel/analytics"
 import { Button } from "@/components/ui/button"
-import { motion } from "framer-motion"
-import { useEffect, useState } from "react"
+import { PersonaToggle } from "@/components/persona-toggle"
+import { DiscordStatus } from "@/components/discord-status"
 import { XIcon } from "@/components/icons/x-icon"
 import { LeetCodeIcon } from "@/components/icons/leetcode-icon"
-import { track } from "@vercel/analytics";
-import { DiscordStatus } from "@/components/discord-status"
+import { usePersona } from "@/contexts/persona-context"
 import { emitGameEvent } from "@/lib/game/event-bus"
+import { MagneticHover } from "@/components/motion/magnetic-hover"
+import { SpotlightBorder } from "@/components/motion/spotlight-border"
+import { RevealStagger } from "@/components/motion/reveal-stagger"
+import { RevealWord } from "@/components/motion/reveal-word"
+import { motionEase, useReducedMotionSafe } from "@/hooks/use-reduced-motion"
+
+type PersonaContent = {
+  eyebrow: string
+  name: string
+  subtext: string
+  primary: { text: string; href: string; taskId: string }
+  secondary: { text: string; href: string; taskId: string }
+}
+
+const content: Record<"developer" | "gamer", PersonaContent> = {
+  developer: {
+    eyebrow: "THE PORTFOLIO",
+    name: "Aarsh Mishra",
+    subtext: "Software Engineer at Nagarro. React, TypeScript, Next.js, Kubernetes. Building fast systems for people who ship.",
+    primary: { text: "Contact", href: "/contact", taskId: "hero:contact" },
+    secondary: { text: "View my work", href: "/projects", taskId: "hero:projects" },
+  },
+  gamer: {
+    eyebrow: "THE ARENA",
+    name: "LuC",
+    subtext: "Competitive streamer and community builder. FPS, strategy games, and Discord communities that actually stick.",
+    primary: { text: "Watch Streams", href: "/community?tab=streams", taskId: "hero:streams" },
+    secondary: { text: "Join Community", href: "/community", taskId: "hero:community" },
+  },
+}
 
 export function HomeContent() {
+  const { isDeveloper } = usePersona()
+  const reduceMotion = useReducedMotionSafe()
+  const active = isDeveloper ? content.developer : content.gamer
+
+  const onHeroCta = (taskId: string, href: string) => {
+    emitGameEvent({ type: "link_click", taskId, metadata: { href } })
+    track("hero_cta_click", {
+      taskId,
+      href,
+      persona: isDeveloper ? "developer" : "gamer",
+    })
+  }
+
   const trackCuratedLink = (taskId: string, href: string) => {
     emitGameEvent({
       type: "link_click",
@@ -23,244 +65,217 @@ export function HomeContent() {
     })
   }
 
-  const { isDeveloper, isGamer } = usePersona()
-  const [currentTime, setCurrentTime] = useState("")
-  const [timeZone, setTimeZone] = useState("")
-  
-  // Update time every minute
-  useEffect(() => {
-    const updateTime = () => {
-      const now = new Date()
-      setCurrentTime(now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }))
-      setTimeZone(now.toLocaleDateString([], { timeZoneName: 'short' }).split(', ')[1] || '')
-    }
-    
-    updateTime()
-    const interval = setInterval(updateTime, 60000)
-    return () => clearInterval(interval)
-  }, [])
-  
-  // Content based on persona
-  const content = {
-    developer: {
-      name: "Aarsh Mishra",
-      description:
-        "A Software Engineer specializing in building exceptional digital experiences with modern technologies.",
-      primaryButton: {
-        text: "Get in touch",
-        href: "/contact",
-        icon: <Globe className="ml-2 h-4 w-4" />,
-      },
-      secondaryButton: {
-        text: "View my work",
-        href: "/projects",
-      },
-      resumeButton: {
-        text: "Resume",
-        href: "/resume.pdf",
-      },
-    },
-    gamer: {
-      name: "LuC",
-      description:
-        "Competitive gamer and streamer focused on strategy games, first-person shooters, and community building.",
-      primaryButton: {
-        text: "Watch Streams",
-        href: "/community?tab=streams",
-        icon: <Youtube className="ml-2 h-4 w-4" />,
-      },
-      secondaryButton: {
-        text: "Join Community",
-        href: "/community",
-      },
-    },
-  }
-
-  // Select content based on current persona
-  const activeContent = isDeveloper ? content.developer : content.gamer
-
   return (
-    <div className="flex flex-col">
-      <div className="container mx-auto px-4 pt-32 pb-8 flex flex-col">
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
-          {/* Left column - Profile image and persona toggle */}
-          <div className="lg:col-span-4 flex flex-col items-center">
-            <motion.div
-              initial={{ opacity: 0, scale: 0.9 }}
-              animate={{ opacity: 1, scale: 1 }}
-              transition={{ duration: 0.5 }}
-              className="relative w-64 h-64 md:w-72 md:h-72"
-            >
-              <div className="profile-border w-full h-full relative overflow-hidden rounded-full">
+    <section id="top" className="min-h-[100dvh] w-full pt-20 pb-12 lg:pt-24 lg:pb-16">
+      <div className="mx-auto grid w-full max-w-[1400px] grid-cols-1 items-center gap-10 px-4 lg:grid-cols-12 lg:gap-12 lg:px-6">
+        <div className="order-1 lg:order-2 lg:col-span-5">
+          <motion.div
+            initial={reduceMotion ? false : { opacity: 0, scale: 0.96 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={reduceMotion ? { duration: 0 } : { duration: 0.6, ease: motionEase.expoOut }}
+            className="mx-auto w-full max-w-sm lg:max-w-none"
+          >
+            <SpotlightBorder className="overflow-hidden rounded-xl" size={240}>
+              <div className="relative aspect-[4/5] w-full">
                 <Image
                   src={isDeveloper ? "/profile.jpg" : "/gamer-profile.gif?v=1"}
                   alt={isDeveloper ? "Aarsh Mishra profile photo" : "LuC gamer profile"}
                   fill
-                  className="object-cover"
                   priority
-                  sizes="(max-width: 768px) 16rem, 18rem"
+                  className="object-cover"
+                  sizes="(max-width: 1024px) 100vw, 42vw"
                 />
               </div>
-            </motion.div>
-            
-            <div className="mt-6">
+            </SpotlightBorder>
+          </motion.div>
+        </div>
+
+        <div className="order-2 space-y-8 lg:order-1 lg:col-span-7">
+          <motion.p
+            initial={reduceMotion ? false : { opacity: 0, y: 12 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={reduceMotion ? { duration: 0 } : { duration: 0.45, ease: motionEase.expoOut }}
+            className="font-mono text-[11px] uppercase tracking-[0.25em] text-primary"
+          >
+            {active.eyebrow}
+          </motion.p>
+
+          <h1
+            aria-label={`Hi, I'm ${active.name}.`}
+            className="font-sans text-5xl font-extrabold leading-[1.05] tracking-tighter md:text-7xl"
+          >
+            <RevealWord text="Hi, I'm" />
+            <span className="text-primary">
+              {" "}
+              <RevealWord text={active.name} delay={0.18} />
+            </span>
+            .
+          </h1>
+
+          <motion.p
+            initial={reduceMotion ? false : { opacity: 0, y: 18 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={reduceMotion ? { duration: 0 } : { duration: 0.5, delay: 0.12, ease: motionEase.expoOut }}
+            className="max-w-[52ch] text-base leading-relaxed text-muted-foreground md:text-lg"
+          >
+            {active.subtext}
+          </motion.p>
+
+          <motion.div
+            initial={reduceMotion ? false : { opacity: 0, y: 18 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={reduceMotion ? { duration: 0 } : { duration: 0.5, delay: 0.18, ease: motionEase.expoOut }}
+            className="flex flex-wrap items-center gap-3"
+          >
+            <MagneticHover>
+              <Button asChild className="rounded-full">
+                <Link href={active.primary.href} onClick={() => onHeroCta(active.primary.taskId, active.primary.href)}>
+                  {active.primary.text}
+                </Link>
+              </Button>
+            </MagneticHover>
+            <MagneticHover>
+              <Button variant="outline" asChild className="rounded-full">
+                <Link
+                  href={active.secondary.href}
+                  onClick={() => onHeroCta(active.secondary.taskId, active.secondary.href)}
+                >
+                  {active.secondary.text}
+                </Link>
+              </Button>
+            </MagneticHover>
+          </motion.div>
+
+          <div className="space-y-4">
+            <div className="flex flex-wrap items-center gap-3">
               <PersonaToggle />
-            </div>
-            
-            <div className="mt-4 flex items-center text-sm text-muted-foreground">
-              <Clock className="mr-2 h-4 w-4" />
-              <span>{currentTime} {timeZone}</span>
-            </div>
-          </div>
-          
-          {/* Right column - Content */}
-          <div className="lg:col-span-8">
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.5 }}
-            >
-              <h1 className="text-4xl md:text-5xl font-bold mb-4">
-                Hi, I'm <span className="text-primary">{activeContent.name}</span>
-              </h1>
-              <p className="text-xl text-muted-foreground mb-6">
-                {activeContent.description}
-              </p>
-              
-              <div className="flex flex-wrap gap-4 mb-8">
-                <Button asChild>
-                  <Link href={activeContent.primaryButton.href}>
-                    {activeContent.primaryButton.text}
-                    {activeContent.primaryButton.icon}
-                  </Link>
-                </Button>
-                <Button variant="outline" asChild>
-                  <Link href={activeContent.secondaryButton.href}>
-                    {activeContent.secondaryButton.text}
-                  </Link>
-                </Button>
-                {isDeveloper && (
-                  <Link 
-                    href={activeContent.resumeButton.href} 
-                    target="_blank" 
+              {isDeveloper ? (
+                <Button
+                  variant="outline"
+                  className="rounded-full"
+                  asChild
+                >
+                  <Link
+                    href="/resume.pdf"
+                    target="_blank"
                     rel="noopener noreferrer"
                     onClick={() => {
                       emitGameEvent({
                         type: "resume_download",
                         taskId: "resume:download",
-                        metadata: {
-                          file: activeContent.resumeButton.href,
-                        },
+                        metadata: { file: "/resume.pdf" },
                       })
-                      track("resume_download", { 
-                        persona: "developer",
-                        resumeVersion: "latest" 
-                      });
+                      track("resume_download", { persona: "developer", resumeVersion: "latest" })
                     }}
                   >
-                    <Button variant="outline" className="rounded-full">
-                      {activeContent.resumeButton.text}
-                    </Button>
+                    Resume
                   </Link>
-                )}
-              </div>
-              
-              <div className="mt-6">
-                <DiscordStatus />
-                
-                <div className="flex flex-wrap gap-2 mt-4">
-                  {isDeveloper ? (
-                    <>
-                      <Link
-                        href="https://github.com/LuC-9"
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        aria-label="GitHub"
-                        onClick={() => trackCuratedLink("link:github", "https://github.com/LuC-9")}
-                      >
-                        <Github className="h-6 w-6 text-muted-foreground hover:text-primary transition-colors" />
-                      </Link>
-                      <Link
-                        href="https://www.linkedin.com/in/aarsh-mishra09/"
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        aria-label="LinkedIn"
-                        onClick={() => trackCuratedLink("link:linkedin", "https://www.linkedin.com/in/aarsh-mishra09/")}
-                      >
-                        <Linkedin className="h-6 w-6 text-muted-foreground hover:text-primary transition-colors" />
-                      </Link>
-                      <Link
-                        href="https://twitter.com/xrshLuC"
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        aria-label="X (formerly Twitter)"
-                        onClick={() => trackCuratedLink("link:twitter", "https://twitter.com/xrshLuC")}
-                      >
-                        <XIcon className="h-6 w-6 text-muted-foreground hover:text-primary transition-colors" />
-                      </Link>
-                      <Link
-                        href="https://leetcode.com/u/LuC9/"
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        aria-label="LeetCode"
-                        onClick={() => trackCuratedLink("link:leetcode", "https://leetcode.com/u/LuC9/")}
-                      >
-                        <LeetCodeIcon className="h-6 w-6 text-muted-foreground hover:text-primary transition-colors" />
-                      </Link>
-                    </>
-                  ) : (
-                    <>
-                      <Link
-                        href="https://www.twitch.tv/xrshluc"
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        aria-label="Twitch"
-                        onClick={() => trackCuratedLink("link:twitch", "https://www.twitch.tv/xrshluc")}
-                      >
-                        <Twitch className="h-6 w-6 text-muted-foreground hover:text-primary transition-colors" />
-                      </Link>
-                      <Link
-                        href="https://www.youtube.com/@LuC-Throws"
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        aria-label="YouTube"
-                        onClick={() => trackCuratedLink("link:youtube", "https://www.youtube.com/@LuC-Throws")}
-                      >
-                        <Youtube className="h-6 w-6 text-muted-foreground hover:text-primary transition-colors" />
-                      </Link>
-                      <Link
-                        href="https://twitter.com/xrshLuC"
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        aria-label="X (formerly Twitter)"
-                        onClick={() => trackCuratedLink("link:twitter", "https://twitter.com/xrshLuC")}
-                      >
-                        <XIcon className="h-6 w-6 text-muted-foreground hover:text-primary transition-colors" />
-                      </Link>
-                    </>
-                  )}
+                </Button>
+              ) : null}
+            </div>
+
+            <DiscordStatus />
+
+            <RevealStagger as="div" className="flex flex-wrap items-center gap-3" staggerMs={70} amount={0.25}>
+              {isDeveloper ? (
+                <>
                   <Link
-                    href="https://discord.gg/Sd8Uq73FeK"
+                    href="https://github.com/LuC-9"
                     target="_blank"
                     rel="noopener noreferrer"
-                    aria-label="Discord server"
-                    onClick={() => trackCuratedLink("link:discord", "https://discord.gg/Sd8Uq73FeK")}
+                    aria-label="GitHub"
+                    onClick={() => trackCuratedLink("link:github", "https://github.com/LuC-9")}
+                    className="rounded-full border border-border/60 bg-card/40 p-2 text-muted-foreground transition-colors hover:text-primary"
                   >
-                    <Globe className="h-6 w-6 text-muted-foreground hover:text-primary transition-colors" />
+                    <Github className="h-5 w-5" />
                   </Link>
                   <Link
-                    href="mailto:aarshmail@gmail.com"
-                    aria-label="Email"
-                    onClick={() => trackCuratedLink("link:email", "mailto:aarshmail@gmail.com")}
+                    href="https://www.linkedin.com/in/aarsh-mishra09/"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    aria-label="LinkedIn"
+                    onClick={() => trackCuratedLink("link:linkedin", "https://www.linkedin.com/in/aarsh-mishra09/")}
+                    className="rounded-full border border-border/60 bg-card/40 p-2 text-muted-foreground transition-colors hover:text-primary"
                   >
-                    <Mail className="h-6 w-6 text-muted-foreground hover:text-primary transition-colors" />
+                    <Linkedin className="h-5 w-5" />
                   </Link>
-                </div>
-              </div>
-            </motion.div>
+                  <Link
+                    href="https://twitter.com/xrshLuC"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    aria-label="X"
+                    onClick={() => trackCuratedLink("link:twitter", "https://twitter.com/xrshLuC")}
+                    className="rounded-full border border-border/60 bg-card/40 p-2 text-muted-foreground transition-colors hover:text-primary"
+                  >
+                    <XIcon className="h-5 w-5" />
+                  </Link>
+                  <Link
+                    href="https://leetcode.com/u/LuC9/"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    aria-label="LeetCode"
+                    onClick={() => trackCuratedLink("link:leetcode", "https://leetcode.com/u/LuC9/")}
+                    className="rounded-full border border-border/60 bg-card/40 p-2 text-muted-foreground transition-colors hover:text-primary"
+                  >
+                    <LeetCodeIcon className="h-5 w-5" />
+                  </Link>
+                </>
+              ) : (
+                <>
+                  <Link
+                    href="https://www.twitch.tv/xrshluc"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    aria-label="Twitch"
+                    onClick={() => trackCuratedLink("link:twitch", "https://www.twitch.tv/xrshluc")}
+                    className="rounded-full border border-border/60 bg-card/40 p-2 text-muted-foreground transition-colors hover:text-primary"
+                  >
+                    <Twitch className="h-5 w-5" />
+                  </Link>
+                  <Link
+                    href="https://www.youtube.com/@LuC-Throws"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    aria-label="YouTube"
+                    onClick={() => trackCuratedLink("link:youtube", "https://www.youtube.com/@LuC-Throws")}
+                    className="rounded-full border border-border/60 bg-card/40 p-2 text-muted-foreground transition-colors hover:text-primary"
+                  >
+                    <Youtube className="h-5 w-5" />
+                  </Link>
+                  <Link
+                    href="https://twitter.com/xrshLuC"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    aria-label="X"
+                    onClick={() => trackCuratedLink("link:twitter", "https://twitter.com/xrshLuC")}
+                    className="rounded-full border border-border/60 bg-card/40 p-2 text-muted-foreground transition-colors hover:text-primary"
+                  >
+                    <XIcon className="h-5 w-5" />
+                  </Link>
+                </>
+              )}
+              <Link
+                href="https://discord.gg/Sd8Uq73FeK"
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label="Discord server"
+                onClick={() => trackCuratedLink("link:discord", "https://discord.gg/Sd8Uq73FeK")}
+                className="rounded-full border border-border/60 bg-card/40 p-2 text-muted-foreground transition-colors hover:text-primary"
+              >
+                <Globe className="h-5 w-5" />
+              </Link>
+              <Link
+                href="mailto:aarshmail@gmail.com"
+                aria-label="Email"
+                onClick={() => trackCuratedLink("link:email", "mailto:aarshmail@gmail.com")}
+                className="rounded-full border border-border/60 bg-card/40 p-2 text-muted-foreground transition-colors hover:text-primary"
+              >
+                <Mail className="h-5 w-5" />
+              </Link>
+            </RevealStagger>
           </div>
         </div>
       </div>
-    </div>
+    </section>
   )
 }

@@ -7,8 +7,8 @@ import dynamic from "next/dynamic"
 const CommunityAndStreamsClient = dynamic(
   () => import("./CommunityAndStreamsClient"),
   {
-    loading: () => <div className="text-center py-8">Loading community content...</div>,
-    ssr: false // Disable SSR for this component
+    loading: () => <div className="rounded-xl border border-border/60 bg-card/40 p-6 text-sm text-muted-foreground">Loading community content...</div>,
+    ssr: false
   }
 )
 

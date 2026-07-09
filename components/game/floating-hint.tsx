@@ -24,8 +24,8 @@ export function FloatingHint() {
   const route = routeFromTaskId(currentHint.taskId)
 
   return (
-    <section aria-live="polite" className="fixed bottom-28 left-4 z-40">
-      <div className="experience-card flex items-center gap-2 rounded-full px-2 py-1 shadow-lg backdrop-blur-sm">
+    <section aria-live="polite" className="fixed bottom-24 left-4 z-40 md:bottom-28">
+      <div className="flex items-center gap-2 rounded-full border border-border/60 bg-card/90 px-2 py-1 shadow-kinetic backdrop-blur">
         <Button
           type="button"
           variant="secondary"
@@ -37,7 +37,7 @@ export function FloatingHint() {
             }
             dismissHint()
           }}
-          className="h-auto rounded-full px-3 py-1 text-xs font-mono leading-snug"
+          className="h-auto rounded-full border border-border/60 bg-card/90 px-4 py-2 font-mono text-xs leading-snug"
           aria-label={
             route ? `Navigate to complete hint: ${currentHint.label}` : `Hint: ${currentHint.label}`
           }
@@ -50,7 +50,7 @@ export function FloatingHint() {
           variant="ghost"
           size="icon"
           onClick={dismissHint}
-          className="h-7 w-7 rounded-full"
+          className="h-7 w-7 rounded-full border border-border/60"
           aria-label="Dismiss hint"
         >
           <X className="h-3.5 w-3.5" />

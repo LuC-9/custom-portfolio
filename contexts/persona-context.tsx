@@ -16,9 +16,11 @@ const PersonaContext = createContext<PersonaContextType | undefined>(undefined)
 
 export function PersonaProvider({ children }: { children: ReactNode }) {
   const [persona, setPersonaState] = useState<Persona>("developer")
+  const [mounted, setMounted] = useState(false)
 
   // Initialize from localStorage on client side
   useEffect(() => {
+    setMounted(true)
     const savedPersona = localStorage.getItem("persona") as Persona | null
     if (savedPersona && (savedPersona === "developer" || savedPersona === "gamer")) {
       setPersonaState(savedPersona)
@@ -28,12 +30,6 @@ export function PersonaProvider({ children }: { children: ReactNode }) {
   const setPersona = (newPersona: Persona) => {
     setPersonaState(newPersona)
     localStorage.setItem("persona", newPersona)
-    
-    // Update document colors based on persona
-    if (newPersona === "developer") {
-      document.documentElement.style.setProperty("--primary", "210 80% 75%") // Pastel blue for developer
-      document.documentElement.classList.remove("gamer-theme")
-    }
   }
 
   const togglePersona = () => {
@@ -41,16 +37,11 @@ export function PersonaProvider({ children }: { children: ReactNode }) {
     setPersona(newPersona)
   }
 
-  // Initialize theme on first load
+  // Keep persona cascade declarative via html[data-persona].
   useEffect(() => {
-    if (persona === "developer") {
-      document.documentElement.style.setProperty("--primary", "210 80% 75%") // Pastel blue
-      document.documentElement.classList.remove("gamer-theme")
-    } else {
-      document.documentElement.style.setProperty("--primary", "0 80% 80%") // Pastel red
-      document.documentElement.classList.add("gamer-theme")
-    }
-  }, [persona])
+    if (!mounted) return
+    document.documentElement.setAttribute("data-persona", persona)
+  }, [mounted, persona])
 
   return (
     <PersonaContext.Provider
