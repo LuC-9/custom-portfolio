@@ -7,7 +7,7 @@ A modern, responsive portfolio website built with Next.js, TypeScript, and Tailw
 ## Features
 
 - 🌓 Dual persona toggle (Developer/Gamer) that reroutes home content, navigation, blog filters, and accent language without a page reload
-- 🎬 Cinematic hero intro overlay on first landing per session (portal-mounted so it sits above the game HUD stacking context)
+- 🎬 Cinematic hero intro overlay on each fresh page load/reload (portal-mounted so it sits above the game HUD stacking context)
 - 📜 Center-spine zigzag experience timeline with directional slide-in reveal and a milestone dot on the spine
 - 🎞️ Seamless kinetic marquee of tech / games (two duplicated halves + `w-max` track for a gapless loop)
 - 🧩 Persona-aware featured bento: developer persona interleaves projects and blog posts across six cells; gamer persona swaps to Twitch/YouTube cards + gamer blogs
