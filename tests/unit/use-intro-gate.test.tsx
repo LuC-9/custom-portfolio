@@ -31,5 +31,6 @@ describe("useIntroGate", () => {
     })
 
     expect(result.current.shouldPlay).toBe(false)
+    expect(window.sessionStorage.getItem(LEGACY_STORAGE_KEY)).toBeNull()
   })
 })
