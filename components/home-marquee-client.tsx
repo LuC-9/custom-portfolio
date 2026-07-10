@@ -1,12 +1,30 @@
 "use client"
 
 import type { CSSProperties } from "react"
+import { cn } from "@/lib/utils"
 import { usePersona } from "@/contexts/persona-context"
 import { useReducedMotionSafe } from "@/hooks/use-reduced-motion"
+
+type Direction = "forward" | "reverse"
 
 type HomeMarqueeClientProps = {
   developerSkills: string[]
   gamerGames: string[]
+  /**
+   * Which way the strip animates. Two strips with opposite directions
+   * (e.g. top + bottom of a picture frame) create a nice conveyor-belt
+   * feel around the framed content.
+   */
+  direction?: Direction
+  /**
+   * When true, apply a horizontal fade mask at both edges so the strip
+   * fades in/out instead of hard-clipping against the container. Off by
+   * default because most consumers (like the hero image frame) already
+   * clip via `overflow-hidden` on a bordered container.
+   */
+  fadeEdges?: boolean
+  /** Extra classes on the outer wrapper, e.g. sizing / padding. */
+  className?: string
 }
 
 const fadeMask: CSSProperties = {
@@ -27,14 +45,23 @@ function MarqueeHalf({ skills }: { skills: string[] }) {
   )
 }
 
-export function HomeMarqueeClient({ developerSkills, gamerGames }: HomeMarqueeClientProps) {
+export function HomeMarqueeClient({
+  developerSkills,
+  gamerGames,
+  direction = "forward",
+  fadeEdges = false,
+  className,
+}: HomeMarqueeClientProps) {
   const { isDeveloper } = usePersona()
   const reduceMotion = useReducedMotionSafe()
   const source = isDeveloper ? developerSkills : gamerGames
   const skills = source.length > 0 ? source : developerSkills
 
   return (
-    <div className="min-w-0 w-full overflow-hidden" style={fadeMask}>
+    <div
+      className={cn("min-w-0 w-full overflow-hidden", className)}
+      style={fadeEdges ? fadeMask : undefined}
+    >
       <ul className="sr-only" aria-label="Tech stack">
         {skills.map((skill) => (
           <li key={`sr-${skill}`}>{skill}</li>
@@ -47,7 +74,12 @@ export function HomeMarqueeClient({ developerSkills, gamerGames }: HomeMarqueeCl
           // Two "halves" each pinned to at least viewport width via min-w-full.
           // Track uses w-max so it grows to the sum of both halves (2× viewport min);
           // CSS then animates by exactly -50% = one half's width → seamless loop.
-          <div className="skills-marquee-track flex w-max">
+          <div
+            className={cn(
+              "skills-marquee-track flex w-max",
+              direction === "reverse" && "skills-marquee-track-reverse",
+            )}
+          >
             <MarqueeHalf skills={skills} />
             <MarqueeHalf skills={skills} />
           </div>

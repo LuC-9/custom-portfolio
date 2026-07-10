@@ -336,7 +336,19 @@ table td {
   will-change: transform;
 }
 
-.skills-marquee-track:hover {
+/*
+ * Two-halves marquee track can play in either direction — the wrap point
+ * is at -50% (end of the first half aligned with the start of the second),
+ * so translating from -50% back to 0 loops just as seamlessly as the
+ * forward direction. Used to give the hero image frame a conveyor-belt
+ * look with the top strip going one way and the bottom the other.
+ */
+.skills-marquee-track-reverse {
+  animation-name: skills-marquee-reverse;
+}
+
+.skills-marquee-track:hover,
+.skills-marquee-track-reverse:hover {
   animation-play-state: paused;
 }
 
@@ -382,13 +394,23 @@ table td {
   }
 }
 
+@keyframes skills-marquee-reverse {
+  from {
+    transform: translate3d(-50%, 0, 0);
+  }
+  to {
+    transform: translate3d(0, 0, 0);
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
   .animate-marquee {
     animation: none !important;
     transform: none !important;
   }
 
-  .skills-marquee-track {
+  .skills-marquee-track,
+  .skills-marquee-track-reverse {
     animation: none !important;
     transform: none !important;
   }
