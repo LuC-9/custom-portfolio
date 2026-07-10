@@ -394,6 +394,33 @@ table td {
   }
 }
 
+/*
+ * Stick-figure "hop" onto a staircase step. Used by the experience
+ * section: as the user hovers or focuses a step card, a small climber
+ * appears to the left of the card and springs onto the step with a
+ * short arc, then settles pointing at the card. Base position must land
+ * on the step (translate 0), so the intermediate keyframe overshoots
+ * upward and inward before settling.
+ */
+@keyframes stair-climber-hop {
+  0% {
+    transform: translate3d(-12px, 28px, 0) rotate(-6deg) scale(0.85);
+    opacity: 0;
+  }
+  55% {
+    transform: translate3d(4px, -8px, 0) rotate(3deg) scale(1.05);
+    opacity: 1;
+  }
+  80% {
+    transform: translate3d(-1px, 2px, 0) rotate(-1deg) scale(0.99);
+    opacity: 1;
+  }
+  100% {
+    transform: translate3d(0, 0, 0) rotate(0deg) scale(1);
+    opacity: 1;
+  }
+}
+
 @keyframes skills-marquee-reverse {
   from {
     transform: translate3d(-50%, 0, 0);
