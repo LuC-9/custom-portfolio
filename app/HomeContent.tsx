@@ -78,7 +78,7 @@ export function HomeContent() {
   }
 
   return (
-    <section id="top" className="relative isolate min-h-[100dvh] w-full overflow-hidden pt-20 pb-12 lg:pt-24 lg:pb-16">
+    <section id="top" className="relative isolate flex min-h-[100dvh] w-full items-center overflow-hidden pt-20 pb-12 lg:pt-24 lg:pb-16">
       {introShouldPlay ? <HeroIntro persona={persona} onDone={markIntroPlayed} /> : null}
       <AnimatePresence mode="wait" initial={false}>
         <PersonaBackground key={persona} persona={persona} />
