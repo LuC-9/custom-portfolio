@@ -1,7 +1,7 @@
 ---
 title: "byluc.in Portfolio"
 description: "Dual-persona Next.js 15 portfolio with a cinematic intro, zigzag experience timeline, kinetic marquee, gamification HUD, and Gemini-powered chatbot."
-image: "/portfolioSS.png?height=400&width=600"
+image: "/portfolioSS.png"
 tags: ["Next.js 15", "React 19", "TypeScript", "Tailwind CSS", "Motion", "Three.js", "Gemini", "Markdown"]
 github: "https://github.com/LuC-9/custom-portfolio"
 demo: "https://byluc.in"
@@ -9,8 +9,9 @@ featured: true
 order: 1
 ---
 
-![Portfolio Screenshot](/ss1.png)
-![Portfolio Screenshot](/ss2.png)
+![Developer persona — vertically centered hero, kinetic marquee, and zigzag experience timeline](/ss1.png)
+
+![Gamer persona — accent recolor, LuC identity, and gaming-oriented featured surfaces](/ss2.png)
 
 A modern, responsive portfolio built on Next.js 15 App Router and React 19. The site runs a dual-persona concept: visitors switch between a developer profile (project bento, work history, engineering blog) and a gamer profile (Twitch/YouTube surfaces, gaming experience, streaming notes). Persona flips the home content, navigation, blog filter, and accent language without a page reload.
 
