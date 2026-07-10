@@ -379,3 +379,59 @@ table td {
 @media (prefers-reduced-motion: reduce) {
   .spotify-progress-fill { animation: none; transform: scaleX(0); }
 }
+
+/*
+ * Scroll-driven reveal (see https://www.builder.io/blog/scroll-driven-animations).
+ * Uses `animation-timeline: view()` so the browser drives the animation off the
+ * main thread as the element intersects its scroller. Chromium supports this
+ * today; Firefox/Safari fall back to the un-animated static state via the
+ * `@supports (animation-timeline: view())` guard — the element simply appears
+ * in place, which is acceptable since the reveal is decorative.
+ *
+ * Keyframes deliberately start from the "visible" end state so that when the
+ * feature is unsupported the element is fully visible without any JS work.
+ */
+@keyframes reveal-in-up {
+  from {
+    opacity: 0;
+    transform: translate3d(0, var(--reveal-distance, 24px), 0);
+  }
+  to {
+    opacity: 1;
+    transform: translate3d(0, 0, 0);
+  }
+}
+
+@supports (animation-timeline: view()) {
+  @media (prefers-reduced-motion: no-preference) {
+    .reveal-on-view {
+      animation: reveal-in-up linear both;
+      animation-timeline: view();
+      /*
+       * Play across the entry phase but complete a bit before the element is
+       * fully in view so the finished state is what the user reads. The
+       * `entry` range covers "leading edge enters viewport" (0%) through
+       * "trailing edge enters viewport" (100%).
+       */
+      animation-range: entry 10% cover 30%;
+      will-change: opacity, transform;
+    }
+
+    /*
+     * Scroll-driven staggered reveal for lists/grids. Consumers set
+     * `--reveal-index` on each child (0, 1, 2, ...). Each child's animation
+     * range is offset so items animate in sequence as the parent scrolls into
+     * view — no timers, no JS.
+     */
+    .reveal-stagger-item {
+      --reveal-index: 0;
+      --reveal-step: 8%;
+      animation: reveal-in-up linear both;
+      animation-timeline: view();
+      animation-range:
+        entry calc(10% + var(--reveal-index) * var(--reveal-step))
+        cover calc(30% + var(--reveal-index) * var(--reveal-step));
+      will-change: opacity, transform;
+    }
+  }
+}
