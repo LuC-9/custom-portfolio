@@ -56,13 +56,33 @@ const streamCards = [
   },
 ]
 
+/**
+ * Bento span map for the developer featured grid.
+ *
+ * With 6 cells and a 3-column grid, this arrangement adds up to exactly
+ * 9 units (a 2×2 feature card + five 1×1 cards) so the whole bento snaps
+ * into a clean 3×3 rectangle with no empty tiles. Together with
+ * `grid-flow-dense` the browser lays it out as:
+ *
+ *   ┌──────────────┬─────────┐
+ *   │              │ cell 1  │
+ *   │   cell 0     ├─────────┤
+ *   │  (feature)   │ cell 2  │
+ *   ├───────┬──────┼─────────┤
+ *   │cell 3 │cell 4│ cell 5  │
+ *   └───────┴──────┴─────────┘
+ *
+ * Cell 0 is the byluc.in project card (self-referential portfolio),
+ * cells 1/2 are featured blog posts, cells 3/4/5 are the second/third
+ * projects and remaining blog posts.
+ */
 function getDeveloperSpanClass(index: number, total: number) {
   if (total < 4) return ""
   const spanMap = [
     "md:col-span-2 md:row-span-2",
     "md:col-span-1 md:row-span-1",
     "md:col-span-1 md:row-span-1",
-    "md:col-span-1 md:row-span-2",
+    "md:col-span-1 md:row-span-1",
     "md:col-span-1 md:row-span-1",
     "md:col-span-1 md:row-span-1",
   ]
