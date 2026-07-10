@@ -1,8 +1,16 @@
 #!/usr/bin/env node
 /**
- * Fast snapshot-only pass: captures public/ss1.png (developer home) and
- * public/ss2.png (gamer home) as full-page stills. Walks the page top-to-
- * bottom first so Motion `whileInView` reveals settle before capture.
+ * Fast snapshot-only pass for the site's marketing/README stills:
+ *
+ *   public/ss1.png         Developer full-page landing
+ *   public/ss2.png         Gamer full-page landing
+ *   public/portfolioSS.png Viewport-only developer landing (project card
+ *                          thumbnail — 4:3 so it crops well inside the
+ *                          project cards' aspect-video / aspect-[4/3] boxes).
+ *
+ * Walks each page top-to-bottom first so scroll-driven reveals (CSS
+ * animation-timeline: view()) and Motion `whileInView` fallbacks settle
+ * before capture.
  *
  * Usage:
  *   npm run capture:snapshots
@@ -19,7 +27,10 @@ const REPO_ROOT = join(HERE, "..")
 const BASE_URL = process.env.DEMO_URL || "http://localhost:3000"
 const SS1 = join(REPO_ROOT, "public", "ss1.png")
 const SS2 = join(REPO_ROOT, "public", "ss2.png")
+const CARD = join(REPO_ROOT, "public", "portfolioSS.png")
 const VIEWPORT = { width: 1440, height: 900 }
+// 4:3 crop that project cards render at up to 50vw / 33vw.
+const CARD_VIEWPORT = { width: 1600, height: 1200 }
 
 async function primeAndShoot(page, dest) {
   const height = await page.evaluate(() => document.body.scrollHeight)
@@ -34,28 +45,51 @@ async function primeAndShoot(page, dest) {
   console.log(`  Saved ${dest}`)
 }
 
-const browser = await chromium.launch({ headless: true })
-try {
-  for (const [persona, dest] of [
-    ["developer", SS1],
-    ["gamer", SS2],
-  ]) {
-    const context = await browser.newContext({
-      viewport: VIEWPORT,
-      deviceScaleFactor: 1,
-      colorScheme: "dark",
-    })
-    await context.addInitScript(({ persona }) => {
-      try { localStorage.setItem("persona", persona) } catch {}
-      try { sessionStorage.setItem("portfolio:hero-intro:skip:v1", "1") } catch {}
-      try { document.documentElement.setAttribute("data-persona", persona) } catch {}
-    }, { persona })
-    const page = await context.newPage()
+async function shootViewport(page, dest) {
+  await page.evaluate(() => window.scrollTo(0, 0))
+  await page.waitForTimeout(400)
+  await page.screenshot({ path: dest, fullPage: false })
+  console.log(`  Saved ${dest}`)
+}
+
+async function withPersonaPage(browser, { persona, viewport, run }) {
+  const context = await browser.newContext({
+    viewport,
+    deviceScaleFactor: 1,
+    colorScheme: "dark",
+  })
+  await context.addInitScript(({ persona }) => {
+    try { localStorage.setItem("persona", persona) } catch {}
+    try { sessionStorage.setItem("portfolio:hero-intro:skip:v1", "1") } catch {}
+    try { document.documentElement.setAttribute("data-persona", persona) } catch {}
+  }, { persona })
+  const page = await context.newPage()
+  try {
     await page.goto(BASE_URL, { waitUntil: "load", timeout: 30000 })
     await page.waitForTimeout(1200)
-    await primeAndShoot(page, dest)
+    await run(page)
+  } finally {
     await context.close()
   }
+}
+
+const browser = await chromium.launch({ headless: true })
+try {
+  await withPersonaPage(browser, {
+    persona: "developer",
+    viewport: VIEWPORT,
+    run: (page) => primeAndShoot(page, SS1),
+  })
+  await withPersonaPage(browser, {
+    persona: "gamer",
+    viewport: VIEWPORT,
+    run: (page) => primeAndShoot(page, SS2),
+  })
+  await withPersonaPage(browser, {
+    persona: "developer",
+    viewport: CARD_VIEWPORT,
+    run: (page) => shootViewport(page, CARD),
+  })
 } finally {
   await browser.close()
 }
