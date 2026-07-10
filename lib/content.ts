@@ -87,9 +87,13 @@ export async function getAllContentData(directory: string) {
       // Calculate reading time
       const readingTime = calculateReadingTime(matterResult.content);
 
-      // Combine the data with the id
+      // Combine the data with the id. Expose the raw markdown as
+      // `content` alongside the rendered `contentHtml` so consumers
+      // like ContentThumbnail can render a plain-text preview without
+      // running an HTML stripper on the sanitized output.
       return {
         id,
+        content: matterResult.content,
         contentHtml,
         readingTime,
         ...matterResult.data,
