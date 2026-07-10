@@ -9,6 +9,7 @@ import { usePersona } from "@/contexts/persona-context"
 import { cn, formatDate } from "@/lib/utils"
 import { SpotlightBorder } from "@/components/motion/spotlight-border"
 import { MagneticHover } from "@/components/motion/magnetic-hover"
+import { ProjectDialog } from "@/components/project-dialog"
 
 type ProjectItem = {
   id: string
@@ -16,7 +17,16 @@ type ProjectItem = {
   description?: string
   image?: string
   tags?: string[]
+  github?: string
   demo?: string
+  /**
+   * Present when the item was loaded via getAllContentData("projects").
+   * Required by ProjectDialog, which renders the markdown-derived
+   * long-form body inside the popup. `content` is the raw markdown
+   * string; `contentHtml` is the pre-rendered HTML.
+   */
+  content?: string
+  contentHtml?: string
 }
 
 type BlogItem = {
@@ -142,26 +152,40 @@ export function HomeFeaturedSection({
               >
                 <SpotlightBorder className="h-full overflow-hidden rounded-xl">
                   {cell.kind === "project" ? (
-                    <Link href={cell.item.demo ?? "/projects"} className="flex h-full flex-col bg-card/60 p-4">
-                      {cell.item.image ? (
-                        <div className="relative mb-4 aspect-video overflow-hidden rounded-lg">
-                          <Image
-                            src={cell.item.image}
-                            alt={cell.item.title}
-                            fill
-                            sizes="(max-width: 768px) 100vw, 33vw"
-                            className="object-cover"
-                          />
+                    <ProjectDialog
+                      project={{
+                        id: cell.item.id,
+                        title: cell.item.title,
+                        description: cell.item.description ?? "",
+                        content: cell.item.content ?? "",
+                        contentHtml: cell.item.contentHtml ?? "",
+                        image: cell.item.image ?? "",
+                        tags: cell.item.tags ?? [],
+                        github: cell.item.github,
+                        demo: cell.item.demo,
+                      }}
+                    >
+                      <div className="flex h-full cursor-pointer flex-col bg-card/60 p-4">
+                        {cell.item.image ? (
+                          <div className="relative mb-4 aspect-video overflow-hidden rounded-lg">
+                            <Image
+                              src={cell.item.image}
+                              alt={cell.item.title}
+                              fill
+                              sizes="(max-width: 768px) 100vw, 33vw"
+                              className="object-cover"
+                            />
+                          </div>
+                        ) : null}
+                        <h3 className="font-sans text-xl font-semibold">{cell.item.title}</h3>
+                        <p className="mt-2 overflow-hidden text-ellipsis whitespace-nowrap text-sm text-muted-foreground">
+                          {cell.item.description ?? "Built for speed, reliability, and meaningful user outcomes."}
+                        </p>
+                        <div className="mt-4">
+                          <Tags tags={cell.item.tags} />
                         </div>
-                      ) : null}
-                      <h3 className="font-sans text-xl font-semibold">{cell.item.title}</h3>
-                      <p className="mt-2 overflow-hidden text-ellipsis whitespace-nowrap text-sm text-muted-foreground">
-                        {cell.item.description ?? "Built for speed, reliability, and meaningful user outcomes."}
-                      </p>
-                      <div className="mt-4">
-                        <Tags tags={cell.item.tags} />
                       </div>
-                    </Link>
+                    </ProjectDialog>
                   ) : (
                     <Link href={`/blog/${cell.item.id}`} className="flex h-full flex-col bg-card/60 p-4">
                       {cell.item.image ? (
