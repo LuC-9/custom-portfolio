@@ -395,6 +395,26 @@ table td {
 }
 
 /*
+ * Staircase step offset. Consumer sets `--step-idx` (0 for the newest
+ * role, rising with each older role) and `--step-max` (the max index,
+ * usually `total - 1`). At md+ the card's margin-right is computed as
+ * a fraction of the empty space in the container so that step 0 hugs
+ * the right edge, the final step hugs the left edge, and the middle
+ * steps distribute evenly regardless of viewport width. Cards are
+ * 19.5rem wide (set in the component's utility classes).
+ */
+.staircase-step {
+  --step-idx: 0;
+  --step-max: 3;
+}
+
+@media (min-width: 768px) {
+  .staircase-step {
+    margin-right: calc((100% - 19.5rem) * var(--step-idx) / var(--step-max));
+  }
+}
+
+/*
  * Tanjiro climber lands on the hovered career step. Outer wrapper runs
  * this once when a card gains hover/focus: character starts below and
  * offscreen, arcs up with a small overshoot, and lands centered on the

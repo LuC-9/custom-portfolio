@@ -25,83 +25,98 @@ function extractStartYear(period: string): string {
 }
 
 /**
- * Small Tanjiro-inspired climber standing on the hovered step.
- *
- * Not a portrait — a stylised mascot that borrows the show's recognisable
- * silhouette so a 40x60px SVG still reads: dark spiky hair, skin-tone
- * face, the diagonal scar on the forehead, black-and-green checker
- * haori, dark hakama, and a katana slung across the back. Uses inline
- * hex colours rather than currentColor because the character wants its
- * own palette regardless of the surrounding accent.
+ * Chibi-style anime climber standing on the hovered step. Original SVG
+ * inspired by the "young swordsman in a checkered haori" archetype —
+ * oversized head, cartoon eyes with a shine, faint blush, a small
+ * diagonal scar accent, a checker-pattern top, dark hakama, and a
+ * katana slung across the back. All shapes and colors are original;
+ * this is not a portrait of any specific character.
  */
 function TanjiroClimber({ className }: { className?: string }) {
   const skin = "#f5d5a8"
-  const hair = "#231613"
+  const hair = "#241512"
   const scar = "#c53030"
   const haoriDark = "#0e1a10"
-  const haoriGreen = "#2d5a2d"
+  const haoriAccent = "#3a7a3a"
+  const obi = "#e2e6dd"
   const hakama = "#141013"
-  const blade = "#dfe7f0"
+  const blade = "#e5ebf1"
   const handle = "#8a2b2b"
+  const eye = "#3a1810"
+  const cheek = "#f0a5a5"
+  const sandal = "#c9a26a"
   return (
     <svg
-      viewBox="0 0 40 60"
+      viewBox="0 0 44 60"
       xmlns="http://www.w3.org/2000/svg"
       aria-hidden
       className={className}
     >
-      {/* Katana slung across the back — handle + blade poking up behind head */}
-      <line x1={26} y1={26} x2={30} y2={22} stroke={handle} strokeWidth={2.2} strokeLinecap="round" />
-      <line x1={30} y1={22} x2={39} y2={4} stroke={blade} strokeWidth={1.8} strokeLinecap="round" />
+      {/* Katana strapped across the back — visible past the right shoulder */}
+      <line x1={30} y1={26} x2={35} y2={20} stroke={handle} strokeWidth={2.4} strokeLinecap="round" />
+      <line x1={35} y1={20} x2={43} y2={4} stroke={blade} strokeWidth={1.9} strokeLinecap="round" />
 
-      {/* Hair back — dark silhouette behind the head */}
-      <ellipse cx={20} cy={11} rx={7.2} ry={7} fill={hair} />
-
-      {/* Face */}
-      <circle cx={20} cy={12} r={5.6} fill={skin} />
-
-      {/* Hair front — layered spiky bangs */}
+      {/* Hair silhouette behind the head (chibi proportion — head takes ~40% of the figure) */}
       <path
-        d="M 14.5 12 Q 15 5.5, 20 4.5 Q 25 5.5, 25.5 12 L 24 14 Q 22.5 12.5, 21 13.5 Q 19 12.5, 17 14 L 14.5 12 Z"
+        d="M 10 15 Q 9 4 22 3.5 Q 35 4 34 15 L 34 22 Q 28 24 22 24 Q 16 24 10 22 Z"
         fill={hair}
       />
 
-      {/* Iconic scar over the right eye */}
-      <line x1={17} y1={8.5} x2={19.5} y2={11.5} stroke={scar} strokeWidth={0.9} strokeLinecap="round" />
+      {/* Face circle */}
+      <circle cx={22} cy={16} r={9} fill={skin} />
 
-      {/* Eyes */}
-      <circle cx={17.8} cy={13} r={0.7} fill={hair} />
-      <circle cx={22.2} cy={13} r={0.7} fill={hair} />
+      {/* Hair front — layered bangs falling over the forehead */}
+      <path
+        d="M 11 13 Q 12 4 22 3.5 Q 32 4 33 13 Q 30 15 27.5 13 L 26.5 15.5 Q 24.5 13.5 22.5 15 Q 20.5 13.5 18.5 15.5 L 17.5 13 Q 14 15 11 13 Z"
+        fill={hair}
+      />
+      {/* Hair strand accents at the sides */}
+      <path d="M 11 13 L 9 19 Q 10 21 12 19 Z" fill={hair} />
+      <path d="M 33 13 L 35 19 Q 34 21 32 19 Z" fill={hair} />
 
-      {/* Haori base */}
-      <path d="M 14 18 L 26 18 L 25.4 36 L 14.6 36 Z" fill={haoriDark} />
-      {/* Checker squares — approximated so a small render still reads as pattern */}
-      <g fill={haoriGreen}>
-        <rect x={14} y={18} width={3} height={3} />
-        <rect x={20} y={18} width={3} height={3} />
-        <rect x={17} y={21} width={3} height={3} />
-        <rect x={23} y={21} width={2.4} height={3} />
-        <rect x={14} y={24} width={3} height={3} />
-        <rect x={20} y={24} width={3} height={3} />
-        <rect x={17} y={27} width={3} height={3} />
-        <rect x={23} y={27} width={2.4} height={3} />
-        <rect x={14} y={30} width={3} height={3} />
-        <rect x={20} y={30} width={3} height={3} />
-        <rect x={17} y={33} width={3} height={3} />
-        <rect x={23} y={33} width={2.4} height={3} />
+      {/* Small diagonal scar accent over the right brow */}
+      <path d="M 17 10 L 19.5 13.5" stroke={scar} strokeWidth={1.2} strokeLinecap="round" fill="none" />
+
+      {/* Blush marks (chibi trope) */}
+      <circle cx={15.5} cy={19.5} r={1.6} fill={cheek} opacity={0.55} />
+      <circle cx={28.5} cy={19.5} r={1.6} fill={cheek} opacity={0.55} />
+
+      {/* Oversized cartoon eyes */}
+      <ellipse cx={17.5} cy={18} rx={1.3} ry={2} fill={eye} />
+      <ellipse cx={26.5} cy={18} rx={1.3} ry={2} fill={eye} />
+      {/* Eye shine */}
+      <circle cx={17.8} cy={17.3} r={0.55} fill="#ffffff" />
+      <circle cx={26.8} cy={17.3} r={0.55} fill="#ffffff" />
+
+      {/* Haori base — dark green-black */}
+      <path d="M 14 25 L 30 25 L 29 41 L 15 41 Z" fill={haoriDark} />
+      {/* Alternating checker squares approximated in a 2-row grid */}
+      <g fill={haoriAccent}>
+        <rect x={14} y={25} width={4} height={4} />
+        <rect x={22} y={25} width={4} height={4} />
+        <rect x={18} y={29} width={4} height={4} />
+        <rect x={26} y={29} width={3} height={4} />
+        <rect x={14} y={33} width={4} height={4} />
+        <rect x={22} y={33} width={4} height={4} />
+        <rect x={18} y={37} width={4} height={4} />
+        <rect x={26} y={37} width={3} height={4} />
       </g>
+      {/* White obi belt across the waist */}
+      <rect x={14} y={35} width={16} height={1.5} fill={obi} />
 
-      {/* Arms — skin, one relaxed at the side, one raised */}
-      <path d="M 14.5 20 Q 11 25, 10 32" stroke={skin} strokeWidth={2.4} strokeLinecap="round" fill="none" />
-      <path d="M 25.5 20 Q 28 17, 30 12" stroke={skin} strokeWidth={2.4} strokeLinecap="round" fill="none" />
+      {/* Arms — resting at the sides with rounded hands */}
+      <path d="M 14 27 Q 10 32 10 37" stroke={skin} strokeWidth={2.8} strokeLinecap="round" fill="none" />
+      <path d="M 30 27 Q 34 32 34 37" stroke={skin} strokeWidth={2.8} strokeLinecap="round" fill="none" />
+      <circle cx={10} cy={37} r={1.6} fill={skin} />
+      <circle cx={34} cy={37} r={1.6} fill={skin} />
 
-      {/* Hakama / legs */}
-      <line x1={17} y1={36} x2={15} y2={54} stroke={hakama} strokeWidth={3.2} strokeLinecap="round" />
-      <line x1={23} y1={36} x2={25} y2={54} stroke={hakama} strokeWidth={3.2} strokeLinecap="round" />
+      {/* Legs — dark hakama */}
+      <path d="M 17 41 L 15 54" stroke={hakama} strokeWidth={3.6} strokeLinecap="round" />
+      <path d="M 27 41 L 29 54" stroke={hakama} strokeWidth={3.6} strokeLinecap="round" />
 
-      {/* Feet */}
-      <line x1={13} y1={54.5} x2={17} y2={54.5} stroke="#3a2820" strokeWidth={2.4} strokeLinecap="round" />
-      <line x1={23} y1={54.5} x2={27} y2={54.5} stroke="#3a2820" strokeWidth={2.4} strokeLinecap="round" />
+      {/* Simple sandals */}
+      <ellipse cx={14} cy={55.5} rx={2.6} ry={1.1} fill={sandal} />
+      <ellipse cx={30} cy={55.5} rx={2.6} ry={1.1} fill={sandal} />
     </svg>
   )
 }
@@ -126,7 +141,7 @@ export function HomeExperienceSection({
       {/* Bottom padding keeps the last (leftmost) step from bumping into the
           next section since the leftward offset makes the ol taller than a
           flush-right column would be. */}
-      <ol className="relative mx-auto flex w-full max-w-4xl flex-col gap-20 pb-6 md:gap-24">
+      <ol className="relative mx-auto flex w-full max-w-full flex-col gap-20 pb-6 md:gap-24">
         {experiences.map((experience, index) => {
           const organization =
             experience.company ??
@@ -146,18 +161,11 @@ export function HomeExperienceSection({
           const stepNumber = total - index
 
           /*
-           * Explicit per-step margin classes. Tailwind's JIT needs the
-           * literal utility strings to emit CSS for them. Only four
-           * steps are ever rendered (`.slice(0, 4)`).
+           * Staircase offset is computed in CSS from --step-idx via a
+           * calc() that spans the full container width regardless of
+           * viewport size. See .staircase-step in globals.css.
            */
-          const stepOffsetClass =
-            index === 0
-              ? "md:mr-0"
-              : index === 1
-                ? "md:mr-24"
-                : index === 2
-                  ? "md:mr-48"
-                  : "md:mr-72"
+          const stepOffsetClass = "staircase-step"
 
           return (
             <li key={experience.id} className="relative">
@@ -175,7 +183,19 @@ export function HomeExperienceSection({
                         ease: motionEase.expoOut,
                       }
                 }
-                style={{ willChange: reduce ? undefined : "transform, opacity" }}
+                style={{
+                  willChange: reduce ? undefined : "transform, opacity",
+                  /*
+                   * --step-idx feeds the staircase offset calc in
+                   * globals.css so every step lands at
+                   * `(container_width - card_width) * idx / (total-1)`.
+                   * That means step 0 hugs the right edge, the final
+                   * step hugs the left edge, and the middle steps
+                   * distribute evenly — regardless of viewport width.
+                   */
+                  ["--step-idx" as string]: index,
+                  ["--step-max" as string]: Math.max(1, total - 1),
+                }}
                 className={cn(
                   // Compact "step" card: shorter than the old zigzag article
                   // so it reads as a flat rung rather than a full content block.
@@ -185,7 +205,7 @@ export function HomeExperienceSection({
                   // Mobile: single-column with a subtle left accent border.
                   "border-l-4 border-l-border/50 hover:border-l-primary/60 focus-visible:border-l-primary/60",
                   // md+: right-align each card at a fixed 19.5rem (312px)
-                  // width so all steps look identical and the staircase
+                  // width so all steps look identical; the staircase
                   // reads cleanly from the offset alone.
                   "md:ml-auto md:w-[19.5rem] md:border-l md:border-l-border/60",
                   stepOffsetClass,
@@ -216,19 +236,22 @@ export function HomeExperienceSection({
                   offset applies.
                 */}
                 {/*
-                  Staircase connector — a small L-shape that hangs off the
-                  bottom-left corner of this card and reaches down-and-
-                  left to the top-right corner of the next lower step.
-                  The `border-t` visualises the tread of this step (the
-                  horizontal edge you'd stand on), the `border-l` is the
-                  riser dropping down to the step below. Rendered only
-                  when there's a following step, and only at md+ where
-                  the staircase offset applies.
+                  Staircase connector — an L-shape hanging off this
+                  card's bottom-left corner. Top border is the tread of
+                  this step; left border is the riser dropping to the
+                  step below. Width matches the horizontal distance to
+                  the next step (`(container - card) / step_max` — the
+                  same increment used by .staircase-step's margin) so it
+                  visually spans the gap between consecutive steps at
+                  any viewport width. Height matches the ol gap.
                 */}
                 {index < experiences.length - 1 ? (
                   <span
                     aria-hidden
-                    className="pointer-events-none absolute right-full top-full hidden h-20 w-24 rounded-tl-md border-l border-t border-border/60 md:block"
+                    className="pointer-events-none absolute right-full top-full hidden h-20 rounded-tl-md border-l border-t border-border/60 md:block md:h-24"
+                    style={{
+                      width: "calc((100% - 19.5rem) / var(--step-max))",
+                    }}
                   />
                 ) : null}
 
