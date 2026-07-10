@@ -73,7 +73,11 @@ export function HomeExperienceSection({
                   transition={
                     reduce
                       ? { duration: 0.2 }
-                      : { delay: 0.25, duration: 0.5, ease: motionEase.expoOut }
+                      : {
+                          delay: 0.45 + index * 0.14,
+                          duration: 0.75,
+                          ease: motionEase.expoOut,
+                        }
                   }
                   className={cn(
                     "pointer-events-none absolute top-6 z-10 hidden h-3 w-3 rounded-full ring-4 ring-background md:block",
@@ -91,7 +95,11 @@ export function HomeExperienceSection({
                   transition={
                     reduce
                       ? { duration: 0.25 }
-                      : { duration: 0.75, ease: motionEase.expoOut }
+                      : {
+                          duration: 1.4,
+                          delay: index * 0.14,
+                          ease: motionEase.expoOut,
+                        }
                   }
                   style={{ willChange: reduce ? undefined : "transform, opacity" }}
                   className={cn(
