@@ -90,6 +90,43 @@
   scrollbar-width: none;
 }
 
+/*
+ * Native scrollbar styling.
+ * The default OS scrollbar rendered as a wide light bar on the dark theme,
+ * which clashed with the design. Thin the track and paint the thumb in the
+ * theme's border color with a transparent inset so it reads as a subtle
+ * accent instead of a UI edge. Firefox supports scrollbar-width /
+ * scrollbar-color; Chromium/Safari use the ::-webkit-scrollbar pseudos.
+ */
+html {
+  scrollbar-width: thin;
+  scrollbar-color: hsl(var(--border) / 0.7) transparent;
+}
+
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background-color: hsl(var(--border) / 0.7);
+  border-radius: 999px;
+  border: 2px solid transparent;
+  background-clip: content-box;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background-color: hsl(var(--border));
+}
+
+::-webkit-scrollbar-corner {
+  background: transparent;
+}
+
 pre {
   @apply p-4 rounded-lg overflow-x-auto my-6 bg-secondary/50 border border-secondary;
 }
