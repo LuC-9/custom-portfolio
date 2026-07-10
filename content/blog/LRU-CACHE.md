@@ -5,6 +5,7 @@ date: "2026-07-08"
 excerpt: "A complete guide to understanding the Least Recently Used (LRU) Cache—from fundamentals and design decisions to production use cases, interview questions, and implementation in O(1)."
 tags: [algorithms, data-structures, system-design, caching]
 featured: true
+image: https://share.gemini.google/WDNJKQxQDIWs
 ---
 
 ![LRU Cache Data Structure](https://cdn.hashnode.com/res/hashnode/image/upload/v1655812960691/pqAZ20NyS.png)
