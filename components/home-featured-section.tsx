@@ -10,12 +10,20 @@ import { cn, formatDate } from "@/lib/utils"
 import { SpotlightBorder } from "@/components/motion/spotlight-border"
 import { MagneticHover } from "@/components/motion/magnetic-hover"
 import { ProjectDialog } from "@/components/project-dialog"
+import { ContentThumbnail } from "@/components/content-thumbnail"
 
 type ProjectItem = {
   id: string
   title: string
   description?: string
   image?: string
+  /**
+   * Optional URL for the image itself. When set, the image slot becomes
+   * an external anchor (opens in a new tab) instead of inheriting the
+   * card's primary link — useful for pointing at a live demo, a source
+   * image on GitHub, etc.
+   */
+  imageLink?: string
   tags?: string[]
   github?: string
   demo?: string
@@ -23,7 +31,9 @@ type ProjectItem = {
    * Present when the item was loaded via getAllContentData("projects").
    * Required by ProjectDialog, which renders the markdown-derived
    * long-form body inside the popup. `content` is the raw markdown
-   * string; `contentHtml` is the pre-rendered HTML.
+   * string; `contentHtml` is the pre-rendered HTML. Also used by
+   * ContentThumbnail as the source for the fallback thumbnail when
+   * `image` is absent.
    */
   content?: string
   contentHtml?: string
@@ -35,7 +45,9 @@ type BlogItem = {
   date: string
   excerpt?: string
   image?: string
+  imageLink?: string
   tags?: string[]
+  content?: string
 }
 
 type FeaturedCell =
@@ -179,8 +191,8 @@ export function HomeFeaturedSection({
                       }}
                     >
                       <div className="flex h-full cursor-pointer flex-col bg-card/60 p-4">
-                        {cell.item.image ? (
-                          <div className="relative mb-4 aspect-video overflow-hidden rounded-lg">
+                        <div className="relative mb-4 aspect-video overflow-hidden rounded-lg">
+                          {cell.item.image ? (
                             <Image
                               src={cell.item.image}
                               alt={cell.item.title}
@@ -188,8 +200,13 @@ export function HomeFeaturedSection({
                               sizes="(max-width: 768px) 100vw, 33vw"
                               className="object-cover"
                             />
-                          </div>
-                        ) : null}
+                          ) : (
+                            <ContentThumbnail
+                              title={cell.item.title}
+                              content={cell.item.content}
+                            />
+                          )}
+                        </div>
                         <h3 className="font-sans text-xl font-semibold">{cell.item.title}</h3>
                         <p className="mt-2 overflow-hidden text-ellipsis whitespace-nowrap text-sm text-muted-foreground">
                           {cell.item.description ?? "Built for speed, reliability, and meaningful user outcomes."}
@@ -200,27 +217,71 @@ export function HomeFeaturedSection({
                       </div>
                     </ProjectDialog>
                   ) : (
-                    <Link href={`/blog/${cell.item.id}`} className="flex h-full flex-col bg-card/60 p-4">
-                      {cell.item.image ? (
-                        <div className="relative mb-4 aspect-video overflow-hidden rounded-lg">
-                          <Image
-                            src={cell.item.image}
-                            alt={cell.item.title}
-                            fill
-                            sizes="(max-width: 768px) 100vw, 33vw"
-                            className="object-cover"
-                          />
+                    <div className="flex h-full flex-col bg-card/60 p-4">
+                      {/*
+                        If an imageLink is provided on the blog frontmatter,
+                        the image slot becomes an independent external
+                        anchor (opens in a new tab). Otherwise it inherits
+                        the blog detail link like the rest of the card.
+                        Two separate anchors keeps click targets clear
+                        without nesting <a> elements.
+                      */}
+                      {cell.item.imageLink ? (
+                        <a
+                          href={cell.item.imageLink}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="relative mb-4 block aspect-video overflow-hidden rounded-lg"
+                          aria-label={`${cell.item.title} — open linked image`}
+                        >
+                          {cell.item.image ? (
+                            <Image
+                              src={cell.item.image}
+                              alt={cell.item.title}
+                              fill
+                              sizes="(max-width: 768px) 100vw, 33vw"
+                              className="object-cover"
+                            />
+                          ) : (
+                            <ContentThumbnail
+                              title={cell.item.title}
+                              content={cell.item.content}
+                            />
+                          )}
+                        </a>
+                      ) : (
+                        <Link
+                          href={`/blog/${cell.item.id}`}
+                          className="relative mb-4 block aspect-video overflow-hidden rounded-lg"
+                          aria-label={cell.item.title}
+                        >
+                          {cell.item.image ? (
+                            <Image
+                              src={cell.item.image}
+                              alt={cell.item.title}
+                              fill
+                              sizes="(max-width: 768px) 100vw, 33vw"
+                              className="object-cover"
+                            />
+                          ) : (
+                            <ContentThumbnail
+                              title={cell.item.title}
+                              content={cell.item.content}
+                            />
+                          )}
+                        </Link>
+                      )}
+                      <Link href={`/blog/${cell.item.id}`} className="flex flex-1 flex-col">
+                        <p className="font-mono text-xs text-muted-foreground">{formatDate(cell.item.date)}</p>
+                        <h3 className="mt-2 font-sans text-xl font-semibold">{cell.item.title}</h3>
+                        <p className="mt-2 overflow-hidden text-sm text-muted-foreground [display:-webkit-box] [-webkit-box-orient:vertical] [-webkit-line-clamp:2]">
+                          {cell.item.excerpt ?? "A practical take on engineering, systems, and shipping better software."}
+                        </p>
+                        <div className="mt-4">
+                          <Tags tags={cell.item.tags} />
                         </div>
-                      ) : null}
-                      <p className="font-mono text-xs text-muted-foreground">{formatDate(cell.item.date)}</p>
-                      <h3 className="mt-2 font-sans text-xl font-semibold">{cell.item.title}</h3>
-                      <p className="mt-2 overflow-hidden text-sm text-muted-foreground [display:-webkit-box] [-webkit-box-orient:vertical] [-webkit-line-clamp:2]">
-                        {cell.item.excerpt ?? "A practical take on engineering, systems, and shipping better software."}
-                      </p>
-                      <div className="mt-4">
-                        <Tags tags={cell.item.tags} />
-                      </div>
-                    </Link>
+                      </Link>
+                    </div>
                   )}
                 </SpotlightBorder>
               </div>
@@ -296,27 +357,57 @@ export function HomeFeaturedSection({
                 style={{ ["--reveal-index" as string]: streamCards.length + index } as CSSProperties}
               >
                 <SpotlightBorder className="h-full rounded-xl">
-                  <Link href={`/blog/${blog.id}`} className="flex h-full flex-col bg-card/60 p-4">
-                    {blog.image ? (
-                      <div className="relative mb-4 aspect-video overflow-hidden rounded-lg">
-                        <Image
-                          src={blog.image}
-                          alt={blog.title}
-                          fill
-                          sizes="(max-width: 768px) 100vw, 50vw"
-                          className="object-cover"
-                        />
+                  <div className="flex h-full flex-col bg-card/60 p-4">
+                    {blog.imageLink ? (
+                      <a
+                        href={blog.imageLink}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="relative mb-4 block aspect-video overflow-hidden rounded-lg"
+                        aria-label={`${blog.title} — open linked image`}
+                      >
+                        {blog.image ? (
+                          <Image
+                            src={blog.image}
+                            alt={blog.title}
+                            fill
+                            sizes="(max-width: 768px) 100vw, 50vw"
+                            className="object-cover"
+                          />
+                        ) : (
+                          <ContentThumbnail title={blog.title} content={blog.content} />
+                        )}
+                      </a>
+                    ) : (
+                      <Link
+                        href={`/blog/${blog.id}`}
+                        className="relative mb-4 block aspect-video overflow-hidden rounded-lg"
+                        aria-label={blog.title}
+                      >
+                        {blog.image ? (
+                          <Image
+                            src={blog.image}
+                            alt={blog.title}
+                            fill
+                            sizes="(max-width: 768px) 100vw, 50vw"
+                            className="object-cover"
+                          />
+                        ) : (
+                          <ContentThumbnail title={blog.title} content={blog.content} />
+                        )}
+                      </Link>
+                    )}
+                    <Link href={`/blog/${blog.id}`} className="flex flex-1 flex-col">
+                      <p className="font-mono text-xs text-muted-foreground">{formatDate(blog.date)}</p>
+                      <h3 className="mt-2 font-sans text-xl font-semibold">{blog.title}</h3>
+                      <p className="mt-2 overflow-hidden text-sm text-muted-foreground [display:-webkit-box] [-webkit-box-orient:vertical] [-webkit-line-clamp:2]">
+                        {blog.excerpt ?? "Stories from matches, community culture, and long-form strategy notes."}
+                      </p>
+                      <div className="mt-4">
+                        <Tags tags={blog.tags} />
                       </div>
-                    ) : null}
-                    <p className="font-mono text-xs text-muted-foreground">{formatDate(blog.date)}</p>
-                    <h3 className="mt-2 font-sans text-xl font-semibold">{blog.title}</h3>
-                    <p className="mt-2 overflow-hidden text-sm text-muted-foreground [display:-webkit-box] [-webkit-box-orient:vertical] [-webkit-line-clamp:2]">
-                      {blog.excerpt ?? "Stories from matches, community culture, and long-form strategy notes."}
-                    </p>
-                    <div className="mt-4">
-                      <Tags tags={blog.tags} />
-                    </div>
-                  </Link>
+                    </Link>
+                  </div>
                 </SpotlightBorder>
               </div>
             ))}
