@@ -25,36 +25,83 @@ function extractStartYear(period: string): string {
 }
 
 /**
- * Small stick figure standing on top of a career step.
+ * Small Tanjiro-inspired climber standing on the hovered step.
  *
- * Pose matches the user's sketch: head circle, torso, arms raised in a
- * "V" (reaching for the next step / celebrating that this one was
- * reached), legs planted on the step below. Rendered with a transparent
- * head interior so the primary accent lines show cleanly against the
- * dark background.
+ * Not a portrait — a stylised mascot that borrows the show's recognisable
+ * silhouette so a 40x60px SVG still reads: dark spiky hair, skin-tone
+ * face, the diagonal scar on the forehead, black-and-green checker
+ * haori, dark hakama, and a katana slung across the back. Uses inline
+ * hex colours rather than currentColor because the character wants its
+ * own palette regardless of the surrounding accent.
  */
-function StepClimber({ className }: { className?: string }) {
+function TanjiroClimber({ className }: { className?: string }) {
+  const skin = "#f5d5a8"
+  const hair = "#231613"
+  const scar = "#c53030"
+  const haoriDark = "#0e1a10"
+  const haoriGreen = "#2d5a2d"
+  const hakama = "#141013"
+  const blade = "#dfe7f0"
+  const handle = "#8a2b2b"
   return (
     <svg
-      viewBox="0 0 32 44"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth={2.4}
-      strokeLinecap="round"
-      strokeLinejoin="round"
+      viewBox="0 0 40 60"
+      xmlns="http://www.w3.org/2000/svg"
       aria-hidden
       className={className}
     >
-      {/* Head — outline only, matches the sketch */}
-      <circle cx={16} cy={8} r={5} />
-      {/* Torso */}
-      <line x1={16} y1={13} x2={16} y2={27} />
-      {/* Arms raised in V, reaching upward */}
-      <line x1={16} y1={17} x2={7} y2={9} />
-      <line x1={16} y1={17} x2={25} y2={9} />
-      {/* Legs */}
-      <line x1={16} y1={27} x2={9} y2={41} />
-      <line x1={16} y1={27} x2={23} y2={41} />
+      {/* Katana slung across the back — handle + blade poking up behind head */}
+      <line x1={26} y1={26} x2={30} y2={22} stroke={handle} strokeWidth={2.2} strokeLinecap="round" />
+      <line x1={30} y1={22} x2={39} y2={4} stroke={blade} strokeWidth={1.8} strokeLinecap="round" />
+
+      {/* Hair back — dark silhouette behind the head */}
+      <ellipse cx={20} cy={11} rx={7.2} ry={7} fill={hair} />
+
+      {/* Face */}
+      <circle cx={20} cy={12} r={5.6} fill={skin} />
+
+      {/* Hair front — layered spiky bangs */}
+      <path
+        d="M 14.5 12 Q 15 5.5, 20 4.5 Q 25 5.5, 25.5 12 L 24 14 Q 22.5 12.5, 21 13.5 Q 19 12.5, 17 14 L 14.5 12 Z"
+        fill={hair}
+      />
+
+      {/* Iconic scar over the right eye */}
+      <line x1={17} y1={8.5} x2={19.5} y2={11.5} stroke={scar} strokeWidth={0.9} strokeLinecap="round" />
+
+      {/* Eyes */}
+      <circle cx={17.8} cy={13} r={0.7} fill={hair} />
+      <circle cx={22.2} cy={13} r={0.7} fill={hair} />
+
+      {/* Haori base */}
+      <path d="M 14 18 L 26 18 L 25.4 36 L 14.6 36 Z" fill={haoriDark} />
+      {/* Checker squares — approximated so a small render still reads as pattern */}
+      <g fill={haoriGreen}>
+        <rect x={14} y={18} width={3} height={3} />
+        <rect x={20} y={18} width={3} height={3} />
+        <rect x={17} y={21} width={3} height={3} />
+        <rect x={23} y={21} width={2.4} height={3} />
+        <rect x={14} y={24} width={3} height={3} />
+        <rect x={20} y={24} width={3} height={3} />
+        <rect x={17} y={27} width={3} height={3} />
+        <rect x={23} y={27} width={2.4} height={3} />
+        <rect x={14} y={30} width={3} height={3} />
+        <rect x={20} y={30} width={3} height={3} />
+        <rect x={17} y={33} width={3} height={3} />
+        <rect x={23} y={33} width={2.4} height={3} />
+      </g>
+
+      {/* Arms — skin, one relaxed at the side, one raised */}
+      <path d="M 14.5 20 Q 11 25, 10 32" stroke={skin} strokeWidth={2.4} strokeLinecap="round" fill="none" />
+      <path d="M 25.5 20 Q 28 17, 30 12" stroke={skin} strokeWidth={2.4} strokeLinecap="round" fill="none" />
+
+      {/* Hakama / legs */}
+      <line x1={17} y1={36} x2={15} y2={54} stroke={hakama} strokeWidth={3.2} strokeLinecap="round" />
+      <line x1={23} y1={36} x2={25} y2={54} stroke={hakama} strokeWidth={3.2} strokeLinecap="round" />
+
+      {/* Feet */}
+      <line x1={13} y1={54.5} x2={17} y2={54.5} stroke="#3a2820" strokeWidth={2.4} strokeLinecap="round" />
+      <line x1={23} y1={54.5} x2={27} y2={54.5} stroke="#3a2820" strokeWidth={2.4} strokeLinecap="round" />
     </svg>
   )
 }
@@ -79,7 +126,7 @@ export function HomeExperienceSection({
       {/* Bottom padding keeps the last (leftmost) step from bumping into the
           next section since the leftward offset makes the ol taller than a
           flush-right column would be. */}
-      <ol className="relative mx-auto flex w-full max-w-4xl flex-col gap-14 pb-6 md:gap-16">
+      <ol className="relative mx-auto flex w-full max-w-4xl flex-col gap-20 pb-6 md:gap-24">
         {experiences.map((experience, index) => {
           const organization =
             experience.company ??
@@ -145,18 +192,45 @@ export function HomeExperienceSection({
                 )}
               >
                 {/*
-                  Stick figure standing on top of the step, centered.
-                  Always visible on md+ (the whole point of the sketch
-                  was a climber on each rung). Because it lives inside
-                  the article, it inherits the card's hover translate so
-                  the figure appears to bounce with the step it stands on.
+                  Tanjiro-inspired climber. Only visible on the hovered /
+                  focused step. Outer wrapper handles the "jump onto the
+                  step" appear animation (opacity + translate + scale);
+                  inner wrapper runs a slow idle bob so the character
+                  breathes while standing. Both animations pause under
+                  reduced-motion so the character just fades in.
                 */}
                 <div
                   aria-hidden
-                  className="pointer-events-none absolute -top-11 left-1/2 hidden h-10 w-8 -translate-x-1/2 text-primary md:block"
+                  className="pointer-events-none absolute -top-16 left-1/2 z-10 hidden h-20 w-14 -translate-x-1/2 opacity-0 transition-opacity duration-200 group-hover/step:opacity-100 group-focus-within/step:opacity-100 group-hover/step:animate-[tanjiro-hop_500ms_var(--ease-out-expo)_forwards] group-focus-within/step:animate-[tanjiro-hop_500ms_var(--ease-out-expo)_forwards] motion-reduce:animate-none md:block"
                 >
-                  <StepClimber className="h-full w-full" />
+                  <div className="h-full w-full animate-[tanjiro-idle_2.2s_ease-in-out_infinite] motion-reduce:animate-none">
+                    <TanjiroClimber className="h-full w-full" />
+                  </div>
                 </div>
+
+                {/*
+                  Tread line — visualises the horizontal edge of this
+                  stair step, extending leftward toward where the next
+                  (lower) step begins. Rendered only for cards that have
+                  a following step, and only on md+ where the staircase
+                  offset applies.
+                */}
+                {/*
+                  Staircase connector — a small L-shape that hangs off the
+                  bottom-left corner of this card and reaches down-and-
+                  left to the top-right corner of the next lower step.
+                  The `border-t` visualises the tread of this step (the
+                  horizontal edge you'd stand on), the `border-l` is the
+                  riser dropping down to the step below. Rendered only
+                  when there's a following step, and only at md+ where
+                  the staircase offset applies.
+                */}
+                {index < experiences.length - 1 ? (
+                  <span
+                    aria-hidden
+                    className="pointer-events-none absolute right-full top-full hidden h-20 w-24 rounded-tl-md border-l border-t border-border/60 md:block"
+                  />
+                ) : null}
 
                 {/* Compact header row: everything on a single line so the
                     collapsed card is a proper step shape. */}
