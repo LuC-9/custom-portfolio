@@ -128,12 +128,25 @@ export function HomeFeaturedSection({
   const projects = featuredProjects.slice(0, 3)
   const blogs = featuredBlogs.slice(0, isDeveloper ? 3 : 3)
 
+  /*
+   * Grouped, not interleaved. Projects come first so the byluc.in 2×2
+   * feature card in cell 0 (see spanMap) anchors the top-left, the two
+   * other projects fill the right column of the first two rows, and all
+   * three blog cards sit together across the bottom row.
+   *
+   *   +-------+-------+
+   *   |               | project 2
+   *   |   byluc.in    +---------+
+   *   |    (2x2)      | project 3
+   *   +---+---+---+---+---------+
+   *   | blog 1 | blog 2 | blog 3
+   */
   const developerCells: FeaturedCell[] = [
     projects[0] ? { kind: "project", item: projects[0] } : null,
-    blogs[0] ? { kind: "blog", item: blogs[0] } : null,
     projects[1] ? { kind: "project", item: projects[1] } : null,
-    blogs[1] ? { kind: "blog", item: blogs[1] } : null,
     projects[2] ? { kind: "project", item: projects[2] } : null,
+    blogs[0] ? { kind: "blog", item: blogs[0] } : null,
+    blogs[1] ? { kind: "blog", item: blogs[1] } : null,
     blogs[2] ? { kind: "blog", item: blogs[2] } : null,
   ].filter(Boolean) as FeaturedCell[]
 
