@@ -105,10 +105,15 @@ export function HomeExperienceSection({
                     "md:max-w-[460px]",
                     isRight
                       ? "md:col-start-2 md:justify-self-start"
-                      : "md:col-start-1 md:justify-self-end",
+                      : "md:col-start-1 md:justify-self-end md:text-right",
                   )}
                 >
-                  <div className="mb-5 flex flex-col gap-1.5 md:mb-6">
+                  <div
+                    className={cn(
+                      "mb-5 flex flex-col gap-1.5 md:mb-6",
+                      !isRight && "md:items-end",
+                    )}
+                  >
                     <span className="font-sans text-4xl font-black tabular-nums leading-[0.9] tracking-tight md:text-6xl">
                       {startYear || (index + 1).toString()}
                     </span>
@@ -117,7 +122,12 @@ export function HomeExperienceSection({
                     </span>
                   </div>
 
-                  <div className="flex flex-wrap items-baseline gap-x-3 gap-y-1">
+                  <div
+                    className={cn(
+                      "flex flex-wrap items-baseline gap-x-3 gap-y-1",
+                      !isRight && "md:justify-end",
+                    )}
+                  >
                     <h3 className="font-sans text-2xl font-semibold tracking-tight md:text-3xl">
                       {experience.title}
                     </h3>
@@ -131,7 +141,13 @@ export function HomeExperienceSection({
                     ) : null}
                   </div>
 
-                  <div className="mt-5 max-w-[62ch]">
+                  {/*
+                    Description keeps left-aligned text so bulleted markdown
+                    still reads naturally on both sides. On left-column cards
+                    we push the block itself to the right edge with ml-auto
+                    so it stays anchored to the spine like the header above.
+                  */}
+                  <div className={cn("mt-5 max-w-[62ch] text-left", !isRight && "md:ml-auto")}>
                     {experience.contentHtml ? (
                       <div
                         className="prose prose-invert prose-sm max-w-none text-base leading-relaxed text-muted-foreground prose-p:my-2"
@@ -146,7 +162,12 @@ export function HomeExperienceSection({
                   </div>
 
                   {experience.skills?.length ? (
-                    <ul className="mt-6 flex flex-wrap gap-2">
+                    <ul
+                      className={cn(
+                        "mt-6 flex flex-wrap gap-2",
+                        !isRight && "md:justify-end",
+                      )}
+                    >
                       {experience.skills.map((skill) => (
                         <li
                           key={`${experience.id}-${skill}`}
