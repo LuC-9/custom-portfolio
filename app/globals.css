@@ -91,40 +91,50 @@
 }
 
 /*
- * Native scrollbar styling.
- * The default OS scrollbar rendered as a wide light bar on the dark theme,
- * which clashed with the design. Thin the track and paint the thumb in the
- * theme's border color with a transparent inset so it reads as a subtle
- * accent instead of a UI edge. Firefox supports scrollbar-width /
- * scrollbar-color; Chromium/Safari use the ::-webkit-scrollbar pseudos.
+ * Hide the native scrollbar entirely. The dark theme has enough visual
+ * language (persona toggle, HUD, nav) that a scrollbar becomes noise, and
+ * pairing it with mandatory scroll snapping (below) means users don't rely
+ * on the bar to gauge document position anyway.
+ *
+ * Scroll wheel / touch / keyboard still work as normal; only the visual
+ * bar is suppressed. Firefox uses `scrollbar-width: none`; Chromium and
+ * Safari use the `::-webkit-scrollbar` pseudo, which we collapse to zero
+ * size and hide.
  */
 html {
-  scrollbar-width: thin;
-  scrollbar-color: hsl(var(--border) / 0.7) transparent;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
 }
 
-::-webkit-scrollbar {
-  width: 10px;
-  height: 10px;
+html::-webkit-scrollbar,
+body::-webkit-scrollbar,
+*::-webkit-scrollbar {
+  width: 0;
+  height: 0;
+  display: none;
 }
 
-::-webkit-scrollbar-track {
-  background: transparent;
-}
-
-::-webkit-scrollbar-thumb {
-  background-color: hsl(var(--border) / 0.7);
-  border-radius: 999px;
-  border: 2px solid transparent;
-  background-clip: content-box;
-}
-
-::-webkit-scrollbar-thumb:hover {
-  background-color: hsl(var(--border));
-}
-
-::-webkit-scrollbar-corner {
-  background: transparent;
+/*
+ * Page-level scroll snapping.
+ *
+ * The home page has a big hero, a thin skills marquee, and then the
+ * experience timeline / featured grid. The marquee felt like an
+ * unintentional "obstacle" between hero and the real content, so we mark
+ * only the landmark sections (hero, experience, featured, footer) as
+ * snap targets and use `y mandatory` — scrolling from the hero jumps
+ * directly to the experience section because that's the next snap point.
+ * The marquee has no snap-align and is skipped past mid-animation.
+ *
+ * `scroll-behavior: smooth` gives the snap a gentle animated glide
+ * instead of a hard jump, matching the "with a bit slower speed" feel
+ * of the reveal animations on landing.
+ *
+ * Pages other than the home page have no descendants with
+ * `scroll-snap-align`, so this rule is a no-op there.
+ */
+html {
+  scroll-snap-type: y mandatory;
+  scroll-behavior: smooth;
 }
 
 pre {
