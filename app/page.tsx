@@ -38,21 +38,21 @@ export default async function Home() {
           <HomeContent />
           <HomeMarquee />
 
-          <div className="mx-auto mt-24 w-full max-w-[1400px] px-4 md:px-6">
+          <div className="mx-auto mt-24 w-full max-w-[1400px] snap-start scroll-mt-20 px-4 md:px-6">
             <HomeExperienceSection
               developerExperiences={developerExperiences}
               gamingExperiences={gamingExperiences}
             />
           </div>
 
-          <div className="mx-auto mt-24 w-full max-w-[1400px] px-4 md:px-6">
+          <div className="mx-auto mt-24 w-full max-w-[1400px] snap-start scroll-mt-20 px-4 md:px-6">
             <HomeFeaturedSection
               featuredProjects={featuredProjects}
               featuredBlogs={featuredBlogs}
             />
           </div>
         </div>
-        <div className="mx-auto mt-24 w-full max-w-[1400px] px-4 md:px-6">
+        <div className="mx-auto mt-24 w-full max-w-[1400px] snap-start scroll-mt-20 px-4 md:px-6">
           <Footer />
         </div>
       </main>
