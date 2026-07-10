@@ -1,12 +1,12 @@
 "use client"
 
+import type { CSSProperties } from "react"
 import Image from "next/image"
 import Link from "next/link"
 import { Twitch, Youtube } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { usePersona } from "@/contexts/persona-context"
-import { formatDate } from "@/lib/utils"
-import { RevealStagger } from "@/components/motion/reveal-stagger"
+import { cn, formatDate } from "@/lib/utils"
 import { SpotlightBorder } from "@/components/motion/spotlight-border"
 import { MagneticHover } from "@/components/motion/magnetic-hover"
 
@@ -108,14 +108,13 @@ export function HomeFeaturedSection({
     <section>
       {isDeveloper ? (
         <>
-          <RevealStagger
-            as="div"
-            className="grid grid-cols-1 gap-4 md:grid-cols-3 md:auto-rows-[minmax(280px,1fr)] md:grid-flow-dense"
-            staggerMs={35}
-            amount={0.05}
-          >
+          <div className="grid grid-cols-1 gap-4 md:grid-cols-3 md:auto-rows-[minmax(280px,1fr)] md:grid-flow-dense">
             {developerCells.map((cell, index) => (
-              <div key={`${cell.kind}-${cell.item.id}`} className={getDeveloperSpanClass(index, developerCells.length)}>
+              <div
+                key={`${cell.kind}-${cell.item.id}`}
+                className={cn("reveal-stagger-item", getDeveloperSpanClass(index, developerCells.length))}
+                style={{ ["--reveal-index" as string]: index } as CSSProperties}
+              >
                 <SpotlightBorder className="h-full overflow-hidden rounded-xl">
                   {cell.kind === "project" ? (
                     <Link href={cell.item.demo ?? "/projects"} className="flex h-full flex-col bg-card/60 p-4">
@@ -164,7 +163,7 @@ export function HomeFeaturedSection({
                 </SpotlightBorder>
               </div>
             ))}
-          </RevealStagger>
+          </div>
 
           <div className="mt-8 flex flex-wrap gap-3">
             <MagneticHover>
@@ -185,14 +184,13 @@ export function HomeFeaturedSection({
         </>
       ) : (
         <>
-          <RevealStagger
-            as="div"
-            className="grid grid-cols-1 gap-4 md:grid-cols-2 md:auto-rows-[minmax(240px,1fr)] md:grid-flow-dense"
-            staggerMs={35}
-            amount={0.05}
-          >
-            {streamCards.map(({ id, label, href, cta, pitch, Icon }) => (
-              <div key={id} className="md:row-span-2">
+          <div className="grid grid-cols-1 gap-4 md:grid-cols-2 md:auto-rows-[minmax(240px,1fr)] md:grid-flow-dense">
+            {streamCards.map(({ id, label, href, cta, pitch, Icon }, index) => (
+              <div
+                key={id}
+                className="reveal-stagger-item md:row-span-2"
+                style={{ ["--reveal-index" as string]: index } as CSSProperties}
+              >
                 <SpotlightBorder className="h-full rounded-xl">
                   <div className="flex h-full flex-col justify-between bg-card/60 p-6">
                     <div className="space-y-4">
@@ -212,8 +210,12 @@ export function HomeFeaturedSection({
               </div>
             ))}
 
-            {gamerBlogs.map((blog) => (
-              <div key={blog.id}>
+            {gamerBlogs.map((blog, index) => (
+              <div
+                key={blog.id}
+                className="reveal-stagger-item"
+                style={{ ["--reveal-index" as string]: streamCards.length + index } as CSSProperties}
+              >
                 <SpotlightBorder className="h-full rounded-xl">
                   <Link href={`/blog/${blog.id}`} className="flex h-full flex-col bg-card/60 p-4">
                     {blog.image ? (
@@ -239,7 +241,7 @@ export function HomeFeaturedSection({
                 </SpotlightBorder>
               </div>
             ))}
-          </RevealStagger>
+          </div>
 
           <div className="mt-8 flex flex-wrap gap-3">
             <MagneticHover>
