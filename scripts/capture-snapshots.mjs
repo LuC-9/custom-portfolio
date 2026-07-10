@@ -32,6 +32,29 @@ const VIEWPORT = { width: 1440, height: 900 }
 // 4:3 crop that project cards render at up to 50vw / 33vw.
 const CARD_VIEWPORT = { width: 1600, height: 1200 }
 
+/**
+ * Pin every scroll-driven reveal to its finished state. CSS SDA
+ * (animation-timeline: view()) sets .reveal-on-view / .reveal-stagger-item
+ * to opacity: 0 whenever they're outside the viewport, so a fullPage stitch
+ * would otherwise capture the featured bento and skills strip blank. Motion's
+ * `whileInView` reveals use `once: true` and survive the prime scroll, but a
+ * belt-and-braces reset for common transform props keeps mid-flight cards
+ * from being caught partially animated.
+ */
+async function forceRevealsSettled(page) {
+  await page.addStyleTag({
+    content: `
+      .reveal-on-view,
+      .reveal-stagger-item {
+        animation: none !important;
+        opacity: 1 !important;
+        transform: none !important;
+      }
+    `,
+  })
+  await page.waitForTimeout(200)
+}
+
 async function primeAndShoot(page, dest) {
   const height = await page.evaluate(() => document.body.scrollHeight)
   const stride = 400
@@ -41,6 +64,7 @@ async function primeAndShoot(page, dest) {
   }
   await page.evaluate(() => window.scrollTo(0, 0))
   await page.waitForTimeout(500)
+  await forceRevealsSettled(page)
   await page.screenshot({ path: dest, fullPage: true })
   console.log(`  Saved ${dest}`)
 }
