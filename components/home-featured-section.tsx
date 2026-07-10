@@ -39,6 +39,10 @@ const streamCards = [
     href: "https://www.twitch.tv/xrshluc",
     cta: "Follow on Twitch",
     pitch: "Live gameplay, ranked sessions, and community nights every week.",
+    // Twitch account (xrshluc) has no custom profile banner uploaded, so
+    // use the profile hero (a stadium-floodlight photo) at banner aspect.
+    // Swap for a real channel banner once one is uploaded.
+    banner: "/twitch-avatar.png",
     Icon: Twitch,
   },
   {
@@ -47,6 +51,7 @@ const streamCards = [
     href: "https://www.youtube.com/@LuC-Throws",
     cta: "Subscribe on YouTube",
     pitch: "Guides, VOD highlights, and tactical breakdowns from recent streams.",
+    banner: "/youtube-banner.jpg",
     Icon: Youtube,
   },
 ]
@@ -185,26 +190,43 @@ export function HomeFeaturedSection({
       ) : (
         <>
           <div className="grid grid-cols-1 gap-4 md:grid-cols-2 md:auto-rows-[minmax(240px,1fr)] md:grid-flow-dense">
-            {streamCards.map(({ id, label, href, cta, pitch, Icon }, index) => (
+            {streamCards.map(({ id, label, href, cta, pitch, banner, Icon }, index) => (
               <div
                 key={id}
                 className="reveal-stagger-item md:row-span-2"
                 style={{ ["--reveal-index" as string]: index } as CSSProperties}
               >
-                <SpotlightBorder className="h-full rounded-xl">
-                  <div className="flex h-full flex-col justify-between bg-card/60 p-6">
-                    <div className="space-y-4">
-                      <Icon className="h-12 w-12 text-primary" />
-                      <h3 className="font-sans text-3xl font-semibold tracking-tight">{label}</h3>
-                      <p className="text-sm text-muted-foreground">{pitch}</p>
+                <SpotlightBorder className="h-full overflow-hidden rounded-xl">
+                  <div className="flex h-full flex-col bg-card/60">
+                    <div className="relative aspect-video w-full overflow-hidden bg-background">
+                      <Image
+                        src={banner}
+                        alt={`${label} channel banner`}
+                        fill
+                        sizes="(max-width: 768px) 100vw, 50vw"
+                        className="object-cover object-center"
+                      />
+                      {/* Fade the banner into the card so the icon/heading
+                          below reads clearly regardless of banner content. */}
+                      <div
+                        aria-hidden
+                        className="pointer-events-none absolute inset-x-0 bottom-0 h-1/2 bg-gradient-to-b from-transparent to-card/90"
+                      />
                     </div>
-                    <MagneticHover>
-                      <Button asChild className="mt-6 rounded-full">
-                        <Link href={href} target="_blank" rel="noopener noreferrer">
-                          {cta}
-                        </Link>
-                      </Button>
-                    </MagneticHover>
+                    <div className="flex flex-1 flex-col justify-between p-6">
+                      <div className="space-y-4">
+                        <Icon className="h-12 w-12 text-primary" />
+                        <h3 className="font-sans text-3xl font-semibold tracking-tight">{label}</h3>
+                        <p className="text-sm text-muted-foreground">{pitch}</p>
+                      </div>
+                      <MagneticHover>
+                        <Button asChild className="mt-6 rounded-full">
+                          <Link href={href} target="_blank" rel="noopener noreferrer">
+                            {cta}
+                          </Link>
+                        </Button>
+                      </MagneticHover>
+                    </div>
                   </div>
                 </SpotlightBorder>
               </div>
