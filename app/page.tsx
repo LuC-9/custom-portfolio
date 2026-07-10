@@ -1,9 +1,10 @@
 import { HomeContent } from "./HomeContent"
-import { HomeMarquee } from "@/components/home-marquee"
 import { HomeExperienceSection } from "@/components/home-experience-section"
 import { HomeFeaturedSection } from "@/components/home-featured-section"
 import { Footer } from "@/components/footer"
 import { getAllContentData, getExperiences } from "@/lib/content"
+import { getHomeGames } from "@/lib/content/games"
+import { getHomeSkills } from "@/lib/content/skills"
 import { Metadata } from "next"
 import { PersonStructuredData, WebsiteStructuredData } from './structured-data'
 
@@ -24,19 +25,19 @@ export default async function Home() {
   const gamingExperiences = await getExperiences('gaming-experience')
   const projects = await getAllContentData("projects")
   const blogs = await getAllContentData("blog")
-  
-  // Filter featured content
+  const developerSkills = getHomeSkills()
+  const gamerGames = getHomeGames()
+
   const featuredProjects = projects.filter(project => project.featured === true)
   const featuredBlogs = blogs.filter(blog => blog.featured === true)
-  
+
   return (
     <>
       <PersonStructuredData />
       <WebsiteStructuredData />
       <main className="flex flex-col min-h-screen">
         <div className="flex-1">
-          <HomeContent />
-          <HomeMarquee />
+          <HomeContent developerSkills={developerSkills} gamerGames={gamerGames} />
 
           <div className="mx-auto mt-24 w-full max-w-[1400px] snap-start scroll-mt-20 px-4 md:px-6">
             <HomeExperienceSection

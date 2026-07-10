@@ -18,6 +18,7 @@ import { SpotlightBorder } from "@/components/motion/spotlight-border"
 import { RevealWord } from "@/components/motion/reveal-word"
 import { PersonaBackground } from "@/components/persona-background"
 import { HeroIntro } from "@/components/intro/hero-intro"
+import { HomeMarqueeClient } from "@/components/home-marquee-client"
 import { motionEase, useReducedMotionSafe } from "@/hooks/use-reduced-motion"
 import { useIntroGate } from "@/hooks/use-intro-gate"
 
@@ -46,7 +47,12 @@ const content: Record<"developer" | "gamer", PersonaContent> = {
   },
 }
 
-export function HomeContent() {
+type HomeContentProps = {
+  developerSkills: string[]
+  gamerGames: string[]
+}
+
+export function HomeContent({ developerSkills, gamerGames }: HomeContentProps) {
   const { isDeveloper, persona } = usePersona()
   const reduceMotion = useReducedMotionSafe()
   const { shouldPlay: introShouldPlay, markPlayed: markIntroPlayed } = useIntroGate()
@@ -91,48 +97,75 @@ export function HomeContent() {
             transition={reduceMotion ? { duration: 0 } : { duration: 0.6, ease: motionEase.expoOut }}
             className="mx-auto w-full max-w-sm lg:max-w-none"
           >
-            <SpotlightBorder className="overflow-hidden rounded-xl" size={240}>
-              <div className="relative aspect-[4/5] w-full overflow-hidden">
-                <AnimatePresence mode="wait" initial={false}>
-                  <motion.div
-                    key={persona}
-                    initial={
-                      reduceMotion
-                        ? { opacity: 0 }
-                        : { clipPath: "inset(0 100% 0 0)", scale: 1.04, filter: "blur(6px)", opacity: 1 }
-                    }
-                    animate={reduceMotion ? { opacity: 1 } : { clipPath: "inset(0 0 0 0)", scale: 1, filter: "blur(0px)" }}
-                    exit={
-                      reduceMotion
-                        ? { opacity: 0 }
-                        : {
-                            clipPath: "inset(0 0 0 0)",
-                            scale: 0.96,
-                            filter: "blur(6px)",
-                            opacity: 0,
-                            transition: { duration: 0.35, ease: motionEase.expoOut },
-                          }
-                    }
-                    transition={reduceMotion ? { duration: 0.2 } : { duration: 0.7, ease: motionEase.expoOut, delay: 0.05 }}
-                    className="relative h-full w-full"
-                    style={
-                      reduceMotion
-                        ? undefined
-                        : { transformOrigin: "center", willChange: "transform, clip-path, filter" }
-                    }
-                  >
-                    <Image
-                      src={isDeveloper ? "/profile.jpg" : "/gamer-profile.gif?v=1"}
-                      alt={isDeveloper ? "Aarsh profile photo" : "LuC gamer profile"}
-                      fill
-                      priority
-                      className="object-cover"
-                      sizes="(max-width: 1024px) 100vw, 42vw"
-                    />
-                  </motion.div>
-                </AnimatePresence>
+            {/*
+              The skills / games marquee now doubles as a kinetic frame
+              around the profile image. Two strips (top + bottom) run in
+              opposite directions so the effect reads as a conveyor belt
+              wrapping the portrait. Previously the marquee lived as its
+              own section between hero and experience, but scroll-snap
+              from hero straight to experience meant it was never on
+              screen — this puts the strip inside the always-visible
+              hero, and reclaims the vertical space between the two snap
+              targets.
+            */}
+            <div className="relative overflow-hidden rounded-2xl border border-border/60 bg-card/30 shadow-[0_20px_60px_-30px_hsl(220_24%_3%/0.6)]">
+              <div className="border-b border-border/60 bg-card/50 py-2">
+                <HomeMarqueeClient
+                  developerSkills={developerSkills}
+                  gamerGames={gamerGames}
+                  direction="forward"
+                />
               </div>
-            </SpotlightBorder>
+              <SpotlightBorder className="rounded-none border-0" size={240}>
+                <div className="relative aspect-[4/5] w-full overflow-hidden">
+                  <AnimatePresence mode="wait" initial={false}>
+                    <motion.div
+                      key={persona}
+                      initial={
+                        reduceMotion
+                          ? { opacity: 0 }
+                          : { clipPath: "inset(0 100% 0 0)", scale: 1.04, filter: "blur(6px)", opacity: 1 }
+                      }
+                      animate={reduceMotion ? { opacity: 1 } : { clipPath: "inset(0 0 0 0)", scale: 1, filter: "blur(0px)" }}
+                      exit={
+                        reduceMotion
+                          ? { opacity: 0 }
+                          : {
+                              clipPath: "inset(0 0 0 0)",
+                              scale: 0.96,
+                              filter: "blur(6px)",
+                              opacity: 0,
+                              transition: { duration: 0.35, ease: motionEase.expoOut },
+                            }
+                      }
+                      transition={reduceMotion ? { duration: 0.2 } : { duration: 0.7, ease: motionEase.expoOut, delay: 0.05 }}
+                      className="relative h-full w-full"
+                      style={
+                        reduceMotion
+                          ? undefined
+                          : { transformOrigin: "center", willChange: "transform, clip-path, filter" }
+                      }
+                    >
+                      <Image
+                        src={isDeveloper ? "/profile.jpg" : "/gamer-profile.gif?v=1"}
+                        alt={isDeveloper ? "Aarsh profile photo" : "LuC gamer profile"}
+                        fill
+                        priority
+                        className="object-cover"
+                        sizes="(max-width: 1024px) 100vw, 42vw"
+                      />
+                    </motion.div>
+                  </AnimatePresence>
+                </div>
+              </SpotlightBorder>
+              <div className="border-t border-border/60 bg-card/50 py-2">
+                <HomeMarqueeClient
+                  developerSkills={developerSkills}
+                  gamerGames={gamerGames}
+                  direction="reverse"
+                />
+              </div>
+            </div>
           </motion.div>
         </div>
 
