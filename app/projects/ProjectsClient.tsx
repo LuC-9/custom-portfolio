@@ -2,8 +2,8 @@
 
 import { ProjectDialog } from "@/components/project-dialog"
 import Image from "next/image"
-import { FileCode } from "lucide-react"
 import { SpotlightBorder } from "@/components/motion/spotlight-border"
+import { ContentThumbnail } from "@/components/content-thumbnail"
 
 interface ProjectProps {
   id: string
@@ -34,8 +34,10 @@ export function ProjectsClient({ projects }: { projects: ProjectProps[] }) {
           <ProjectDialog project={project}>
             <SpotlightBorder className="h-full overflow-hidden rounded-xl">
               <article className="group flex h-full cursor-pointer flex-col overflow-hidden rounded-xl border border-border/60 bg-card/70 transition-transform duration-300 hover:-translate-y-0.5">
-                {project.image ? (
-                  <div className={`relative overflow-hidden ${index % rhythm.length === 0 || index % rhythm.length === 3 ? "aspect-[4/3]" : "aspect-video"}`}>
+                <div
+                  className={`relative overflow-hidden ${index % rhythm.length === 0 || index % rhythm.length === 3 ? "aspect-[4/3]" : "aspect-video"}`}
+                >
+                  {project.image ? (
                     <Image
                       src={project.image}
                       alt={project.title}
@@ -43,12 +45,10 @@ export function ProjectsClient({ projects }: { projects: ProjectProps[] }) {
                       className="object-cover transition-transform duration-500 group-hover:scale-[1.03]"
                       sizes="(max-width: 1024px) 100vw, 50vw"
                     />
-                  </div>
-                ) : (
-                  <div className="flex aspect-video items-center justify-center bg-muted/40">
-                    <FileCode className="h-10 w-10 text-muted-foreground/50" />
-                  </div>
-                )}
+                  ) : (
+                    <ContentThumbnail title={project.title} content={project.content} />
+                  )}
+                </div>
 
                 <div className="flex flex-1 flex-col space-y-3 p-5 md:p-6">
                   <h3 className="font-sans text-xl font-semibold tracking-tight md:text-2xl">{project.title}</h3>

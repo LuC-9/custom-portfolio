@@ -90,6 +90,53 @@
   scrollbar-width: none;
 }
 
+/*
+ * Hide the native scrollbar entirely. The dark theme has enough visual
+ * language (persona toggle, HUD, nav) that a scrollbar becomes noise, and
+ * pairing it with mandatory scroll snapping (below) means users don't rely
+ * on the bar to gauge document position anyway.
+ *
+ * Scroll wheel / touch / keyboard still work as normal; only the visual
+ * bar is suppressed. Firefox uses `scrollbar-width: none`; Chromium and
+ * Safari use the `::-webkit-scrollbar` pseudo, which we collapse to zero
+ * size and hide.
+ */
+html {
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+html::-webkit-scrollbar,
+body::-webkit-scrollbar,
+*::-webkit-scrollbar {
+  width: 0;
+  height: 0;
+  display: none;
+}
+
+/*
+ * Page-level scroll snapping.
+ *
+ * The home page has a big hero, a thin skills marquee, and then the
+ * experience timeline / featured grid. The marquee felt like an
+ * unintentional "obstacle" between hero and the real content, so we mark
+ * only the landmark sections (hero, experience, featured, footer) as
+ * snap targets and use `y mandatory` — scrolling from the hero jumps
+ * directly to the experience section because that's the next snap point.
+ * The marquee has no snap-align and is skipped past mid-animation.
+ *
+ * `scroll-behavior: smooth` gives the snap a gentle animated glide
+ * instead of a hard jump, matching the "with a bit slower speed" feel
+ * of the reveal animations on landing.
+ *
+ * Pages other than the home page have no descendants with
+ * `scroll-snap-align`, so this rule is a no-op there.
+ */
+html {
+  scroll-snap-type: y mandatory;
+  scroll-behavior: smooth;
+}
+
 pre {
   @apply p-4 rounded-lg overflow-x-auto my-6 bg-secondary/50 border border-secondary;
 }
@@ -289,7 +336,19 @@ table td {
   will-change: transform;
 }
 
-.skills-marquee-track:hover {
+/*
+ * Two-halves marquee track can play in either direction — the wrap point
+ * is at -50% (end of the first half aligned with the start of the second),
+ * so translating from -50% back to 0 loops just as seamlessly as the
+ * forward direction. Used to give the hero image frame a conveyor-belt
+ * look with the top strip going one way and the bottom the other.
+ */
+.skills-marquee-track-reverse {
+  animation-name: skills-marquee-reverse;
+}
+
+.skills-marquee-track:hover,
+.skills-marquee-track-reverse:hover {
   animation-play-state: paused;
 }
 
@@ -335,13 +394,79 @@ table td {
   }
 }
 
+/*
+ * Staircase step offset. Consumer sets `--step-idx` (0 for the newest
+ * role, rising with each older role) and `--step-max` (the max index,
+ * usually `total - 1`). At md+ the card's margin-right is computed as
+ * a fraction of the empty space in the container so that step 0 hugs
+ * the right edge, the final step hugs the left edge, and the middle
+ * steps distribute evenly regardless of viewport width. Cards are
+ * 19.5rem wide (set in the component's utility classes).
+ */
+.staircase-step {
+  --step-idx: 0;
+  --step-max: 3;
+}
+
+@media (min-width: 768px) {
+  .staircase-step {
+    margin-right: calc((100% - 19.5rem) * var(--step-idx) / var(--step-max));
+  }
+}
+
+/*
+ * Tanjiro climber lands on the hovered career step. Outer wrapper runs
+ * this once when a card gains hover/focus: character starts below and
+ * offscreen, arcs up with a small overshoot, and lands centered on the
+ * step. Base position must resolve to translate 0 so the layout stays
+ * predictable.
+ */
+@keyframes tanjiro-hop {
+  0% {
+    transform: translate3d(0, 24px, 0) rotate(-8deg) scale(0.7);
+  }
+  55% {
+    transform: translate3d(0, -6px, 0) rotate(4deg) scale(1.06);
+  }
+  80% {
+    transform: translate3d(0, 2px, 0) rotate(-1deg) scale(0.99);
+  }
+  100% {
+    transform: translate3d(0, 0, 0) rotate(0deg) scale(1);
+  }
+}
+
+/*
+ * Slow idle bob so the character breathes while standing on a step.
+ * Runs on an inner wrapper so its transform composes with the outer
+ * `tanjiro-hop` landing transform without either overriding the other.
+ */
+@keyframes tanjiro-idle {
+  0%, 100% {
+    transform: translate3d(0, 0, 0);
+  }
+  50% {
+    transform: translate3d(0, -3px, 0);
+  }
+}
+
+@keyframes skills-marquee-reverse {
+  from {
+    transform: translate3d(-50%, 0, 0);
+  }
+  to {
+    transform: translate3d(0, 0, 0);
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
   .animate-marquee {
     animation: none !important;
     transform: none !important;
   }
 
-  .skills-marquee-track {
+  .skills-marquee-track,
+  .skills-marquee-track-reverse {
     animation: none !important;
     transform: none !important;
   }
@@ -378,4 +503,60 @@ table td {
 
 @media (prefers-reduced-motion: reduce) {
   .spotify-progress-fill { animation: none; transform: scaleX(0); }
+}
+
+/*
+ * Scroll-driven reveal (see https://www.builder.io/blog/scroll-driven-animations).
+ * Uses `animation-timeline: view()` so the browser drives the animation off the
+ * main thread as the element intersects its scroller. Chromium supports this
+ * today; Firefox/Safari fall back to the un-animated static state via the
+ * `@supports (animation-timeline: view())` guard — the element simply appears
+ * in place, which is acceptable since the reveal is decorative.
+ *
+ * Keyframes deliberately start from the "visible" end state so that when the
+ * feature is unsupported the element is fully visible without any JS work.
+ */
+@keyframes reveal-in-up {
+  from {
+    opacity: 0;
+    transform: translate3d(0, var(--reveal-distance, 24px), 0);
+  }
+  to {
+    opacity: 1;
+    transform: translate3d(0, 0, 0);
+  }
+}
+
+@supports (animation-timeline: view()) {
+  @media (prefers-reduced-motion: no-preference) {
+    .reveal-on-view {
+      animation: reveal-in-up linear both;
+      animation-timeline: view();
+      /*
+       * Play across the entry phase but complete a bit before the element is
+       * fully in view so the finished state is what the user reads. The
+       * `entry` range covers "leading edge enters viewport" (0%) through
+       * "trailing edge enters viewport" (100%).
+       */
+      animation-range: entry 10% cover 30%;
+      will-change: opacity, transform;
+    }
+
+    /*
+     * Scroll-driven staggered reveal for lists/grids. Consumers set
+     * `--reveal-index` on each child (0, 1, 2, ...). Each child's animation
+     * range is offset so items animate in sequence as the parent scrolls into
+     * view — no timers, no JS.
+     */
+    .reveal-stagger-item {
+      --reveal-index: 0;
+      --reveal-step: 8%;
+      animation: reveal-in-up linear both;
+      animation-timeline: view();
+      animation-range:
+        entry calc(10% + var(--reveal-index) * var(--reveal-step))
+        cover calc(30% + var(--reveal-index) * var(--reveal-step));
+      will-change: opacity, transform;
+    }
+  }
 }

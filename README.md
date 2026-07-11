@@ -2,30 +2,40 @@
 
 A modern, responsive portfolio website built with Next.js, TypeScript, and Tailwind CSS. The site uses a dual persona concept so visitors can switch between developer and gamer profiles with distinct styling, navigation, and content.
 
-![Portfolio Screenshot](public/ss1.png)
+![Developer persona — centered hero with skills marquee framing the portrait, staircase experience section, and 3×3 featured bento with the byluc.in project as the anchor tile](public/ss1.png)
+
+![Gamer persona — LuC identity with the games marquee framing the portrait, gaming staircase, and Twitch / YouTube channel-banner cards above the featured blogs](public/ss2.png)
+
+> Regenerate these stills any time with `npm run capture:snapshots` (writes `public/ss1.png`, `public/ss2.png`, and the `public/portfolioSS.png` project-card thumbnail).
 
 ## Features
 
-- 🌓 Dual persona toggle (Developer/Gamer) that reroutes home content, navigation, blog filters, and accent language without a page reload
-- 🎬 Cinematic hero intro overlay on each fresh page load/reload (portal-mounted so it sits above the game HUD stacking context)
-- 📜 Center-spine zigzag experience timeline with directional slide-in reveal and a milestone dot on the spine
-- 🎞️ Seamless kinetic marquee of tech / games (two duplicated halves + `w-max` track for a gapless loop)
-- 🧩 Persona-aware featured bento: developer persona interleaves projects and blog posts across six cells; gamer persona swaps to Twitch/YouTube cards + gamer blogs
-- 🕹️ Gamer HUD: achievements, class card, floating hints, focus toggle, live Discord status, and Spotify activity card
-- 🎨 Dark theme with persona-specific accent variables
-- 📱 Responsive App Router pages for home, blog, projects, contact, and community
-- 📝 Markdown content for blogs, projects, work experience, gaming experience, and the home-page marquee strings
-- 🤖 Gemini-powered portfolio chatbot and blog TL;DR summaries
-- 📬 Contact form delivery through Telegram
-- 🔎 Persona-aware blog filtering, keyword search, SEO metadata, structured data, and sitemap routes
-- 🎥 Reproducible demo pipeline (`npm run record:demo`) that produces a testreel MP4 + screenshot step log
+- 🌓 **Dual persona toggle** (Developer/Gamer) that reroutes home content, navigation, blog filters, and accent language without a page reload
+- 🎬 **Cinematic hero intro overlay** on each fresh page load/reload (portal-mounted so it sits above the game HUD stacking context)
+- 🖼️ **Kinetic marquee frame** wrapping the hero portrait — two persona-aware skill / game strips run in opposite directions along the top and bottom of the image at a tight, evenly-spaced rhythm (source list duplicated 3× per half so items pack with a 24px gap instead of being spread across the viewport)
+- 🪜 **Staircase experience section** — each career phase is a uniform 19.5rem "step" card that indents further left as you go back in time; a small stick-figure climber (outline head, torso, arms raised in a V) stands on top of each step, and every card wears a `▲ Step N / total` badge so the layout reads bottom-left → top-right as an actual staircase
+- 🎯 **Compact-first cards** — the experience descriptions and skills chips are hidden by default and slide open on `:hover` / `:focus-within` via the CSS `grid-template-rows: 0fr → 1fr` trick, so mouse, keyboard, and touch all reach the detail
+- 🧩 **Featured bento (3×3)** — developer persona groups all three projects together (byluc.in as a 2×2 anchor top-left plus two 1×1 project cards in the right column) and all three featured blogs together across the bottom row; clicking a project card opens the same rich popup the `/projects` grid uses
+- 📺 **Twitch + YouTube channel-banner cards** on the gamer bento with the live channel imagery rendered at `aspect-video` above the CTA
+- 🖼️ **Blog cards render a thumbnail whenever the frontmatter includes an `image:` field** — the home featured bento uses an `aspect-video` header image, the `/blog` featured cards use `aspect-[4/3]`, and the `/blog` "More posts" compact rows switch to a horizontal media layout with an 80–96px square thumbnail on the left. Blogs without an image collapse gracefully to text-only
+- 🌀 **Scroll-driven reveals via CSS** — `animation-timeline: view()` + a `.reveal-stagger-item` primitive drive the marquee and featured-grid fade-ups off the compositor with no JS scroll handlers (with `@supports` + reduced-motion graceful fallback)
+- 🧭 **Landmark scroll snap** — `scroll-snap-type: y mandatory` on `html` with `snap-start` on hero / experience / featured / footer so a real scroll gesture jumps hero → experience directly (marquee frame stays in view as part of the hero)
+- 👻 **Hidden native scrollbar** — Firefox `scrollbar-width: none` + Chromium `::-webkit-scrollbar { display: none }` so the dark theme reads clean while wheel / touch / keyboard scrolling still work
+- 🕹️ **Gamer HUD**: achievements, class card, floating hints, focus toggle, live Discord status, and Spotify activity card
+- 🎨 **Dark theme with persona-specific accent variables**
+- 📱 **Responsive App Router pages** for home, blog, projects, contact, and community
+- 📝 **Markdown content** for blogs, projects, work experience, gaming experience, and the home-page marquee strings
+- 🤖 **Gemini-powered portfolio chatbot and blog TL;DR summaries**
+- 📬 **Contact form delivery through Telegram**
+- 🔎 **Persona-aware blog filtering, keyword search, SEO metadata, structured data, and sitemap routes**
+- 🎥 **Reproducible demo pipeline** (`npm run record:demo`) that produces a testreel MP4 + screenshot step log
 
 ## Tech Stack
 
 - **Framework**: [Next.js 15](https://nextjs.org/) App Router with [React 19](https://react.dev/)
 - **Language**: [TypeScript](https://www.typescriptlang.org/)
 - **Styling**: [Tailwind CSS](https://tailwindcss.com/) and [shadcn/ui](https://ui.shadcn.com/)
-- **Animation/3D**: [Framer Motion](https://www.framer.com/motion/) and [Three.js](https://threejs.org/)
+- **Animation**: [Motion](https://motion.dev/) for keyframe / gesture animation, native CSS **scroll-driven animations** (`animation-timeline: view()`) for scroll reveals, GSAP + ScrollTrigger for pinned scroll pieces, and [Three.js](https://threejs.org/) for the persona backgrounds
 - **Icons**: [Lucide Icons](https://lucide.dev/) and React Icons
 - **Content**: Markdown/MDX files parsed with [gray-matter](https://github.com/jonschlinkert/gray-matter), `unified`, `remark`, and `rehype`
 - **AI**: [`@google/genai`](https://www.npmjs.com/package/@google/genai) using Gemini 2.5 Flash
@@ -109,8 +119,8 @@ There is no active `DISCORD_WEBHOOK_URL` contact path. Contact submissions use T
 ├── components/                  # Reusable UI, chatbot, summaries, persona sections, search
 │   ├── intro/                   # Hero intro cinematic overlay (portal-mounted)
 │   ├── game/                    # Gamer HUD: achievements, class card, floating hints, focus toggle
-│   ├── home-marquee-client.tsx  # Seamless kinetic marquee client
-│   └── home-experience-section.tsx  # Zigzag center-spine timeline
+│   ├── home-marquee-client.tsx  # Seamless kinetic marquee (used as the frame around the hero portrait)
+│   └── home-experience-section.tsx  # Staircase career section with hover-to-expand descriptions
 ├── contexts/                    # Persona context provider
 ├── content/                     # Markdown content loaded by lib/content.ts
 │   ├── blog/

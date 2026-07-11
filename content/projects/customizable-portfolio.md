@@ -1,7 +1,7 @@
 ---
 title: "byluc.in Portfolio"
-description: "Dual-persona Next.js 15 portfolio with a cinematic intro, zigzag experience timeline, kinetic marquee, gamification HUD, and Gemini-powered chatbot."
-image: "/portfolioSS.png?height=400&width=600"
+description: "Dual-persona Next.js 15 portfolio with a cinematic intro, kinetic marquee framing the portrait, staircase career section, snap-scrolled landmarks, CSS scroll-driven reveals, a gamification HUD, and a Gemini-powered chatbot."
+image: "/portfolioSS.png"
 tags: ["Next.js 15", "React 19", "TypeScript", "Tailwind CSS", "Motion", "Three.js", "Gemini", "Markdown"]
 github: "https://github.com/LuC-9/custom-portfolio"
 demo: "https://byluc.in"
@@ -9,8 +9,9 @@ featured: true
 order: 1
 ---
 
-![Portfolio Screenshot](/ss1.png)
-![Portfolio Screenshot](/ss2.png)
+![Developer persona — centered hero with skills marquee framing the portrait, staircase experience section, and 3×3 featured bento with the byluc.in project as the anchor tile](/ss1.png)
+
+![Gamer persona — LuC identity with the games marquee framing the portrait, gaming staircase, and Twitch / YouTube channel-banner cards above the featured blogs](/ss2.png)
 
 A modern, responsive portfolio built on Next.js 15 App Router and React 19. The site runs a dual-persona concept: visitors switch between a developer profile (project bento, work history, engineering blog) and a gamer profile (Twitch/YouTube surfaces, gaming experience, streaming notes). Persona flips the home content, navigation, blog filter, and accent language without a page reload.
 
@@ -18,10 +19,13 @@ A modern, responsive portfolio built on Next.js 15 App Router and React 19. The 
 
 - **Cinematic intro overlay** on first landing per session, mounted through a React portal so it sits above the game HUD stacking context.
 - **Persona toggle** (developer vs gamer) that reroutes home sections, navigation, blog filters, and featured cards.
-- **Center-spine zigzag experience timeline** with directional slide-in reveal and a milestone dot on the spine for the active role.
-- **Seamless kinetic marquee** of the current tech/games strip (two duplicated halves + `w-max` track for a gapless loop).
-- **Featured bento grid** on the home page: developer persona interleaves projects and blog posts across six cells with an asymmetric span map; gamer persona swaps to Twitch/YouTube cards + gamer blogs.
-- **Blog page** with persona-aware filtering, keyword search, tag pills, featured cards, and a "More posts" list with an edge-to-edge hairline divider.
+- **Kinetic marquee frame around the hero portrait**: two seamless skill / game strips (top runs forward, bottom runs reverse) wrap the image like a conveyor belt. Items pack tight with a 24px gap (source list duplicated 3× per half) so the rhythm reads as a continuous band instead of a few skills spread across the viewport.
+- **Staircase career section**: each role is a uniform 19.5rem "step" card that indents further left as you go back in time (mr-0 / mr-24 / mr-48 / mr-72 in Tailwind), with a small stick-figure climber standing on top of every step — arms raised in a V, always visible on md+. Every card wears a `▲ Step N / total` badge so the layout reads bottom-left → top-right as an actual staircase. Cards stay compact by default; skills chips and long-form descriptions expand together on `:hover` / `:focus-within` via a CSS `grid-template-rows: 0fr → 1fr` animation with no JS state.
+- **3×3 featured bento** on the home page: developer persona groups all three projects together (byluc.in as a 2×2 anchor top-left, plus two 1×1 project cards filling the right column) and all three featured blogs together across the bottom row. Project cards open the same rich popup as the `/projects` grid. Gamer persona swaps to Twitch + YouTube channel-banner cards (rendered at `aspect-video`) followed by featured gaming blogs.
+- **Landmark scroll snap** with `scroll-snap-type: y mandatory` on `html` and `snap-start` on hero / experience / featured / footer, so a real scroll gesture jumps hero → experience directly and the marquee frame stays in view as part of the hero.
+- **CSS scroll-driven reveals** (`animation-timeline: view()`) power the marquee band and the featured grid's staggered fade-ups, running off the compositor without JS scroll handlers or IntersectionObservers. Guarded by `@supports` and reduced-motion, with a plain fully-visible fallback.
+- **Hidden native scrollbar** so the dark theme reads clean while wheel / touch / keyboard scrolling still work.
+- **Blog page** with persona-aware filtering, keyword search, tag pills, featured cards, and a "More posts" compact list — every card surface (home bento, `/blog` featured, `/blog` compact rows) picks up a thumbnail when the blog frontmatter includes an `image:` field; blogs without one collapse gracefully to a text-only layout.
 - **Gemini-powered chatbot** grounded in a JSON feed built from the site's own projects, work history, gaming experience, and blog content.
 - **Blog TL;DR summaries** generated on demand via Gemini 2.5 Flash.
 - **Contact form** that ships submissions to Telegram through a server route.
