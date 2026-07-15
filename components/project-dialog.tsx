@@ -43,8 +43,8 @@ export function ProjectDialog({ project, children }: { project: ProjectProps; ch
 
       <Dialog open={isOpen} onOpenChange={setIsOpen}>
         <DialogContent className="w-[95vw] max-w-5xl rounded-xl border-border/60 bg-popover shadow-kinetic max-h-[90dvh] overflow-y-auto md:max-h-[90vh] md:overflow-visible">
-          <div className="grid gap-6 md:grid-cols-2">
-            <div className="space-y-4">
+          <div className="flex min-w-0 flex-col gap-6 md:grid md:grid-cols-2">
+            <div className="min-w-0 space-y-4">
               <div className="relative aspect-[4/3] overflow-hidden rounded-xl border border-border/60 bg-muted/40">
                 {project.image ? (
                   <Image
@@ -80,7 +80,7 @@ export function ProjectDialog({ project, children }: { project: ProjectProps; ch
               </div>
             </div>
 
-            <div className="space-y-4">
+            <div className="min-w-0 space-y-4">
               <DialogHeader>
                 <DialogTitle className="font-sans text-2xl font-semibold tracking-tight">{project.title}</DialogTitle>
                 <DialogDescription className="text-sm text-muted-foreground">{project.description}</DialogDescription>
