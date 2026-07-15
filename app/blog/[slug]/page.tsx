@@ -64,7 +64,7 @@ export default async function BlogPostPage({
       />
       <BlogReadTracker slug={slug} title={post.title} />
       <main className="min-h-screen">
-        <div className="mx-auto w-full max-w-[1400px] px-4 pb-20 pt-28 md:px-6 lg:pt-32">
+        <div className="mx-auto w-full max-w-[1400px] px-5 pb-20 pt-28 md:px-6 lg:pt-32">
           <article>
             <header className="mx-auto max-w-[65ch] space-y-5">
               <h1 className="font-sans text-4xl font-extrabold tracking-tighter md:text-6xl">{post.title}</h1>
@@ -97,8 +97,8 @@ export default async function BlogPostPage({
               </div>
             </div>
 
-            <div className="mt-10 grid gap-10 xl:grid-cols-12">
-              <div className="xl:col-span-9">
+            <div className="mt-10 xl:grid xl:grid-cols-12 xl:gap-10">
+              <div className="min-w-0 xl:col-span-9">
                 <div
                   className="prose prose-sm dark:prose-invert mx-auto max-w-[65ch] leading-relaxed md:prose-base"
                   dangerouslySetInnerHTML={{ __html: contentHtml }}
@@ -112,7 +112,7 @@ export default async function BlogPostPage({
             </div>
           </article>
         </div>
-        <div className="mx-auto w-full max-w-[1400px] px-4 pb-10 md:px-6">
+        <div className="mx-auto w-full max-w-[1400px] px-5 pb-10 md:px-6">
           <BlogFooter />
         </div>
       </main>
