@@ -6,7 +6,7 @@ tags: ["Next.js 15", "React 19", "TypeScript", "Tailwind CSS", "Motion", "Three.
 github: "https://github.com/LuC-9/custom-portfolio"
 demo: "https://byluc.in"
 featured: true
-order: 1
+order: 2
 ---
 
 ![Developer persona — centered hero with skills marquee framing the portrait, staircase experience section, and 3×3 featured bento with the byluc.in project as the anchor tile](/ss1.png)
