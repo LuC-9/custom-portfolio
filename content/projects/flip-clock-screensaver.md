@@ -5,7 +5,7 @@ image: "/flip-clock.png"
 tags: ["C#", ".NET", "WinForms", "GDI+", "Screensaver", "Windows"]
 github: "https://github.com/LuC-9/flip-clock-screensaver"
 featured: true
-order: 2
+order: 1
 ---
 
 ![Flip Clock Screensaver Preview](/flip-clock.png)

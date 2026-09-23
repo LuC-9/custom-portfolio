@@ -6,7 +6,7 @@ tags: ["Java", "SpringBoot", "Maven", "PostgreSQL", "JWT"]
 github: "https://github.com/LuC-9/merchant-api"
 # demo: "https://example.com"
 featured: true
-order: 1
+order: 2
 ---
 
 # Merchant Management API
