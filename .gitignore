@@ -9,3 +9,4 @@ errors.txt
 tsconfig.tsbuildinfo
 .env*
 !.env.example
+artifacts/
