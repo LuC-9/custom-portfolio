@@ -1,8 +1,8 @@
----
+﻿---
 title: "Flip Clock Screensaver"
-description: "A lightweight, elegant Windows flip-clock screensaver inspired by classic retro mechanical split-flap clocks and Fliqlo, built in pure C# with WinForms, GDI+, and Per-Monitor High-DPI awareness."
+description: "A lightweight, elegant cross-platform flip-clock screensaver inspired by classic retro mechanical split-flap clocks and Fliqlo, built natively for Windows (C# / GDI+) and macOS (Swift / AppKit)."
 image: "/flip-clock.png"
-tags: ["C#", ".NET", "WinForms", "GDI+", "Screensaver", "Windows"]
+tags: ["C#", ".NET", "Swift", "macOS", "WinForms", "GDI+", "Screensaver", "Windows"]
 github: "https://github.com/LuC-9/flip-clock-screensaver"
 featured: true
 order: 1
@@ -10,34 +10,42 @@ order: 1
 
 ![Flip Clock Screensaver Preview](/flip-clock.png)
 
-A lightweight, elegant Windows flip-clock screensaver inspired by classic retro mechanical split-flap clocks and Fliqlo. Built in pure C# with Windows Forms and GDI+, it requires zero external runtimes or heavy Chromium wrappers, running natively and smoothly at 60 FPS on any modern Windows system.
+A lightweight, elegant flip-clock screensaver inspired by classic retro mechanical split-flap clocks and Fliqlo. Available natively on both **Windows** (pure C# / Windows Forms / GDI+) and **macOS** (native Swift / AppKit `ScreenSaver.framework`), it requires zero external runtimes or heavy Chromium wrappers, running smoothly at 60 FPS on any modern machine.
 
 ## ✨ Features
 
 - **Mechanical Split-Flap Animation:** Real-time 60 FPS 3D perspective folding flap physics with dynamic light-falloff gradient shading and soft drop shadows on resting lower flaps.
 - **Authentic Hardware Details:** Crisp horizontal divider groove, subtle top-edge bevel highlight, and axle hinge notches on card borders.
 - **Hours, Minutes & Seconds Display:** Standard Hours and Minutes cards plus an optional retro compact Seconds card anchored to the bottom baseline.
-- **High-DPI Razor-Sharp Typography:** Rendered with native system vector outlines (`GraphicsPath`) using Per-Monitor DPI awareness (`SetProcessDpiAwareness`) for razor-sharp fidelity on 1080p, 1440p, and 4K+ displays.
+- **High-DPI / Retina Razor-Sharp Typography:** Rendered with native system vector outlines using Per-Monitor DPI awareness on Windows (`SetProcessDpiAwareness`) and CoreGraphics/CoreText on macOS for crisp fidelity on 1080p, 1440p, 4K Retina, 5K, and Apple XDR displays.
 - **Customizable Formats:** Seamlessly toggle between 12-Hour (with subtle AM/PM indicator) and 24-Hour modes, customize the clock scale (0.5x - 2.0x), or toggle the seconds card.
-- **Windows Screensaver Integration:** Full support for standard Windows command-line switches: `/s` (fullscreen screensaver), `/c` (settings modal), `/p` (preview in Screen Saver Settings), and `/w` (standalone windowed mode).
-- **Safe Mouse Dismissal:** 1,500ms startup grace period and a 60px movement threshold to prevent accidental exits from desk vibration.
+- **Native OS Screensaver Integration:**
+  - **Windows (`.scr`):** Full support for standard command-line switches: `/s` (fullscreen screensaver), `/c` (settings modal), `/p` (preview in Screen Saver Settings), and `/w` (standalone windowed mode), with safe mouse dismissal grace period.
+  - **macOS (`.saver`):** Universal 2 binary bundle (`arm64` for Apple Silicon M1/M2/M3/M4 & `x86_64` for Intel) with native AppKit configuration sheet embedded directly in System Settings.
 
 ## 🛠️ Tech Stack
 
-- **Language:** C# 5
-- **Framework:** .NET Framework 4.0 / 4.8
-- **Graphics & Rendering:** Windows Forms, GDI+ (`System.Drawing`), `GraphicsPath` vector outline rendering
-- **APIs:** Win32 P/Invoke (`SHCore.dll`, `user32.dll`) for Per-Monitor High-DPI awareness
-- **Persistence:** Windows Registry (`HKCU\Software\FliqloClockCS`)
+- **Languages:** C# 5, Swift 5.5+
+- **Platforms:** Windows 10/11, macOS 11.0+ (Big Sur through Sequoia)
+- **Frameworks & Graphics:** 
+  - *Windows:* .NET Framework 4.0 / 4.8, Windows Forms, GDI+ (`System.Drawing`), Win32 P/Invoke
+  - *macOS:* AppKit, `ScreenSaver.framework`, CoreGraphics, CoreText
+- **Persistence:** Windows Registry (`HKCU\Software\FliqloClockCS`), macOS `ScreenSaverDefaults`
+- **CI / CD:** GitHub Actions matrix workflow automating Windows and macOS universal binary release builds
 
 ## 🚀 Installation & Usage
 
-### Install as Windows Screensaver
+### 🍎 macOS Installation (`.saver`)
+1. Download `FliqloClock-macOS.saver.zip` from [Releases](https://github.com/LuC-9/flip-clock-screensaver/releases).
+2. Unzip and double-click `FliqloClock.saver` to install into your macOS Screen Savers (or move to `~/Library/Screen Savers/`).
+3. Open macOS **System Settings** > **Wallpaper / Screen Saver**, select **FliqloClock**, and adjust your preferences via **Options**.
+
+### 🪟 Windows Installation (`.scr`)
 1. Download or build `FliqloClock.scr`.
 2. Right-click `FliqloClock.scr` and choose **Install**, or copy to `C:\Windows\System32\`.
 3. Open Windows **Screen Saver Settings**, select **FliqloClock**, and adjust your preferences.
 
-### Standalone Mode
+### Standalone Mode (Windows)
 You can also run it directly without installing:
 
 ```powershell
