@@ -34,14 +34,14 @@ const content: Record<"developer" | "gamer", PersonaContent> = {
   developer: {
     eyebrow: "THE PORTFOLIO",
     name: "Aarsh",
-    subtext: "Software Engineer at Nagarro. React, TypeScript, Next.js, Kubernetes. Building fast systems for people who ship.",
+    subtext: "Software Engineer building backend systems and AI-powered products. Java, Python, Spring Boot, FastAPI, React — turning complex problems into simple, scalable software.",
     primary: { text: "Contact", href: "/contact", taskId: "hero:contact" },
     secondary: { text: "View my work", href: "/projects", taskId: "hero:projects" },
   },
   gamer: {
     eyebrow: "THE ARENA",
-    name: "LuC",
-    subtext: "Competitive streamer and community builder. FPS, strategy games, and Discord communities that actually stick.",
+    name: "Aarsh",
+    subtext: "I play games. I'm not particularly good at them. Mostly found playing Valorant, wandering around open worlds, or joining whatever the Discord community is playing.",
     primary: { text: "Watch Streams", href: "/community?tab=streams", taskId: "hero:streams" },
     secondary: { text: "Join Community", href: "/community", taskId: "hero:community" },
   },
