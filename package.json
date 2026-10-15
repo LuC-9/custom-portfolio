@@ -15,7 +15,6 @@
     "capture:snapshots": "node scripts/capture-snapshots.mjs"
   },
   "dependencies": {
-    "@google/genai": "^1.50.1",
     "@hookform/resolvers": "latest",
     "@mdx-js/loader": "latest",
     "@mdx-js/react": "latest",

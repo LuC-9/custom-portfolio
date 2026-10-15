@@ -1,8 +1,8 @@
 ---
 title: "byluc.in Portfolio"
-description: "Dual-persona Next.js 15 portfolio with a cinematic intro, kinetic marquee framing the portrait, staircase career section, snap-scrolled landmarks, CSS scroll-driven reveals, a gamification HUD, and a Gemini-powered chatbot."
+description: "Dual-persona Next.js 15 portfolio with a cinematic intro, kinetic marquee framing the portrait, staircase career section, snap-scrolled landmarks, CSS scroll-driven reveals, a gamification HUD, and a Groq-powered portfolio chatbot with a heuristic fallback."
 image: "/portfolioSS.png"
-tags: ["Next.js 15", "React 19", "TypeScript", "Tailwind CSS", "Motion", "Three.js", "Gemini", "Markdown"]
+tags: ["Next.js 15", "React 19", "TypeScript", "Tailwind CSS", "Motion", "Three.js", "Markdown"]
 github: "https://github.com/LuC-9/custom-portfolio"
 demo: "https://byluc.in"
 featured: true
@@ -26,8 +26,8 @@ A modern, responsive portfolio built on Next.js 15 App Router and React 19. The 
 - **CSS scroll-driven reveals** (`animation-timeline: view()`) power the marquee band and the featured grid's staggered fade-ups, running off the compositor without JS scroll handlers or IntersectionObservers. Guarded by `@supports` and reduced-motion, with a plain fully-visible fallback.
 - **Hidden native scrollbar** so the dark theme reads clean while wheel / touch / keyboard scrolling still work.
 - **Blog page** with persona-aware filtering, keyword search, tag pills, featured cards, and a "More posts" compact list — every card surface (home bento, `/blog` featured, `/blog` compact rows) picks up a thumbnail when the blog frontmatter includes an `image:` field; blogs without one collapse gracefully to a text-only layout.
-- **Gemini-powered chatbot** grounded in a JSON feed built from the site's own projects, work history, gaming experience, and blog content.
-- **Blog TL;DR summaries** generated on demand via Gemini 2.5 Flash.
+- **Groq-powered portfolio chatbot with a heuristic fallback** grounded in a JSON feed built from the site's own projects, work history, gaming experience, and blog content.
+- **Blog TL;DR summaries** generated via Groq with local sentence-ranking fallbacks.
 - **Contact form** that ships submissions to Telegram through a server route.
 - **Gamification HUD** for the gamer persona: achievements, class card, floating hints, focus toggle, and live Discord status.
 - **Persona-aware SEO** with structured data, per-route metadata, and sitemap handlers.
@@ -40,7 +40,7 @@ A modern, responsive portfolio built on Next.js 15 App Router and React 19. The 
 - **Animation**: [Motion](https://motion.dev/) (formerly Framer Motion) for UI reveals, GSAP + ScrollTrigger for pinned scroll pieces, [Three.js](https://threejs.org/) for accent backgrounds
 - **Icons**: [Lucide](https://lucide.dev/) and React Icons
 - **Content**: Markdown/MDX parsed with [gray-matter](https://github.com/jonschlinkert/gray-matter), rendered via `unified`, `remark`, and `rehype`
-- **AI**: [`@google/genai`](https://www.npmjs.com/package/@google/genai) with Gemini 2.5 Flash
+- **Assistant**: server-side Groq API with keyword retrieval and extractive fallbacks
 - **Integrations**: Telegram Bot API (contact form), Discord Lanyard (live status), Vercel Analytics
 
 ## Content model
@@ -83,7 +83,7 @@ npm install --legacy-peer-deps
 npm run dev
 ```
 
-`.env.local` is optional for baseline browsing. Gemini chatbot and blog TL;DR are hidden unless `GEMINI_API_KEY` is set. Contact-form delivery requires `TELEGRAM_BOT_TOKEN` and `TELEGRAM_CHAT_ID`.
+`.env.local` is optional for baseline browsing. Set server-only `GROQ_API_KEY` for AI chat and summaries; both retain credential-free heuristic fallbacks. Contact-form delivery requires `TELEGRAM_BOT_TOKEN` and `TELEGRAM_CHAT_ID`.
 
 ## Demo video
 

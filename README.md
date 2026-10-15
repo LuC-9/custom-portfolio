@@ -25,7 +25,7 @@ A modern, responsive portfolio website built with Next.js, TypeScript, and Tailw
 - 🎨 **Dark theme with persona-specific accent variables**
 - 📱 **Responsive App Router pages** for home, blog, projects, contact, and community
 - 📝 **Markdown content** for blogs, projects, work experience, gaming experience, and the home-page marquee strings
-- 🤖 **Gemini-powered portfolio chatbot and blog TL;DR summaries**
+- 🤖 **Groq AI portfolio chatbot and blog TL;DR summaries with heuristic fallbacks**
 - 📬 **Contact form delivery through Telegram**
 - 🔎 **Persona-aware blog filtering, keyword search, SEO metadata, structured data, and sitemap routes**
 - 🎥 **Reproducible demo pipeline** (`npm run record:demo`) that produces a testreel MP4 + screenshot step log
@@ -38,14 +38,14 @@ A modern, responsive portfolio website built with Next.js, TypeScript, and Tailw
 - **Animation**: [Motion](https://motion.dev/) for keyframe / gesture animation, native CSS **scroll-driven animations** (`animation-timeline: view()`) for scroll reveals, GSAP + ScrollTrigger for pinned scroll pieces, and [Three.js](https://threejs.org/) for the persona backgrounds
 - **Icons**: [Lucide Icons](https://lucide.dev/) and React Icons
 - **Content**: Markdown/MDX files parsed with [gray-matter](https://github.com/jonschlinkert/gray-matter), `unified`, `remark`, and `rehype`
-- **AI**: [`@google/genai`](https://www.npmjs.com/package/@google/genai) using Gemini 2.5 Flash
+- **Assistant**: Groq API (`openai/gpt-oss-20b`) with deterministic retrieval and summary fallbacks
 - **Operational integrations**: Telegram Bot API for contact messages, Vercel Analytics, and Discord Lanyard status
 
 ## Getting Started
 
 ### Prerequisites
 
-- Node.js 20 or later (`@google/genai` requires Node 20+)
+- Node.js 20 or later
 - npm
 
 ### Installation
@@ -69,7 +69,7 @@ npm install
 cp .env.example .env.local
 ```
 
-Fill only the values you need for local testing. The site still runs without AI or Telegram credentials, but the chatbot and AI summary widgets are hidden when Gemini is not configured.
+Fill only the values you need for local testing. Chat and summary widgets work without credentials through heuristic fallbacks. Set a server-only `GROQ_API_KEY` to enable AI. Telegram credentials are needed only for contact delivery.
 
 4. Run the development server:
 
@@ -98,9 +98,10 @@ The script runs a fresh production build and drives the `testreel` walkthrough a
 
 | Variable | Required for | Notes |
 | --- | --- | --- |
-| `GEMINI_API_KEY` | Chatbot and AI blog summaries | `next.config.mjs` exposes this as `NEXT_PUBLIC_GEMINI_API_KEY` for browser-side Gemini calls. Treat it as public to site visitors. |
 | `TELEGRAM_BOT_TOKEN` | Contact form and chatbot contact tool | Used by `app/api/contact/route.ts` to call Telegram's `sendMessage` API. |
 | `TELEGRAM_CHAT_ID` | Contact form and chatbot contact tool | Destination chat for Telegram contact submissions. |
+| `GROQ_API_KEY` | Groq AI chat and summaries | Server-only; leave blank for heuristic fallback. |
+| `GROQ_MODEL` | Model override | Defaults to `openai/gpt-oss-20b`. |
 | `APP_URL` | Hosting/platform metadata | Present in `.env.example`; not required for the active chatbot or contact route. |
 
 There is no active `DISCORD_WEBHOOK_URL` contact path. Contact submissions use Telegram.
@@ -224,23 +225,25 @@ The global persona state lives in `contexts/persona-context.tsx`. It updates the
 - `components/blog-client-page.tsx` for persona-aware blog filtering
 - `components/home-experience-section.tsx` and `components/home-featured-section.tsx` for home-page content
 
-## AI and Contact Workflows
+## Free AI setup
+
+1. Create a [Groq API key](https://console.groq.com/keys) and keep the account on the **Free Plan**.
+2. Add `GROQ_API_KEY` to `.env.local` for development and to your host's server environment for deployment. Never use a `NEXT_PUBLIC_` key. Restart or redeploy after setting it.
+3. The default model is `openai/gpt-oss-20b`; `GROQ_MODEL` can override it. No extra SDK is required.
+
+Groq's [Free Plan](https://community.groq.com/t/do-i-get-charged-for-anything-on-the-groq-free-plan/832) rejects requests above quota rather than charging. Its [published limits](https://console.groq.com/docs/rate-limits) currently list 30 requests/minute, 1,000/day, 8,000 tokens/minute, and 200,000 tokens/day for the default model; account-specific limits may differ. These are shared quotas across visitors. Upgrading to Developer enables usage-based billing. The app makes one attempt per generation with a 15-second timeout and falls back without automatic retries.
+
+## Assistant and Contact Workflows
 
 ### Chatbot
 
-`components/chatbot.tsx` mounts globally from `app/layout.tsx`. When `GEMINI_API_KEY` is configured, it:
+`components/chatbot.tsx` mounts globally without credentials. `/api/chat` loads server-owned portfolio content and ranks entries using query tokens, weighted titles/tags/skills, and category intent. Answers contain source excerpts and links; unknown questions get an explicit fallback. Groq generates an answer grounded in these excerpts and a bounded portfolio overview. The route accepts only the last six conversational turns and ignores client system prompts and supplied portfolio context. Contact details stay out of AI history. Missing keys, timeouts, rate limits, and provider errors return the deterministic search answer. The UI labels which mode produced the response.
 
-1. Fetches `/api/portfolio-context`.
-2. Builds a Gemini system prompt with projects, work experience, gaming experience, blog metadata, and trimmed blog content.
-3. Creates a browser-side Gemini 2.5 Flash chat session.
-4. Uses the `submitContactForm` function tool when a visitor wants to contact Aarsh.
-5. Posts tool calls to `/api/contact`, which sends the message to Telegram.
+Contact requests start a guided flow: name, valid email, existing reason, message, then explicit send confirmation. `/api/contact` delivers confirmed messages to Telegram. Failed delivery keeps the draft for retry or cancellation.
 
-If Gemini is not configured, the chatbot is not rendered. If `/api/portfolio-context` fails, the failure is logged in the browser console and the chat session is not initialized.
+### Blog summaries
 
-### Blog AI summaries
-
-`components/ai-summary-button.tsx` appears on blog detail pages when Gemini is configured. It strips HTML from the rendered blog content and asks Gemini 2.5 Flash for a short TL;DR summary.
+`components/ai-summary-button.tsx` retains its export for compatibility and is always available. `lib/heuristics.ts` strips markup and script/style/code blocks, ranks sentences by term frequency and title relevance, and extracts up to three sentences in source order with a 140-word text budget. The widget requests `/api/summarize`, which asks Groq for up to three bullets under 150 words using at most 12,000 source characters. Provider failures use extractive summaries; browser network failures also use local extraction. The summary sheet labels AI versus extractive output.
 
 ### API routes
 
@@ -248,14 +251,13 @@ If Gemini is not configured, the chatbot is not rendered. If `/api/portfolio-con
 | --- | --- | --- |
 | `/api/portfolio-context` | `GET` | Returns sanitized project, experience, gaming, and blog data for chatbot context. |
 | `/api/contact` | `POST` | Validates `{ name, email, reason, message }` and sends a Telegram message. |
-| `/api/chat` | `POST` | Server-side Gemini chat route retained in the codebase, but not used by the active chatbot UI. |
-| `/api/summarize` | `POST` | Server-side summary route retained in the codebase, but not used by the active blog summary UI. |
+| `/api/chat` | `POST` | Validates messages and returns a Groq answer grounded in server-owned content, or a search fallback. |
+| `/api/summarize` | `POST` | Validates content and optional title, then returns an AI or extractive summary. |
 
 ## Troubleshooting
 
 | Symptom | Check |
 | --- | --- |
-| Chatbot or AI summary button is missing | Confirm `GEMINI_API_KEY` exists before starting/building the app. The browser widgets read `NEXT_PUBLIC_GEMINI_API_KEY`, which is populated from `GEMINI_API_KEY` in `next.config.mjs`. |
 | Contact submissions fail | Confirm `TELEGRAM_BOT_TOKEN` and `TELEGRAM_CHAT_ID` are set and that the bot can send messages to the target chat. |
 | Blog persona filter shows unexpected posts | Review the post tags. Gamer classification uses simple substring matching against gaming-related tag names. |
 | Experience ordering looks wrong | Ensure `period` starts with a parseable month/year, for example `Jul 2025 - Present`. |
@@ -273,7 +275,8 @@ Update personal information in:
 
 - `app/HomeContent.tsx` - main profile copy, social links, and persona-specific home sections
 - `app/layout.tsx` - site metadata and global layout
-- `components/chatbot.tsx` - chatbot system prompt, social links, and contact tool instructions
+- `lib/heuristics.ts` - retrieval, extraction, and social links
+- `lib/contact-flow.ts` - guided contact prompts and validation
 - `content/` - Markdown-backed projects, blogs, experience, and gaming experience
 
 ## Deployment
@@ -289,7 +292,6 @@ npm run build
 
 3. Deploy using your platform's Next.js flow.
 
-Remember that Gemini browser features expose the configured API key to the client bundle through `NEXT_PUBLIC_GEMINI_API_KEY`.
 
 ## License
 

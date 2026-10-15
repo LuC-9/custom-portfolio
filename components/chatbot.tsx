@@ -2,20 +2,13 @@
 
 import React, { useState, useEffect, useRef } from 'react';
 import { MessageSquare, X, Send, Loader2, Minimize2, Maximize2 } from 'lucide-react';
-import { GoogleGenAI, Type } from '@google/genai';
+import { advanceContact, CONTACT_REASONS, isContactIntent, type ContactState } from '@/lib/contact-flow';
 import Markdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { emitGameEvent } from '@/lib/game/event-bus';
-
-// Using NEXT_PUBLIC_GEMINI_API_KEY per guidelines
-const getAiClient = () => {
-  const apiKey = process.env.NEXT_PUBLIC_GEMINI_API_KEY;
-  if (!apiKey) return null;
-  return new GoogleGenAI({ apiKey });
-};
 
 type Message = {
   role: 'user' | 'model';
@@ -26,86 +19,17 @@ export function Chatbot() {
   const [isOpen, setIsOpen] = useState(false);
   const [isExpanded, setIsExpanded] = useState(false);
   const [messages, setMessages] = useState<Message[]>([
-    { role: 'model', text: "Hi! I'm LuC's AI assistant. You can ask me anything about his projects, experience, or blog posts!" }
+    { role: 'model', text: "Hi! I'm LuC's portfolio assistant. Ask about his projects, experience, or blog posts, or say contact to send a message." }
   ]);
   const [input, setInput] = useState('');
   const [isLoading, setIsLoading] = useState(false);
-  const [contextData, setContextData] = useState<any>(null);
   const [error, setError] = useState<string | null>(null);
-  
+  const [contactState, setContactState] = useState<ContactState | null>(null);
+  const [answerMode, setAnswerMode] = useState<'ai' | 'heuristic' | null>(null);
   const bottomRef = useRef<HTMLDivElement>(null);
-  const aiClient = getAiClient();
-  const chatSessionRef = useRef<any>(null);
+  const sendingRef = useRef(false);
+  const questionHistoryRef = useRef<Message[]>([]);
   const hasTrackedFirstMessageRef = useRef(false);
-
-  useEffect(() => {
-    // Fetch context on load securely
-    fetch('/api/portfolio-context')
-      .then(res => res.json())
-      .then(data => setContextData(data))
-      .catch(err => console.error("Could not fetch portfolio context", err));
-  }, []);
-
-  useEffect(() => {
-    if (aiClient && contextData && !chatSessionRef.current) {
-      const systemInstruction = `You are a helpful AI assistant for Aarsh Mishra (LuC)'s portfolio website. 
-Your goal is to answer visitor questions about Aarsh's projects, experience, and articles.
-
-# Social Links & Contact Info
-- x/twitter: https://twitter.com/xrshLuC
-- GitHub: https://github.com/LuC-9
-- LinkedIn: https://www.linkedin.com/in/aarsh-mishra09/
-- YouTube: https://www.youtube.com/@LuC-Throws
-- Discord Server: https://discord.gg/Sd8Uq73FeK
-- Twitch: https://www.twitch.tv/luc_throws
-
-# Contact Form Use
-If the user wants to contact Aarsh directly, leave a message for him, or hire him, you MUST use the \`submitContactForm\` tool to send a message. Make sure you collect their name, email, the reason for contact (Regarding an Opportunity, Need help in Project/Idea, Query regarding Topic/Tech, Need Guidance, Meet in-person, Others), and the message body before calling the tool. Explain you can send a message on their behalf.
-IMPORTANT: When you need to ask the user for the 'reason for contact', you MUST include the exact text "[REASON_DROPDOWN]" somewhere in your response. This will render a visual dropdown for them to select from.
-
-Here is the context data in JSON format:
-${JSON.stringify(contextData)}
-
-Be polite, concise, and helpful. If you don't know the answer based on the context, say that you're not sure.`;
-
-      chatSessionRef.current = aiClient.chats.create({
-        model: 'gemini-2.5-flash',
-        config: {
-          systemInstruction,
-          temperature: 0.7,
-          tools: [{
-            functionDeclarations: [
-              {
-                name: 'submitContactForm',
-                description: 'Submits a message to Aarsh on behalf of the user.',
-                parameters: {
-                  type: Type.OBJECT,
-                  properties: {
-                    name: { type: Type.STRING, description: "The name of the user." },
-                    email: { type: Type.STRING, description: "The email address of the user." },
-                    reason: { 
-                      type: Type.STRING, 
-                      description: "The reason for contact.",
-                      enum: [
-                        "Regarding an Opportunity",
-                        "Need help in Project/Idea",
-                        "Query regarding Topic/Tech",
-                        "Need Guidance",
-                        "Meet in-person",
-                        "Others"
-                      ]
-                    },
-                    message: { type: Type.STRING, description: "The body of the message to send to Aarsh." },
-                  },
-                  required: ["name", "email", "reason", "message"],
-                }
-              }
-            ]
-          }]
-        }
-      });
-    }
-  }, [aiClient, contextData]);
 
   useEffect(() => {
     if (bottomRef.current) {
@@ -116,7 +40,8 @@ Be polite, concise, and helpful. If you don't know the answer based on the conte
   const handleSend = async (overrideMsg?: string) => {
     const isString = typeof overrideMsg === 'string';
     const messageToSend = (isString && overrideMsg) ? overrideMsg : input.trim();
-    if (!messageToSend || !aiClient || !chatSessionRef.current) return;
+    if (!messageToSend || sendingRef.current) return;
+    sendingRef.current = true;
     
     setError(null);
     setInput('');
@@ -131,55 +56,37 @@ Be polite, concise, and helpful. If you don't know the answer based on the conte
     }
 
     try {
-      const response = await chatSessionRef.current.sendMessage({
-        message: messageToSend
-      });
-
-      if (response.functionCalls && response.functionCalls.length > 0) {
-        for (const call of response.functionCalls) {
-          if (call.name === 'submitContactForm') {
-            const { name, email, reason, message } = call.args as Record<string, any>;
-            
-            setMessages(prev => [...prev, { role: 'model', text: `Sending message to Aarsh...` }]);
-            
-            let success = false;
-            try {
-               const res = await fetch('/api/contact', {
-                  method: 'POST',
-                  headers: { 'Content-Type': 'application/json' },
-                  body: JSON.stringify({ name, email, reason, message })
-               });
-               if (res.ok) success = true;
-            } catch (err) {
-               console.error(err);
-            }
-
-            // Send tool response to Gemini
-            const toolResponseResult = await chatSessionRef.current.sendMessage({
-              message: [{
-                 functionResponse: {
-                   id: call.id,
-                   name: call.name,
-                   response: { result: success ? "success" : "failure" }
-                 }
-              }]
-            });
-
-            if (toolResponseResult.text) {
-               setMessages(prev => [...prev, { role: 'model', text: toolResponseResult.text ?? '' }]);
-            } else {
-               setMessages(prev => [...prev, { role: 'model', text: success ? "Message sent successfully!" : "Failed to send message." }]);
-            }
-          }
+      let text: string;
+      if (contactState || isContactIntent(messageToSend)) {
+        const result = advanceContact(contactState, messageToSend);
+        setContactState(result.state);
+        text = result.text;
+        if (result.submit) {
+          const response = await fetch('/api/contact', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(result.submit),
+          });
+          if (!response.ok) throw new Error('Contact delivery failed. Type retry to try again, or cancel.');
+          setContactState(null);
+          text = 'Your message was sent successfully!';
         }
-      } else if (response.text) {
-        setMessages(prev => [...prev, { role: 'model', text: response.text ?? '' }]);
+      } else {
+        const response = await fetch('/api/chat', {
+          method: 'POST', headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ message: messageToSend, history: questionHistoryRef.current }),
+        });
+        if (!response.ok) throw new Error('Portfolio search is unavailable. Please try again.');
+        const data = await response.json();
+        text = data.text;
+        questionHistoryRef.current = [...questionHistoryRef.current, { role: 'user', text: messageToSend }, { role: 'model', text }].slice(-6) as Message[];
+        setAnswerMode(data.mode === 'ai' ? 'ai' : 'heuristic');
       }
-    } catch (err: any) {
-      console.error("Chat error details:", err);
-      // More detailed error formatting specifically to help diagnosing
-      setError('Sorry, I encountered an error: ' + (err.message || String(err)));
+      setMessages(prev => [...prev, { role: 'model', text }]);
+    } catch (err: unknown) {
+      setError(contactState?.step === 'confirm' ? 'Contact delivery failed. Type retry to try again, or cancel.' : err instanceof Error ? err.message : 'Request failed. Please try again.');
     } finally {
+      sendingRef.current = false;
       setIsLoading(false);
     }
   };
@@ -188,16 +95,12 @@ Be polite, concise, and helpful. If you don't know the answer based on the conte
     if (e.key === 'Enter') handleSend();
   };
 
-  if (!aiClient) {
-    // Hide if API key is missing
-    return null;
-  }
-
   return (
     <>
       {/* Floating Button */}
       {!isOpen && (
         <Button
+          aria-label="Open portfolio assistant"
           onClick={() => {
             emitGameEvent({ type: "chatbot_open", taskId: "chatbot:open" });
             setIsOpen(true);
@@ -221,10 +124,10 @@ Be polite, concise, and helpful. If you don't know the answer based on the conte
               <h3 className="font-sans text-sm font-semibold tracking-tight">Ask about my portfolio</h3>
             </div>
             <div className="flex items-center gap-1">
-              <Button variant="ghost" size="icon" className="h-8 w-8" onClick={() => setIsExpanded(!isExpanded)}>
+              <Button aria-label={isExpanded ? "Minimize chat" : "Expand chat"} variant="ghost" size="icon" className="h-8 w-8" onClick={() => setIsExpanded(!isExpanded)}>
                 {isExpanded ? <Minimize2 className="h-4 w-4" /> : <Maximize2 className="h-4 w-4" />}
               </Button>
-              <Button variant="ghost" size="icon" className="h-8 w-8 text-muted-foreground hover:text-foreground" onClick={() => setIsOpen(false)}>
+              <Button aria-label="Close chat" variant="ghost" size="icon" className="h-8 w-8 text-muted-foreground hover:text-foreground" onClick={() => setIsOpen(false)}>
                 <X className="h-4 w-4" />
               </Button>
             </div>
@@ -252,12 +155,13 @@ Be polite, concise, and helpful. If you don't know the answer based on the conte
                         {message.text.includes('[REASON_DROPDOWN]') && i === messages.length - 1 && (
                           <div className="flex flex-col gap-2 mt-4 pt-4 border-t border-border/50">
                             <span className="text-xs font-medium text-muted-foreground mb-1">Select Reason:</span>
-                            {["Regarding an Opportunity", "Need help in Project/Idea", "Query regarding Topic/Tech", "Need Guidance", "Meet in-person", "Others"].map(reason => (
+                            {CONTACT_REASONS.map(reason => (
                               <Button 
                                 key={reason} 
                                 variant="outline" 
                                 size="sm" 
                                 className="justify-start text-xs h-auto py-2 whitespace-normal text-left sm:py-1.5"
+                                disabled={isLoading}
                                 onClick={() => handleSend(reason)}
                               >
                                 {reason}
@@ -274,7 +178,7 @@ Be polite, concise, and helpful. If you don't know the answer based on the conte
                 <div className="flex justify-start">
                   <div className="max-w-[85%] rounded-xl rounded-bl-none bg-card px-4 py-3 flex items-center gap-2">
                     <Loader2 className="h-4 w-4 animate-spin text-muted-foreground" />
-                    <span className="text-sm text-muted-foreground">Thinking...</span>
+                    <span className="text-sm text-muted-foreground">Searching...</span>
                   </div>
                 </div>
               )}
@@ -291,6 +195,8 @@ Be polite, concise, and helpful. If you don't know the answer based on the conte
           <div className="rounded-b-xl border-t border-border/60 bg-popover p-4">
             <div className="flex gap-2 items-center">
               <Input
+                aria-label="Your message"
+                maxLength={4000}
                 placeholder="Ask something..."
                 value={input}
                 onChange={e => setInput(e.target.value)}
@@ -298,12 +204,12 @@ Be polite, concise, and helpful. If you don't know the answer based on the conte
                 className="h-10 flex-1 rounded-full border border-border bg-input px-4 focus-visible:ring-1 focus-visible:ring-primary/50"
                 disabled={isLoading}
               />
-              <Button onClick={() => handleSend()} disabled={!input.trim() || isLoading} size="icon" className="h-10 w-10 shrink-0 rounded-full">
+              <Button aria-label="Send message" onClick={() => handleSend()} disabled={!input.trim() || isLoading} size="icon" className="h-10 w-10 shrink-0 rounded-full">
                 <Send className="h-4 w-4" />
               </Button>
             </div>
             <div className="text-[10px] text-center text-muted-foreground mt-2">
-              Runs on Gemini 2.5 Flash. May make mistakes.
+              {answerMode === 'ai' ? 'AI answers from portfolio content. May make mistakes.' : answerMode === 'heuristic' ? 'Showing portfolio search results. AI is unavailable.' : 'Ask about projects, experience, or articles.'}
             </div>
           </div>
         </div>

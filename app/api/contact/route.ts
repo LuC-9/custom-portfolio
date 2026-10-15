@@ -1,14 +1,20 @@
 import { NextResponse } from "next/server";
+import { CONTACT_REASONS } from "@/lib/contact-flow";
 
 export async function POST(request: Request) {
   try {
     const body = await request.json();
-    const { name, email, reason, message } = body;
+    const { name, email, reason, message } = body || {};
 
     // Validate input
-    if (!name || !email || !reason || !message) {
+    if (
+      typeof name !== 'string' || !name.trim() || name.length > 100 ||
+      typeof email !== 'string' || email.length > 254 || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email) ||
+      typeof reason !== 'string' || ![...CONTACT_REASONS, 'opportunity', 'project-help', 'tech-query', 'guidance', 'meet', 'other'].includes(reason) ||
+      typeof message !== 'string' || !message.trim() || message.length > 3000
+    ) {
       return NextResponse.json(
-        { error: "Missing required fields" },
+        { error: "Invalid contact fields" },
         { status: 400 }
       );
     }
@@ -45,7 +51,6 @@ export async function POST(request: Request) {
         body: JSON.stringify({
           chat_id: telegramChatId,
           text: telegramMessage,
-          parse_mode: "HTML",
         }),
       }
     );

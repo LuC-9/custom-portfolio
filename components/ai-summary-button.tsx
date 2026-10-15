@@ -2,17 +2,11 @@
 
 import React, { useEffect, useState } from 'react';
 import { Sparkles, Loader2 } from 'lucide-react';
-import { GoogleGenAI } from '@google/genai';
+import { summarize } from '@/lib/heuristics';
 import Markdown from 'react-markdown';
 import { Button } from '@/components/ui/button';
 import { MagneticHover } from '@/components/motion/magnetic-hover';
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetDescription } from '@/components/ui/sheet';
-
-const getAiClient = () => {
-  const apiKey = process.env.NEXT_PUBLIC_GEMINI_API_KEY;
-  if (!apiKey) return null;
-  return new GoogleGenAI({ apiKey });
-};
 
 interface AiSummaryButtonProps {
   title: string;
@@ -25,8 +19,9 @@ export function AiSummaryButton({ title, content }: AiSummaryButtonProps) {
   const [isOpen, setIsOpen] = useState(false);
   const [reducedTransparency, setReducedTransparency] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [isAiSummary, setIsAiSummary] = useState(false);
   
-  const aiClient = getAiClient();
+
 
   useEffect(() => {
     if (typeof window === "undefined" || typeof window.matchMedia !== "function") return;
@@ -35,7 +30,7 @@ export function AiSummaryButton({ title, content }: AiSummaryButtonProps) {
   }, []);
 
   const handleGenerateSummary = async () => {
-    if (!aiClient || isLoading) return;
+    if (isLoading) return;
     
     if (summary) {
       setIsOpen(true);
@@ -47,28 +42,25 @@ export function AiSummaryButton({ title, content }: AiSummaryButtonProps) {
     setIsOpen(true);
 
     try {
-      const lightContent = content.replace(/<[^>]*>?/gm, ' ');
-
-      const response = await aiClient.models.generateContent({
-        model: 'gemini-2.5-flash',
-        config: {
-          systemInstruction: "You are a highly capable reading assistant. Your job is to output a short, engaging TL;DR summary using bullet points for the provided blog post.",
-        },
-        contents: `Summarize the following blog post titled "${title}". Keep it under 150 words. \n\nContent:\n${lightContent}`
+      const response = await fetch('/api/summarize', {
+        method: 'POST', headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ title, content }),
       });
-
-      if (response.text) {
-        setSummary(response.text);
-      }
-    } catch (err: any) {
-      console.error(err);
-      setError("Sorry, I couldn't generate a summary right now.");
+      if (!response.ok) throw new Error('Summary request failed');
+      const data = await response.json();
+      if (typeof data.summary !== 'string' || !data.summary.trim()) throw new Error('Empty summary');
+      setSummary(data.summary);
+      setIsAiSummary(data.mode === 'ai');
+    } catch {
+      setSummary(summarize(content, title));
+      setIsAiSummary(false);
+      setError('AI is unavailable. Showing an extract from the article.');
     } finally {
       setIsLoading(false);
     }
   };
 
-  if (!aiClient) return null;
+
 
   return (
     <div className="my-6">
@@ -79,7 +71,7 @@ export function AiSummaryButton({ title, content }: AiSummaryButtonProps) {
           className="rounded-full border-primary/40 bg-transparent px-5"
         >
           {isLoading ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <Sparkles className="mr-2 h-4 w-4 text-primary" />}
-          {isLoading ? "Generating AI Summary..." : "Open AI TL;DR"}
+          {isLoading ? "Preparing summary..." : "Open TL;DR"}
         </Button>
       </MagneticHover>
 
@@ -93,9 +85,9 @@ export function AiSummaryButton({ title, content }: AiSummaryButtonProps) {
           <SheetHeader className="mb-3">
             <SheetTitle className="flex items-center gap-2 font-sans text-xl tracking-tight">
               <Sparkles className="h-4 w-4 text-primary" />
-              AI Summary
+              Article summary
             </SheetTitle>
-            <SheetDescription>{title}</SheetDescription>
+            <SheetDescription>{title} · {isAiSummary ? 'AI summary' : 'Extractive summary'}</SheetDescription>
           </SheetHeader>
           <div className="h-full overflow-y-auto pr-1">
             {summary ? (

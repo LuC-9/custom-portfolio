@@ -466,7 +466,7 @@ await runBeat("live status card", async () => {
 // Outro title card
 await runBeat("outro", async () => {
   await hideCursor(page)
-  await showTitleCard(page, "Custom portfolio", "Next.js 15 · React 19 · Motion · Gemini")
+  await showTitleCard(page, "Custom portfolio", "Next.js 15 · React 19 · Motion · Groq AI")
 })
 
 // -----------------------------------------------------------------------------
